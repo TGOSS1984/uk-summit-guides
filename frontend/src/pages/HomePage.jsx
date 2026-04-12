@@ -25,6 +25,32 @@ function HomePage() {
               Explore Routes
             </a>
           </div>
+
+          <div className="hero__panel">
+            <div className="hero__panel-card">
+              <p className="hero__panel-kicker">Seasonal departures</p>
+              <h2 className="hero__panel-title">Discover guided days built for winter and summer terrain.</h2>
+              <p className="hero__panel-copy">
+                Route-led planning, premium guiding, and a booking platform
+                designed to feel calm, modern, and mountain-first.
+              </p>
+            </div>
+
+            <div className="hero__panel-meta">
+              <div className="hero__meta-item">
+                <span className="hero__meta-label">Regions</span>
+                <strong className="hero__meta-value">5</strong>
+              </div>
+              <div className="hero__meta-item">
+                <span className="hero__meta-label">Routes</span>
+                <strong className="hero__meta-value">28</strong>
+              </div>
+              <div className="hero__meta-item">
+                <span className="hero__meta-label">Guides</span>
+                <strong className="hero__meta-value">8</strong>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -44,69 +70,92 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section">
-        <div className="container showcase-grid">
+      <section className="section editorial-section">
+        <div className="container editorial-stack">
           <Reveal delay={40} variant="left">
-            <article className="showcase-card">
-              <div className="showcase-card__media-wrap">
-                <span className="accent-box accent-box--media accent-box--top-left" aria-hidden="true" />
-                <div className="showcase-card__media" />
-              </div>
-
-              <div className="showcase-card__body-wrap">
+            <article className="editorial-block editorial-block--first">
+              <div className="editorial-block__text-wrap">
                 <span className="accent-box accent-box--content accent-box--right" aria-hidden="true" />
-                <div className="showcase-card__body">
-                  <p className="section-kicker">01 / Routes</p>
-                  <h2 className="section-title">Find the right mountain day</h2>
+                <div className="editorial-block__text">
+                  <p className="editorial-block__number">01</p>
+                  <p className="section-kicker">Get started</p>
+                  <h2 className="section-title">Find the right route for your season and experience level</h2>
                   <p className="section-copy">
-                    Browse regional routes with difficulty, distance, elevation,
-                    duration, and seasonal suitability.
+                    Browse structured mountain days with difficulty, distance,
+                    elevation gain, duration, and regional detail. The goal is a
+                    calmer, clearer planning experience that feels premium from
+                    the first screen.
                   </p>
                 </div>
+              </div>
+
+              <div className="editorial-block__media-wrap">
+                <span className="accent-box accent-box--media accent-box--top-left" aria-hidden="true" />
+                <div className="editorial-block__media" />
               </div>
             </article>
           </Reveal>
 
-          <Reveal delay={90} variant="right">
-            <article className="showcase-card showcase-card--reverse">
-              <div className="showcase-card__media-wrap">
-                <span className="accent-box accent-box--media accent-box--bottom-right" aria-hidden="true" />
-                <div className="showcase-card__media" />
-              </div>
-
-              <div className="showcase-card__body-wrap">
+          <Reveal delay={110} variant="right">
+            <article className="editorial-block editorial-block--reverse">
+              <div className="editorial-block__text-wrap">
                 <span className="accent-box accent-box--content accent-box--left" aria-hidden="true" />
-                <div className="showcase-card__body">
-                  <p className="section-kicker">02 / Guided tours</p>
-                  <h2 className="section-title">Book guided departures with confidence</h2>
+                <div className="editorial-block__text">
+                  <p className="editorial-block__number">02</p>
+                  <p className="section-kicker">Book with confidence</p>
+                  <h2 className="section-title">Protected availability and route-led guided departures</h2>
                   <p className="section-copy">
-                    Capacity rules, protected availability, customer accounts, and
-                    guided tour scheduling will all sit behind the polished frontend.
+                    Capacity rules, seasonal pricing, customer accounts, and
+                    guide scheduling will sit behind a polished frontend that
+                    keeps the experience simple and intentional.
                   </p>
                 </div>
+              </div>
+
+              <div className="editorial-block__media-wrap editorial-block__media-wrap--offset">
+                <span className="accent-box accent-box--media accent-box--bottom-right" aria-hidden="true" />
+                <div className="editorial-block__media editorial-block__media--alt" />
               </div>
             </article>
           </Reveal>
+        </div>
+      </section>
 
-          <Reveal delay={140} variant="left">
-            <article className="showcase-card">
-              <div className="showcase-card__media-wrap">
+      <section className="section scenic-section">
+        <div className="container scenic-layout">
+          <Reveal delay={60} variant="left">
+            <div className="scenic-layout__left">
+              <div className="scenic-layout__image-wrap">
                 <span className="accent-box accent-box--media accent-box--mid-left" aria-hidden="true" />
-                <div className="showcase-card__media" />
+                <div className="scenic-layout__image scenic-layout__image--one" />
               </div>
 
-              <div className="showcase-card__body-wrap">
-                <span className="accent-box accent-box--content accent-box--top-right" aria-hidden="true" />
-                <div className="showcase-card__body">
-                  <p className="section-kicker">03 / Seasonal design</p>
-                  <h2 className="section-title">Switch between winter and summer mood</h2>
-                  <p className="section-copy">
-                    The full interface uses root-based CSS tokens so palette, hero
-                    imagery, and surface styling can switch cleanly.
-                  </p>
-                </div>
+              <div className="scenic-layout__copy">
+                <p className="section-kicker">Regional discovery</p>
+                <h2 className="section-title">Route pages that feel editorial, visual, and useful</h2>
+                <p className="section-copy">
+                  We are shaping the UI so route discovery feels more like a
+                  curated mountain journal than a plain listing page, while
+                  still keeping all the data and booking utility underneath.
+                </p>
               </div>
-            </article>
+            </div>
+          </Reveal>
+
+          <Reveal delay={120} variant="right">
+            <div className="scenic-layout__right">
+              <div className="scenic-layout__copy scenic-layout__copy--compact">
+                <p className="section-kicker">Design language</p>
+                <h2 className="section-title">Quiet surfaces, layered imagery, and restrained accents</h2>
+                <p className="section-copy">
+                  The red frames stay subtle and selective, used only to tie
+                  together editorial cards and image compositions without
+                  overpowering the colder mountain palette.
+                </p>
+              </div>
+
+              <div className="scenic-layout__image scenic-layout__image--two" />
+            </div>
           </Reveal>
         </div>
       </section>

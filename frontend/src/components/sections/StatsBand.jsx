@@ -73,7 +73,9 @@ function StatsBand() {
       <div className="container">
         <div className="stats-band__inner">
           <p className="stats-band__kicker">Trusted Mountain Guiding</p>
-          <h2 className="stats-band__title">Built around real mountain days and regional expertise</h2>
+          <h2 className="stats-band__title">
+            Built around real mountain days and regional expertise
+          </h2>
           <p className="stats-band__copy">
             From guided summits to seasonal route planning, UK Summit Guides is
             being shaped as a premium booking platform for mountain experiences
@@ -81,12 +83,8 @@ function StatsBand() {
           </p>
 
           <div className="stats-band__grid">
-            {stats.map((item, index) => (
+            {stats.map((item) => (
               <div key={item.label} className="stats-band__card">
-                <span
-                  className={`stats-band__accent stats-band__accent--${(index % 4) + 1}`}
-                  aria-hidden="true"
-                />
                 <p className="stats-band__value">
                   <CountUpNumber end={item.value} suffix={item.suffix || ""} />
                 </p>
