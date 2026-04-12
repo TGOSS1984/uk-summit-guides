@@ -51,8 +51,28 @@
     linear-gradient(135deg, #7f9499 0%, #405664 35%, #172a36 70%, #09151c 100%);
 
   --card-image:
-    linear-gradient(135deg, rgba(176, 207, 208, 0.2), rgba(12, 29, 41, 0.15)),
+    linear-gradient(180deg, rgba(7, 15, 22, 0.08), rgba(7, 15, 22, 0.42)),
+    radial-gradient(circle at 50% 12%, rgba(230, 238, 240, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(18, 31, 39, 0.12) 0%, rgba(8, 16, 24, 0.72) 100%),
+    url("/images/shared/footer-mountains.jpg"),
     linear-gradient(180deg, #8ea4a7 0%, #526873 35%, #243543 72%, #0c1a23 100%);
+
+  --card-image-alt:
+    linear-gradient(180deg, rgba(8, 14, 22, 0.06), rgba(8, 14, 22, 0.52)),
+    radial-gradient(circle at 28% 18%, rgba(255, 247, 220, 0.08), transparent 22%),
+    linear-gradient(135deg, rgba(107, 124, 138, 0.2), rgba(12, 24, 32, 0.22)),
+    url("/images/shared/footer-mountains.jpg"),
+    linear-gradient(180deg, #7f9298 0%, #475c67 35%, #24333d 72%, #0b151d 100%);
+
+  --card-image-night:
+    linear-gradient(180deg, rgba(4, 9, 16, 0.08), rgba(4, 9, 16, 0.68)),
+    radial-gradient(circle at 26% 16%, rgba(199, 220, 255, 0.16), transparent 18%),
+    linear-gradient(135deg, rgba(56, 73, 92, 0.22), rgba(8, 17, 24, 0.24)),
+    url("/images/shared/footer-mountains.jpg"),
+    linear-gradient(180deg, #435260 0%, #243543 45%, #101a23 100%);
+
+  --section-surface-dark:
+    linear-gradient(180deg, rgba(10, 19, 27, 0.96), rgba(7, 15, 21, 0.98));
 
   --footer-image: url("/images/shared/footer-mountains.jpg");
   --footer-overlay:
@@ -105,8 +125,28 @@
     linear-gradient(135deg, #b7c6a5 0%, #6a8a72 34%, #3d5a4c 70%, #263c34 100%);
 
   --card-image:
-    linear-gradient(135deg, rgba(239, 227, 186, 0.16), rgba(38, 60, 52, 0.12)),
+    linear-gradient(180deg, rgba(18, 28, 23, 0.05), rgba(18, 28, 23, 0.42)),
+    radial-gradient(circle at 50% 12%, rgba(255, 238, 192, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(47, 66, 57, 0.08) 0%, rgba(21, 33, 28, 0.66) 100%),
+    url("/images/shared/footer-mountains.jpg"),
     linear-gradient(180deg, #a8b48a 0%, #738c64 35%, #486250 72%, #253730 100%);
+
+  --card-image-alt:
+    linear-gradient(180deg, rgba(20, 29, 25, 0.06), rgba(20, 29, 25, 0.48)),
+    radial-gradient(circle at 28% 18%, rgba(255, 226, 164, 0.12), transparent 22%),
+    linear-gradient(135deg, rgba(153, 167, 116, 0.12), rgba(44, 59, 49, 0.22)),
+    url("/images/shared/footer-mountains.jpg"),
+    linear-gradient(180deg, #9aa77f 0%, #688062 35%, #445b4c 72%, #253730 100%);
+
+  --card-image-night:
+    linear-gradient(180deg, rgba(16, 23, 21, 0.08), rgba(16, 23, 21, 0.62)),
+    radial-gradient(circle at 26% 16%, rgba(242, 223, 165, 0.12), transparent 18%),
+    linear-gradient(135deg, rgba(85, 108, 90, 0.16), rgba(27, 40, 34, 0.24)),
+    url("/images/shared/footer-mountains.jpg"),
+    linear-gradient(180deg, #7b8f74 0%, #4c6457 45%, #253730 100%);
+
+  --section-surface-dark:
+    linear-gradient(180deg, rgba(27, 39, 34, 0.96), rgba(23, 34, 29, 0.98));
 
   --footer-overlay:
     linear-gradient(

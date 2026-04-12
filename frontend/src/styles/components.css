@@ -83,16 +83,15 @@
 
 .feature-band__card {
   position: relative;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.06),
-    rgba(255, 255, 255, 0.02)
-  );
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.08), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   padding: 1.6rem;
   box-shadow: var(--shadow-panel);
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .feature-band__accent {
@@ -175,15 +174,30 @@
 .editorial-block__media {
   min-height: 420px;
   border-radius: var(--radius-lg);
-  background: var(--card-image);
+  background-image: var(--card-image-night);
+  background-size: cover;
+  background-position: center;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-soft);
   position: relative;
   z-index: 2;
+  overflow: hidden;
+}
+
+.editorial-block__media::after,
+.scenic-layout__image::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(0, 0, 0, 0.18)),
+    linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.22) 100%);
+  pointer-events: none;
 }
 
 .editorial-block__media--alt {
   min-height: 460px;
+  background-image: var(--card-image-alt);
 }
 
 .scenic-layout {
@@ -202,18 +216,23 @@
 .scenic-layout__image {
   min-height: 320px;
   border-radius: var(--radius-lg);
-  background: var(--card-image);
+  background-image: var(--card-image);
+  background-size: cover;
+  background-position: center;
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-soft);
   position: relative;
+  overflow: hidden;
 }
 
 .scenic-layout__image--one {
   min-height: 300px;
+  background-image: var(--card-image-night);
 }
 
 .scenic-layout__image--two {
   min-height: 260px;
+  background-image: var(--card-image-alt);
 }
 
 .scenic-layout__copy--compact {
