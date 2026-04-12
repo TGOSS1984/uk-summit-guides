@@ -202,7 +202,9 @@
 
 .editorial-block__media::after,
 .scenic-layout__image::after,
-.route-card__media::after {
+.route-card__media::after,
+.route-detail-hero__image::after,
+.route-detail-map::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -459,6 +461,199 @@
   border-color: transparent;
 }
 
+.route-detail-panel,
+.route-booking-card,
+.route-guide-card {
+  position: relative;
+  padding: 1.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-lg) + 0.1rem);
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 24%),
+    rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-soft);
+}
+
+.route-detail-panel__copy-spaced {
+  margin-top: 1rem;
+}
+
+.route-detail-panel__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.route-detail-map {
+  position: relative;
+  min-height: 360px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background-image: var(--card-image-night);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--color-border);
+}
+
+.route-detail-map__overlay {
+  position: relative;
+  z-index: 1;
+  padding: 1.25rem;
+  max-width: 420px;
+}
+
+.route-detail-map__tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.85rem;
+  border-radius: var(--radius-pill);
+  background: rgba(11, 20, 28, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f1f5f6;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.route-detail-map__text {
+  margin: 1rem 0 0;
+  color: var(--color-text-soft);
+  line-height: 1.75;
+}
+
+.route-detail-highlights {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.route-detail-highlight {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.route-detail-highlight__marker {
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background: #d34242;
+  flex-shrink: 0;
+}
+
+.route-detail-highlight__text {
+  margin: 0;
+  color: var(--color-text-soft);
+  line-height: 1.65;
+}
+
+.route-booking-card__eyebrow,
+.route-guide-card__eyebrow {
+  margin: 0 0 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: var(--color-accent);
+}
+
+.route-booking-card__title,
+.route-guide-card__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  line-height: 1.05;
+}
+
+.route-booking-card__meta {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.7rem;
+}
+
+.route-booking-card__meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-soft);
+}
+
+.route-booking-card__meta-row strong {
+  color: var(--color-text);
+}
+
+.route-booking-card__button,
+.route-booking-card__secondary,
+.route-detail-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 3rem;
+  padding: 0 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  background: transparent;
+  color: var(--color-text);
+}
+
+.route-booking-card__button {
+  width: 100%;
+  margin-top: 1.2rem;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  border-color: transparent;
+}
+
+.route-booking-card__secondary {
+  width: 100%;
+  margin-top: 0.75rem;
+}
+
+.route-guide-card__avatar {
+  width: 100%;
+  height: 180px;
+  margin-top: 1rem;
+  border-radius: var(--radius-lg);
+  background-image: var(--card-image-alt);
+  background-size: cover;
+  background-position: center;
+  border: 1px solid var(--color-border);
+}
+
+.route-guide-card__copy {
+  margin: 0.85rem 0 0;
+  color: var(--color-text-soft);
+  line-height: 1.7;
+}
+
+.route-guide-card__meta {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.route-guide-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-text-soft);
+}
+
+.route-detail-action--link {
+  text-decoration: none;
+}
+
 .accent-box {
   position: absolute;
   border: 2px solid rgba(196, 61, 61, 0.9);
@@ -637,7 +832,8 @@
   .editorial-block,
   .editorial-block--reverse,
   .scenic-layout,
-  .route-card {
+  .route-card,
+  .route-detail-layout {
     grid-template-columns: 1fr;
   }
 
@@ -673,7 +869,8 @@
 
   .editorial-block__media,
   .editorial-block__media--alt,
-  .route-card__media {
+  .route-card__media,
+  .route-detail-map {
     min-height: 260px;
   }
 

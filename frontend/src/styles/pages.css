@@ -269,7 +269,8 @@
   color: var(--color-text);
 }
 
-.routes-hero {
+.routes-hero,
+.route-detail-hero {
   position: relative;
   min-height: 440px;
   display: flex;
@@ -279,12 +280,15 @@
 }
 
 .routes-hero__image,
-.routes-hero__overlay {
+.routes-hero__overlay,
+.route-detail-hero__image,
+.route-detail-hero__overlay {
   position: absolute;
   inset: 0;
 }
 
-.routes-hero__image {
+.routes-hero__image,
+.route-detail-hero__image {
   background-image: var(--hero-image);
   background-size: cover;
   background-position: center center;
@@ -293,30 +297,54 @@
   filter: saturate(0.9);
 }
 
-.routes-hero__overlay {
+.route-detail-hero__image--ridge {
+  background-image: var(--card-image-night);
+}
+
+.routes-hero__overlay,
+.route-detail-hero__overlay {
   background:
     linear-gradient(180deg, rgba(9, 18, 27, 0.2) 0%, transparent 24%),
     linear-gradient(180deg, transparent 0%, rgba(7, 17, 24, 0.78) 100%);
 }
 
-:root[data-theme="summer"] .routes-hero__overlay {
+:root[data-theme="summer"] .routes-hero__overlay,
+:root[data-theme="summer"] .route-detail-hero__overlay {
   background:
     linear-gradient(180deg, rgba(36, 52, 45, 0.14) 0%, transparent 24%),
     linear-gradient(180deg, transparent 0%, rgba(28, 42, 37, 0.72) 100%);
 }
 
-.routes-hero__content {
+.routes-hero__content,
+.route-detail-hero__content {
   position: relative;
   z-index: 1;
   padding-bottom: 3rem;
 }
 
-.routes-hero__title {
+.routes-hero__title,
+.route-detail-hero__title {
   max-width: 12ch;
 }
 
-.routes-hero__copy {
+.routes-hero__copy,
+.route-detail-hero__copy {
   max-width: 62ch;
+  color: var(--color-text-soft);
+  line-height: 1.8;
+}
+
+.route-detail-hero__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-bottom: 1rem;
+  color: var(--color-text-muted);
+}
+
+.route-detail-hero__breadcrumb-link {
+  color: var(--color-text-soft);
+  text-decoration: none;
 }
 
 .routes-hero__meta {
@@ -326,7 +354,8 @@
   margin-top: 2rem;
 }
 
-.routes-hero__meta-item {
+.routes-hero__meta-item,
+.route-detail-hero__stat {
   min-width: 132px;
   padding: 1rem 1rem;
   border-radius: var(--radius-md);
@@ -337,7 +366,8 @@
   backdrop-filter: blur(8px);
 }
 
-.routes-hero__meta-label {
+.routes-hero__meta-label,
+.route-detail-hero__stat-label {
   display: block;
   font-size: 0.72rem;
   letter-spacing: 0.16em;
@@ -345,7 +375,8 @@
   color: var(--color-text-muted);
 }
 
-.routes-hero__meta-value {
+.routes-hero__meta-value,
+.route-detail-hero__stat-value {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -354,10 +385,70 @@
   color: var(--color-text);
 }
 
-.routes-shell {
+.route-detail-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.9rem;
+  margin-top: 2rem;
+}
+
+.route-detail-hero__stat {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.route-detail-hero__stat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-accent-strong);
+  flex-shrink: 0;
+}
+
+.routes-shell,
+.route-detail-shell {
   background:
     radial-gradient(circle at top center, rgba(255, 255, 255, 0.025), transparent 18%),
     var(--section-surface-dark);
+}
+
+.route-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.route-detail-main,
+.route-detail-aside {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.related-routes {
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.025), transparent 18%),
+    linear-gradient(180deg, rgba(8, 15, 21, 0.98), rgba(9, 17, 24, 1));
+}
+
+:root[data-theme="summer"] .related-routes {
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.025), transparent 18%),
+    linear-gradient(180deg, rgba(24, 35, 29, 0.98), rgba(25, 37, 31, 1));
+}
+
+.related-routes__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .routes-filter-bar {
@@ -428,6 +519,10 @@
 .routes-grid {
   display: grid;
   gap: 1.5rem;
+}
+
+.routes-grid--related {
+  margin-top: 0;
 }
 
 .pagination-shell {
@@ -528,7 +623,8 @@
     width: 180px;
   }
 
-  .routes-filter-bar {
+  .routes-filter-bar,
+  .route-detail-hero__stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -574,7 +670,8 @@
     max-width: 100%;
   }
 
-  .routes-filter-bar {
+  .routes-filter-bar,
+  .route-detail-hero__stats {
     grid-template-columns: 1fr;
   }
 

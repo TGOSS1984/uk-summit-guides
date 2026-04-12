@@ -5,6 +5,7 @@ import {
   FaRoute,
 } from "react-icons/fa6";
 import { FiClock } from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 function RouteCard({ route }) {
   return (
@@ -26,7 +27,9 @@ function RouteCard({ route }) {
             <h2 className="route-card__title">{route.name}</h2>
           </div>
 
-          <span className={`route-card__difficulty route-card__difficulty--${route.difficulty.toLowerCase()}`}>
+          <span
+            className={`route-card__difficulty route-card__difficulty--${route.difficulty.toLowerCase()}`}
+          >
             {route.difficulty}
           </span>
         </div>
@@ -76,10 +79,13 @@ function RouteCard({ route }) {
         </div>
 
         <div className="route-card__footer">
-          <button type="button" className="route-card__link route-card__link--primary">
+          <Link
+            to={`/routes/${route.slug || "sample-route"}`}
+            className="route-card__link route-card__link--primary"
+          >
             View Route
             <FaArrowRight />
-          </button>
+          </Link>
 
           <button type="button" className="route-card__link">
             OS Map Placeholder
