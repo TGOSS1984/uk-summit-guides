@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import siteNav from "../../data/siteNav";
 import ThemeToggle from "../ui/ThemeToggle";
+import BrandLogo from "../ui/BrandLogo";
 
 function Navbar({ theme, onToggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,10 +14,7 @@ function Navbar({ theme, onToggleTheme }) {
   return (
     <header className="site-header">
       <div className="container site-header__inner">
-        <NavLink to="/" className="site-logo" onClick={closeMenu}>
-          <span className="site-logo__mark" />
-          <span className="site-logo__text">UK Summit Guides</span>
-        </NavLink>
+        <BrandLogo className="site-brand" to="/" />
 
         <nav className="site-nav site-nav--desktop" aria-label="Primary">
           {siteNav.map((item) => (

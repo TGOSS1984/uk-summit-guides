@@ -4,6 +4,7 @@ import {
   FaLinkedinIn,
   FaPinterestP,
 } from "react-icons/fa";
+import BrandLogo from "../ui/BrandLogo";
 
 function Footer() {
   const footerGroups = [
@@ -73,21 +74,31 @@ function Footer() {
 
       <div className="container site-footer__content">
         <div className="site-footer__top">
-          <div className="site-footer__nav-grid">
-            {footerGroups.map((group) => (
-              <div key={group.title} className="site-footer__group">
-                <h3 className="site-footer__group-title">{group.title}</h3>
-                <ul className="site-footer__list">
-                  {group.items.map((item) => (
-                    <li key={item}>
-                      <button type="button" className="site-footer__link">
-                        {item}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+          <div className="site-footer__nav-grid-wrap">
+            <div className="site-footer__brand-block">
+              <BrandLogo className="site-footer__brand" to="/" />
+              <p className="site-footer__brand-copy">
+                Guided mountain days across the UK, built around premium route
+                discovery, seasonal touring, and a modern booking experience.
+              </p>
+            </div>
+
+            <div className="site-footer__nav-grid">
+              {footerGroups.map((group) => (
+                <div key={group.title} className="site-footer__group">
+                  <h3 className="site-footer__group-title">{group.title}</h3>
+                  <ul className="site-footer__list">
+                    {group.items.map((item) => (
+                      <li key={item}>
+                        <button type="button" className="site-footer__link">
+                          {item}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="site-footer__signup">
