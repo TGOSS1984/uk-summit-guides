@@ -1,0 +1,91 @@
+:root {
+  color-scheme: dark;
+
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+
+  --container-width: 1200px;
+  --container-padding: 1.25rem;
+  --header-height: 88px;
+  --radius-sm: 0.85rem;
+  --radius-md: 1.25rem;
+  --radius-lg: 1.75rem;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.22);
+  --shadow-panel: 0 28px 80px rgba(0, 0, 0, 0.28);
+
+  --transition-fast: 180ms ease;
+  --transition-base: 280ms ease;
+  --transition-slow: 420ms ease;
+
+  /* Default: winter */
+  --color-bg: #07131c;
+  --color-bg-alt: #0c1d29;
+  --color-surface: rgba(13, 28, 39, 0.78);
+  --color-surface-strong: rgba(11, 22, 30, 0.92);
+  --color-panel: rgba(18, 36, 49, 0.84);
+  --color-border: rgba(176, 202, 214, 0.14);
+  --color-border-strong: rgba(176, 202, 214, 0.24);
+
+  --color-text: #eef3f6;
+  --color-text-soft: #c8d6dc;
+  --color-text-muted: #91a8b2;
+
+  --color-accent: #b0cfd0;
+  --color-accent-strong: #d9e6e4;
+  --color-accent-contrast: #0c1b24;
+
+  --color-hero-overlay-top: rgba(8, 18, 27, 0.18);
+  --color-hero-overlay-bottom: rgba(4, 11, 17, 0.82);
+
+  --hero-image:
+    linear-gradient(
+      180deg,
+      rgba(164, 184, 189, 0.12) 0%,
+      rgba(18, 43, 60, 0.18) 35%,
+      rgba(5, 14, 20, 0.65) 100%
+    ),
+    radial-gradient(circle at 50% 20%, rgba(214, 225, 222, 0.2), transparent 36%),
+    linear-gradient(135deg, #7f9499 0%, #405664 35%, #172a36 70%, #09151c 100%);
+
+  --card-image:
+    linear-gradient(135deg, rgba(176, 207, 208, 0.2), rgba(12, 29, 41, 0.15)),
+    linear-gradient(180deg, #8ea4a7 0%, #526873 35%, #243543 72%, #0c1a23 100%);
+}
+
+:root[data-theme="summer"] {
+  --color-bg: #1f302c;
+  --color-bg-alt: #2d443d;
+  --color-surface: rgba(42, 59, 53, 0.76);
+  --color-surface-strong: rgba(34, 49, 45, 0.92);
+  --color-panel: rgba(61, 85, 73, 0.82);
+  --color-border: rgba(231, 219, 189, 0.14);
+  --color-border-strong: rgba(231, 219, 189, 0.24);
+
+  --color-text: #f7f4ea;
+  --color-text-soft: #e2dcc8;
+  --color-text-muted: #bdc0ae;
+
+  --color-accent: #d6c18e;
+  --color-accent-strong: #efe3ba;
+  --color-accent-contrast: #22322d;
+
+  --color-hero-overlay-top: rgba(42, 60, 51, 0.14);
+  --color-hero-overlay-bottom: rgba(25, 39, 33, 0.7);
+
+  --hero-image:
+    linear-gradient(
+      180deg,
+      rgba(223, 216, 176, 0.08) 0%,
+      rgba(94, 123, 93, 0.18) 35%,
+      rgba(28, 42, 37, 0.6) 100%
+    ),
+    radial-gradient(circle at 50% 18%, rgba(255, 235, 188, 0.16), transparent 34%),
+    linear-gradient(135deg, #b7c6a5 0%, #6a8a72 34%, #3d5a4c 70%, #263c34 100%);
+
+  --card-image:
+    linear-gradient(135deg, rgba(239, 227, 186, 0.16), rgba(38, 60, 52, 0.12)),
+    linear-gradient(180deg, #a8b48a 0%, #738c64 35%, #486250 72%, #253730 100%);
+}
