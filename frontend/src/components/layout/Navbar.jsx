@@ -31,7 +31,7 @@ function Navbar({ theme, onToggleTheme }) {
           <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} />
         </nav>
 
-        <div className="site-header__actions">
+        <div className="site-header__actions site-header__actions--mobile">
           <ThemeToggle theme={theme} onToggleTheme={onToggleTheme} compact />
           <button
             type="button"

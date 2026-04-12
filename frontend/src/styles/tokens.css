@@ -37,17 +37,22 @@
   --color-accent-strong: #d9e6e4;
   --color-accent-contrast: #0c1b24;
 
-  --color-hero-overlay-top: rgba(8, 18, 27, 0.18);
+  --color-hero-overlay-top: rgba(8, 18, 27, 0.14);
+  --color-hero-overlay-mid: rgba(8, 18, 27, 0.1);
   --color-hero-overlay-bottom: rgba(4, 11, 17, 0.82);
+  --color-hero-fade: rgba(7, 19, 28, 0.98);
 
+  --hero-photo: url("/images/winter/hero-winter.jpg");
   --hero-image:
     linear-gradient(
       180deg,
       rgba(164, 184, 189, 0.12) 0%,
-      rgba(18, 43, 60, 0.18) 35%,
-      rgba(5, 14, 20, 0.65) 100%
+      rgba(18, 43, 60, 0.12) 30%,
+      rgba(5, 14, 20, 0.55) 68%,
+      rgba(7, 19, 28, 0.92) 100%
     ),
-    radial-gradient(circle at 50% 20%, rgba(214, 225, 222, 0.2), transparent 36%),
+    radial-gradient(circle at 50% 20%, rgba(214, 225, 222, 0.14), transparent 36%),
+    var(--hero-photo),
     linear-gradient(135deg, #7f9499 0%, #405664 35%, #172a36 70%, #09151c 100%);
 
   --card-image:
@@ -111,17 +116,22 @@
   --color-accent-strong: #efe3ba;
   --color-accent-contrast: #22322d;
 
-  --color-hero-overlay-top: rgba(42, 60, 51, 0.14);
-  --color-hero-overlay-bottom: rgba(25, 39, 33, 0.7);
+  --color-hero-overlay-top: rgba(42, 60, 51, 0.08);
+  --color-hero-overlay-mid: rgba(42, 60, 51, 0.08);
+  --color-hero-overlay-bottom: rgba(25, 39, 33, 0.64);
+  --color-hero-fade: rgba(31, 48, 44, 0.98);
 
+  --hero-photo: url("/images/summer/hero-summer.jpg");
   --hero-image:
     linear-gradient(
       180deg,
-      rgba(223, 216, 176, 0.08) 0%,
-      rgba(94, 123, 93, 0.18) 35%,
-      rgba(28, 42, 37, 0.6) 100%
+      rgba(223, 216, 176, 0.06) 0%,
+      rgba(94, 123, 93, 0.1) 30%,
+      rgba(28, 42, 37, 0.42) 68%,
+      rgba(31, 48, 44, 0.9) 100%
     ),
-    radial-gradient(circle at 50% 18%, rgba(255, 235, 188, 0.16), transparent 34%),
+    radial-gradient(circle at 50% 18%, rgba(255, 235, 188, 0.12), transparent 34%),
+    var(--hero-photo),
     linear-gradient(135deg, #b7c6a5 0%, #6a8a72 34%, #3d5a4c 70%, #263c34 100%);
 
   --card-image:
