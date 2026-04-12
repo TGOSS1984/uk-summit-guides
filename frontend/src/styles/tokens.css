@@ -53,6 +53,25 @@
   --card-image:
     linear-gradient(135deg, rgba(176, 207, 208, 0.2), rgba(12, 29, 41, 0.15)),
     linear-gradient(180deg, #8ea4a7 0%, #526873 35%, #243543 72%, #0c1a23 100%);
+
+  --footer-image: url("/images/shared/footer-mountains.jpg");
+  --footer-overlay:
+    linear-gradient(
+      180deg,
+      rgba(9, 22, 30, 0.58) 0%,
+      rgba(8, 22, 28, 0.78) 42%,
+      rgba(7, 18, 24, 0.92) 100%
+    );
+  --footer-tint:
+    linear-gradient(
+      135deg,
+      rgba(176, 207, 208, 0.08) 0%,
+      rgba(10, 24, 31, 0.1) 100%
+    );
+  --footer-input-bg: rgba(248, 251, 252, 0.92);
+  --footer-input-text: #102028;
+  --footer-button-bg: #c7b06a;
+  --footer-button-text: #152028;
 }
 
 :root[data-theme="summer"] {
@@ -88,4 +107,22 @@
   --card-image:
     linear-gradient(135deg, rgba(239, 227, 186, 0.16), rgba(38, 60, 52, 0.12)),
     linear-gradient(180deg, #a8b48a 0%, #738c64 35%, #486250 72%, #253730 100%);
+
+  --footer-overlay:
+    linear-gradient(
+      180deg,
+      rgba(37, 57, 48, 0.5) 0%,
+      rgba(34, 55, 45, 0.72) 42%,
+      rgba(29, 46, 39, 0.9) 100%
+    );
+  --footer-tint:
+    linear-gradient(
+      135deg,
+      rgba(214, 193, 142, 0.1) 0%,
+      rgba(57, 80, 67, 0.08) 100%
+    );
+  --footer-input-bg: rgba(251, 247, 236, 0.94);
+  --footer-input-text: #243730;
+  --footer-button-bg: #d8bf7b;
+  --footer-button-text: #24352e;
 }
