@@ -1,3 +1,10 @@
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaPinterestP,
+} from "react-icons/fa";
+
 function Footer() {
   const footerGroups = [
     {
@@ -52,7 +59,12 @@ function Footer() {
     "Booking Terms",
   ];
 
-  const socialLinks = ["Instagram", "Facebook", "LinkedIn", "Pinterest"];
+  const socialLinks = [
+    { label: "Instagram", icon: <FaInstagram /> },
+    { label: "Facebook", icon: <FaFacebookF /> },
+    { label: "LinkedIn", icon: <FaLinkedinIn /> },
+    { label: "Pinterest", icon: <FaPinterestP /> },
+  ];
 
   return (
     <footer className="site-footer">
@@ -99,13 +111,13 @@ function Footer() {
             <div className="site-footer__socials" aria-label="Social links">
               {socialLinks.map((item) => (
                 <button
-                  key={item}
+                  key={item.label}
                   type="button"
                   className="site-footer__social"
-                  aria-label={item}
-                  title={item}
+                  aria-label={item.label}
+                  title={item.label}
                 >
-                  {item.slice(0, 2)}
+                  <span className="site-footer__social-icon">{item.icon}</span>
                 </button>
               ))}
             </div>
