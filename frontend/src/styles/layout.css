@@ -112,6 +112,50 @@
   color: var(--color-text);
 }
 
+.site-account-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.8rem;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--color-text);
+  text-decoration: none;
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.site-account-link:hover,
+.site-account-link.is-active {
+  transform: translateY(-1px);
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text);
+}
+
+.site-account-link__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.site-account-link--compact {
+  width: 2.85rem;
+  min-width: 2.85rem;
+  height: 2.85rem;
+  min-height: 2.85rem;
+  padding: 0;
+  border-radius: 50%;
+  gap: 0;
+  flex-shrink: 0;
+}
+
 .site-header__actions {
   display: flex;
   align-items: center;
