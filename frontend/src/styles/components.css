@@ -171,7 +171,8 @@
 .scenic-layout__image-wrap,
 .route-card__media-wrap,
 .about-story__media-wrap,
-.about-split__media-wrap {
+.about-split__media-wrap,
+.services-feature__media-wrap {
   position: relative;
 }
 
@@ -208,7 +209,8 @@
 .route-detail-hero__image::after,
 .route-detail-map::after,
 .about-story__media::after,
-.about-split__media::after {
+.about-split__media::after,
+.services-feature__media::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -455,7 +457,8 @@
   text-decoration: none;
 }
 
-.route-card__link:hover {
+.route-card__link:hover,
+.service-card__link:hover {
   transform: translateY(-1px);
   border-color: var(--color-accent);
 }
@@ -471,7 +474,10 @@
 .route-guide-card,
 .about-pillar-card,
 .about-stat-panel,
-.about-cta__panel {
+.about-cta__panel,
+.service-card,
+.services-process__card,
+.services-cta__panel {
   position: relative;
   padding: 1.4rem;
   border: 1px solid var(--color-border);
@@ -483,7 +489,9 @@
   box-shadow: var(--shadow-soft);
 }
 
-.route-detail-panel__copy-spaced {
+.route-detail-panel__copy-spaced,
+.about-story__copy-spaced,
+.services-feature__copy-spaced {
   margin-top: 1rem;
 }
 
@@ -576,7 +584,9 @@
 
 .route-booking-card__title,
 .route-guide-card__title,
-.about-pillar-card__title {
+.about-pillar-card__title,
+.service-card__title,
+.services-process__title {
   margin: 0;
   font-family: var(--font-serif);
   font-size: clamp(1.45rem, 2vw, 2rem);
@@ -664,19 +674,22 @@
   text-decoration: none;
 }
 
-.about-section-heading {
+.about-section-heading,
+.services-section-heading {
   max-width: 720px;
   margin-bottom: 1.8rem;
 }
 
-.about-pillar-card {
+.about-pillar-card,
+.service-card {
   display: grid;
   gap: 1rem;
   min-height: 100%;
 }
 
 .about-pillar-card__icon,
-.about-stat-panel__icon {
+.about-stat-panel__icon,
+.service-card__icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -689,10 +702,24 @@
 }
 
 .about-pillar-card__copy,
-.about-value__copy {
+.about-value__copy,
+.service-card__copy,
+.services-process__copy {
   margin: 0;
   color: var(--color-text-soft);
   line-height: 1.75;
+}
+
+.service-card__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.95rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text);
+  text-decoration: none;
 }
 
 .about-values {
@@ -742,11 +769,39 @@
   color: var(--color-text);
 }
 
-.about-cta__actions {
+.about-cta__actions,
+.services-cta__actions,
+.services-feature__badges {
   display: flex;
   flex-wrap: wrap;
   gap: 0.8rem;
   margin-top: 1.25rem;
+}
+
+.services-feature__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.6rem;
+  padding: 0 0.95rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--color-text);
+}
+
+.services-process__card {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 100%;
+}
+
+.services-process__step {
+  margin: 0;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 0.9;
+  color: rgba(255, 255, 255, 0.08);
 }
 
 .accent-box {
@@ -930,7 +985,8 @@
   .route-card,
   .route-detail-layout,
   .about-story__layout,
-  .about-split__layout {
+  .about-split__layout,
+  .services-feature__layout {
     grid-template-columns: 1fr;
   }
 
@@ -940,7 +996,9 @@
   }
 
   .stats-band__grid,
-  .about-pillars__grid {
+  .about-pillars__grid,
+  .services-grid,
+  .services-process__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -970,7 +1028,8 @@
   .route-card__media,
   .route-detail-map,
   .about-story__media,
-  .about-split__media {
+  .about-split__media,
+  .services-feature__media {
     min-height: 260px;
   }
 
@@ -983,12 +1042,15 @@
   }
 
   .stats-band__grid,
-  .about-pillars__grid {
+  .about-pillars__grid,
+  .services-grid,
+  .services-process__grid {
     grid-template-columns: 1fr;
     gap: 1.2rem;
   }
 
-  .about-cta__actions {
+  .about-cta__actions,
+  .services-cta__actions {
     flex-direction: column;
     align-items: stretch;
   }
