@@ -6,6 +6,7 @@ import ServicesPage from "./pages/ServicesPage";
 import RoutesPage from "./pages/RoutesPage";
 import RouteDetailPage from "./pages/RouteDetailPage";
 import BookNowPage from "./pages/BookNowPage";
+import AccountPage from "./pages/AccountPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/routes" element={<RoutesPage />} />
         <Route path="/routes/:slug" element={<RouteDetailPage />} />
         <Route path="/book-now" element={<BookNowPage />} />
+        <Route path="/account" element={<AccountPage />} />
       </Routes>
     </AppShell>
   );

@@ -1208,3 +1208,52 @@
     align-items: stretch;
   }
 }
+
+/*Account Page*/
+
+.account-panel,
+.account-benefit-card,
+.account-cta-panel {
+  position: relative;
+  padding: 1.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-lg) + 0.1rem);
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 24%),
+    rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-soft);
+}
+
+.account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.25rem;
+}
+
+.account-benefit-card {
+  display: grid;
+  gap: 0.9rem;
+  min-height: 100%;
+}
+
+.account-benefit-card__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  line-height: 1.05;
+}
+
+.account-benefit-card__copy {
+  margin: 0;
+  color: var(--color-text-soft);
+  line-height: 1.75;
+}
+
+@media (max-width: 640px) {
+  .account-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
