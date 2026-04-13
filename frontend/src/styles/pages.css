@@ -272,7 +272,8 @@
 .routes-hero,
 .route-detail-hero,
 .about-hero,
-.services-hero {
+.services-hero,
+.booking-hero {
   position: relative;
   min-height: 440px;
   display: flex;
@@ -288,7 +289,9 @@
 .about-hero__image,
 .about-hero__overlay,
 .services-hero__image,
-.services-hero__overlay {
+.services-hero__overlay,
+.booking-hero__image,
+.booking-hero__overlay {
   position: absolute;
   inset: 0;
 }
@@ -296,7 +299,8 @@
 .routes-hero__image,
 .route-detail-hero__image,
 .about-hero__image,
-.services-hero__image {
+.services-hero__image,
+.booking-hero__image {
   background-image: var(--hero-image);
   background-size: cover;
   background-position: center center;
@@ -312,7 +316,8 @@
 .routes-hero__overlay,
 .route-detail-hero__overlay,
 .about-hero__overlay,
-.services-hero__overlay {
+.services-hero__overlay,
+.booking-hero__overlay {
   background:
     linear-gradient(180deg, rgba(9, 18, 27, 0.2) 0%, transparent 24%),
     linear-gradient(180deg, transparent 0%, rgba(7, 17, 24, 0.78) 100%);
@@ -321,7 +326,8 @@
 :root[data-theme="summer"] .routes-hero__overlay,
 :root[data-theme="summer"] .route-detail-hero__overlay,
 :root[data-theme="summer"] .about-hero__overlay,
-:root[data-theme="summer"] .services-hero__overlay {
+:root[data-theme="summer"] .services-hero__overlay,
+:root[data-theme="summer"] .booking-hero__overlay {
   background:
     linear-gradient(180deg, rgba(36, 52, 45, 0.14) 0%, transparent 24%),
     linear-gradient(180deg, transparent 0%, rgba(28, 42, 37, 0.72) 100%);
@@ -330,7 +336,8 @@
 .routes-hero__content,
 .route-detail-hero__content,
 .about-hero__content,
-.services-hero__content {
+.services-hero__content,
+.booking-hero__content {
   position: relative;
   z-index: 1;
   padding-bottom: 3rem;
@@ -339,14 +346,16 @@
 .routes-hero__title,
 .route-detail-hero__title,
 .about-hero__title,
-.services-hero__title {
+.services-hero__title,
+.booking-hero__title {
   max-width: 12ch;
 }
 
 .routes-hero__copy,
 .route-detail-hero__copy,
 .about-hero__copy,
-.services-hero__copy {
+.services-hero__copy,
+.booking-hero__copy {
   max-width: 62ch;
   color: var(--color-text-soft);
   line-height: 1.8;
@@ -354,7 +363,8 @@
 
 .about-hero__meta,
 .routes-hero__meta,
-.services-hero__meta {
+.services-hero__meta,
+.booking-hero__meta {
   display: flex;
   flex-wrap: wrap;
   gap: 0.9rem;
@@ -364,6 +374,7 @@
 .about-hero__meta-item,
 .routes-hero__meta-item,
 .services-hero__meta-item,
+.booking-hero__meta-item,
 .route-detail-hero__stat {
   min-width: 132px;
   padding: 1rem 1rem;
@@ -378,6 +389,7 @@
 .about-hero__meta-label,
 .routes-hero__meta-label,
 .services-hero__meta-label,
+.booking-hero__meta-label,
 .route-detail-hero__stat-label {
   display: block;
   font-size: 0.72rem;
@@ -389,6 +401,7 @@
 .about-hero__meta-value,
 .routes-hero__meta-value,
 .services-hero__meta-value,
+.booking-hero__meta-value,
 .route-detail-hero__stat-value {
   display: inline-flex;
   align-items: center;
@@ -443,7 +456,9 @@
 .about-split,
 .services-grid-section,
 .services-feature,
-.services-process {
+.services-process,
+.booking-shell,
+.booking-notes {
   background:
     radial-gradient(circle at top center, rgba(255, 255, 255, 0.025), transparent 18%),
     var(--section-surface-dark);
@@ -451,11 +466,12 @@
 
 .about-story__layout,
 .about-split__layout,
-.services-feature__layout {
+.services-feature__layout,
+.booking-layout {
   display: grid;
   grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
   gap: 2rem;
-  align-items: center;
+  align-items: start;
 }
 
 .about-story__media,
@@ -494,6 +510,16 @@
   background-image: var(--card-image-night);
 }
 
+.booking-layout {
+  grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+.booking-main,
+.booking-aside {
+  display: grid;
+  gap: 1.5rem;
+}
+
 .about-story__content,
 .about-split__content,
 .services-feature__content {
@@ -502,7 +528,8 @@
 
 .about-pillars__grid,
 .services-grid,
-.services-process__grid {
+.services-process__grid,
+.booking-notes__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
