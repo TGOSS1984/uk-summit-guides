@@ -9,7 +9,7 @@ import {
   FaUserGroup,
 } from "react-icons/fa6";
 import Reveal from "../components/ui/Reveal";
-import { getRoutes, getScheduledTours } from "../lib/api";
+import { createBooking, getRoutes, getScheduledTours } from "../lib/api";
 
 function BookNowPage() {
   const [routes, setRoutes] = useState([]);
@@ -19,7 +19,18 @@ function BookNowPage() {
   const [partySize, setPartySize] = useState("1");
   const [loadingRoutes, setLoadingRoutes] = useState(true);
   const [loadingTours, setLoadingTours] = useState(false);
-  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [pageError, setPageError] = useState("");
+  const [submitError, setSubmitError] = useState("");
+  const [submitSuccess, setSubmitSuccess] = useState(null);
+
+  const [formData, setFormData] = useState({
+    contactName: "",
+    contactEmail: "",
+    contactPhone: "",
+    emergencyContact: "",
+    notes: "",
+  });
 
   const notes = [
     {
@@ -30,12 +41,12 @@ function BookNowPage() {
     {
       title: "Availability protection",
       copy:
-        "Later this page will connect to live scheduled tours, guide assignment, and protected availability rules.",
+        "The booking endpoint now validates capacity server-side, so overbooking is blocked even if the frontend changes.",
     },
     {
       title: "Payments and confirmation",
       copy:
-        "Stripe checkout, booking confirmation emails, and account-linked booking management will be added in the backend phase.",
+        "Stripe checkout, booking confirmation emails, and account-linked booking management come next after this booking creation flow.",
     },
   ];
 
@@ -43,11 +54,11 @@ function BookNowPage() {
     async function loadRoutes() {
       try {
         setLoadingRoutes(true);
-        setError("");
+        setPageError("");
         const routeData = await getRoutes();
         setRoutes(routeData);
       } catch (err) {
-        setError("Unable to load routes right now.");
+        setPageError("Unable to load routes right now.");
       } finally {
         setLoadingRoutes(false);
       }
@@ -66,12 +77,12 @@ function BookNowPage() {
 
       try {
         setLoadingTours(true);
-        setError("");
+        setPageError("");
         const tourData = await getScheduledTours({ route: selectedRouteSlug });
         setScheduledTours(tourData);
         setSelectedTourId("");
       } catch (err) {
-        setError("Unable to load scheduled tours right now.");
+        setPageError("Unable to load scheduled tours right now.");
       } finally {
         setLoadingTours(false);
       }
@@ -96,6 +107,76 @@ function BookNowPage() {
     return Number(selectedTour.price_pp) * Number(partySize);
   }, [selectedTour, partySize]);
 
+  function handleFieldChange(event) {
+    const { name, value } = event.target;
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+
+    setSubmitError("");
+    setSubmitSuccess(null);
+
+    if (!selectedTour) {
+      setSubmitError("Please select a route and departure before continuing.");
+      return;
+    }
+
+    if (!formData.contactName || !formData.contactEmail || !formData.contactPhone) {
+      setSubmitError("Please complete the required contact fields.");
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+
+      const booking = await createBooking({
+        scheduled_tour_id: selectedTour.id,
+        party_size: Number(partySize),
+        contact_name: formData.contactName,
+        contact_email: formData.contactEmail,
+        contact_phone: formData.contactPhone,
+        emergency_contact: formData.emergencyContact,
+        notes: formData.notes,
+      });
+
+      setSubmitSuccess(booking);
+      setSubmitError("");
+
+      setFormData({
+        contactName: "",
+        contactEmail: "",
+        contactPhone: "",
+        emergencyContact: "",
+        notes: "",
+      });
+    } catch (err) {
+      const apiErrors = err?.data;
+
+      if (apiErrors?.party_size?.[0]) {
+        setSubmitError(apiErrors.party_size[0]);
+      } else if (apiErrors?.scheduled_tour_id?.[0]) {
+        setSubmitError(apiErrors.scheduled_tour_id[0]);
+      } else if (apiErrors?.contact_email?.[0]) {
+        setSubmitError(apiErrors.contact_email[0]);
+      } else if (apiErrors?.contact_name?.[0]) {
+        setSubmitError(apiErrors.contact_name[0]);
+      } else if (apiErrors?.contact_phone?.[0]) {
+        setSubmitError(apiErrors.contact_phone[0]);
+      } else if (apiErrors?.detail) {
+        setSubmitError(apiErrors.detail);
+      } else {
+        setSubmitError("Unable to create booking right now.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <>
       <section className="booking-hero">
@@ -109,9 +190,8 @@ function BookNowPage() {
               Start your guided mountain booking
             </h1>
             <p className="booking-hero__copy">
-              This page now pulls live route and departure data from Django. The
-              next step after this is submitting real bookings with availability
-              protection and payment flow.
+              This page now pulls live route and departure data from Django and can
+              create real booking records with server-side validation.
             </p>
           </Reveal>
 
@@ -126,8 +206,8 @@ function BookNowPage() {
                 <strong className="booking-hero__meta-value">Max 3</strong>
               </div>
               <div className="booking-hero__meta-item">
-                <span className="booking-hero__meta-label">Checkout</span>
-                <strong className="booking-hero__meta-value">Live Data Ready</strong>
+                <span className="booking-hero__meta-label">Status</span>
+                <strong className="booking-hero__meta-value">Live Booking Flow</strong>
               </div>
             </div>
           </Reveal>
@@ -138,17 +218,35 @@ function BookNowPage() {
         <div className="container booking-layout">
           <div className="booking-main">
             <Reveal variant="left">
-              <form className="booking-form-shell">
+              <form className="booking-form-shell" onSubmit={handleSubmit}>
                 <section className="booking-form-section">
                   <div className="booking-form-section__heading">
                     <p className="section-kicker">Step 1</p>
                     <h2 className="section-title">Choose your route and departure</h2>
                   </div>
 
-                  {error ? (
+                  {pageError ? (
                     <div className="booking-note-card">
                       <h3 className="booking-note-card__title">Data unavailable</h3>
-                      <p className="booking-note-card__copy">{error}</p>
+                      <p className="booking-note-card__copy">{pageError}</p>
+                    </div>
+                  ) : null}
+
+                  {submitError ? (
+                    <div className="booking-note-card">
+                      <h3 className="booking-note-card__title">Booking error</h3>
+                      <p className="booking-note-card__copy">{submitError}</p>
+                    </div>
+                  ) : null}
+
+                  {submitSuccess ? (
+                    <div className="booking-note-card booking-note-card--success">
+                      <h3 className="booking-note-card__title">Booking created</h3>
+                      <p className="booking-note-card__copy">
+                        Reference: <strong>{submitSuccess.booking_reference}</strong>
+                        <br />
+                        Total: <strong>£{submitSuccess.total_price}</strong>
+                      </p>
                     </div>
                   ) : null}
 
@@ -162,7 +260,7 @@ function BookNowPage() {
                         className="booking-field__control"
                         value={selectedRouteSlug}
                         onChange={(event) => setSelectedRouteSlug(event.target.value)}
-                        disabled={loadingRoutes}
+                        disabled={loadingRoutes || submitting}
                       >
                         <option value="">
                           {loadingRoutes ? "Loading routes..." : "Select a route"}
@@ -184,7 +282,7 @@ function BookNowPage() {
                         className="booking-field__control"
                         value={selectedTourId}
                         onChange={(event) => setSelectedTourId(event.target.value)}
-                        disabled={!selectedRouteSlug || loadingTours}
+                        disabled={!selectedRouteSlug || loadingTours || submitting}
                       >
                         <option value="">
                           {!selectedRouteSlug
@@ -212,6 +310,7 @@ function BookNowPage() {
                         className="booking-field__control"
                         value={partySize}
                         onChange={(event) => setPartySize(event.target.value)}
+                        disabled={submitting}
                       >
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -248,9 +347,13 @@ function BookNowPage() {
                       </label>
                       <input
                         id="full-name"
+                        name="contactName"
                         className="booking-field__control"
                         type="text"
                         placeholder="Your full name"
+                        value={formData.contactName}
+                        onChange={handleFieldChange}
+                        disabled={submitting}
                       />
                     </div>
 
@@ -260,9 +363,13 @@ function BookNowPage() {
                       </label>
                       <input
                         id="email"
+                        name="contactEmail"
                         className="booking-field__control"
                         type="email"
                         placeholder="you@example.com"
+                        value={formData.contactEmail}
+                        onChange={handleFieldChange}
+                        disabled={submitting}
                       />
                     </div>
 
@@ -272,9 +379,13 @@ function BookNowPage() {
                       </label>
                       <input
                         id="phone"
+                        name="contactPhone"
                         className="booking-field__control"
                         type="tel"
                         placeholder="Your contact number"
+                        value={formData.contactPhone}
+                        onChange={handleFieldChange}
+                        disabled={submitting}
                       />
                     </div>
 
@@ -284,9 +395,13 @@ function BookNowPage() {
                       </label>
                       <input
                         id="emergency-contact"
+                        name="emergencyContact"
                         className="booking-field__control"
                         type="text"
                         placeholder="Emergency contact name"
+                        value={formData.emergencyContact}
+                        onChange={handleFieldChange}
+                        disabled={submitting}
                       />
                     </div>
                   </div>
@@ -304,22 +419,26 @@ function BookNowPage() {
                     </label>
                     <textarea
                       id="notes"
+                      name="notes"
                       className="booking-field__control booking-field__control--textarea"
                       placeholder="Add any route preferences, questions, or extra detail"
+                      value={formData.notes}
+                      onChange={handleFieldChange}
+                      disabled={submitting}
                     />
                   </div>
 
                   <div className="booking-form-actions">
                     <button
-                      type="button"
+                      type="submit"
                       className="route-card__link route-card__link--primary"
-                      disabled={!selectedRoute || !selectedTour}
+                      disabled={!selectedRoute || !selectedTour || submitting}
                     >
-                      Continue to checkout
+                      {submitting ? "Creating booking..." : "Create booking"}
                       <FaArrowRight />
                     </button>
 
-                    <button type="button" className="route-card__link">
+                    <button type="button" className="route-card__link" disabled={submitting}>
                       Save booking placeholder
                     </button>
                   </div>
@@ -394,9 +513,7 @@ function BookNowPage() {
                       Spaces remaining
                     </span>
                     <strong>
-                      {selectedTour
-                        ? selectedTour.spaces_remaining
-                        : "—"}
+                      {selectedTour ? selectedTour.spaces_remaining : "—"}
                     </strong>
                   </div>
                 </div>
@@ -409,8 +526,7 @@ function BookNowPage() {
                 </div>
 
                 <p className="booking-summary-card__note">
-                  This summary is now driven by live route and scheduled tour data.
-                  Next we can submit real bookings into Django.
+                  This booking now posts to Django and creates a real booking record.
                 </p>
               </div>
             </Reveal>

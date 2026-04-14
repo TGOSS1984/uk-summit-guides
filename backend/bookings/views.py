@@ -1,7 +1,12 @@
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
 
 from .models import ScheduledTour
-from .serializers import ScheduledTourSerializer
+from .serializers import (
+    BookingCreateSerializer,
+    BookingDetailSerializer,
+    ScheduledTourSerializer,
+)
 
 
 class ScheduledTourListAPIView(generics.ListAPIView):
@@ -28,3 +33,20 @@ class ScheduledTourListAPIView(generics.ListAPIView):
             queryset = queryset.filter(date=date_value)
 
         return queryset
+
+
+class BookingCreateAPIView(generics.CreateAPIView):
+    serializer_class = BookingCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        booking = serializer.save()
+
+        output_serializer = BookingDetailSerializer(booking)
+        headers = self.get_success_headers(output_serializer.data)
+        return Response(
+            output_serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers,
+        )

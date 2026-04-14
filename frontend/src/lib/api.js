@@ -10,6 +10,27 @@ async function fetchJson(endpoint) {
   return response.json();
 }
 
+async function sendJson(endpoint, options = {}) {
+  const response = await fetch(`${API_BASE}${endpoint}`, {
+    headers: {
+      "Content-Type": "application/json",
+      ...(options.headers || {}),
+    },
+    ...options,
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const error = new Error("API request failed");
+    error.data = data;
+    error.status = response.status;
+    throw error;
+  }
+
+  return data;
+}
+
 export async function getRegions() {
   return fetchJson("/regions/");
 }
@@ -42,4 +63,11 @@ export async function getScheduledTours(params = {}) {
 
   const queryString = searchParams.toString();
   return fetchJson(`/scheduled-tours/${queryString ? `?${queryString}` : ""}`);
+}
+
+export async function createBooking(payload) {
+  return sendJson("/bookings/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
