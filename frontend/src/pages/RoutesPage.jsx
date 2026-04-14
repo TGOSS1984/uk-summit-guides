@@ -1,95 +1,92 @@
-import { FaChevronLeft, FaChevronRight, FaMapLocationDot } from "react-icons/fa6";
+import { useEffect, useMemo, useState } from "react";
+import { FaMapLocationDot } from "react-icons/fa6";
 import RouteCard from "../components/ui/RouteCard";
 import Reveal from "../components/ui/Reveal";
-
-const mockRoutes = [
-  {
-    id: 1,
-    name: "Helvellyn via Striding Edge",
-    region: "Lake District",
-    season: "Winter Classic",
-    difficulty: "Advanced",
-    distance: "11 km",
-    duration: "7 hrs",
-    height: "950 m",
-    elevation: "860 m",
-    summary:
-      "A premium ridge day with steep exposure, winter movement, and one of the UK's most iconic summit approaches.",
-    imageClass: "route-card__media--ridge",
-  },
-  {
-    id: 2,
-    name: "Blencathra via Sharp Edge",
-    region: "Lake District",
-    season: "Alpine Feel",
-    difficulty: "Advanced",
-    distance: "9 km",
-    duration: "6 hrs",
-    height: "868 m",
-    elevation: "760 m",
-    summary:
-      "A sharper, more dramatic line with exposed movement and a strong mountain character suited to confident clients.",
-    imageClass: "route-card__media--sharp",
-  },
-  {
-    id: 3,
-    name: "Tryfan North Ridge",
-    region: "Eryri / Snowdonia",
-    season: "Scramble Day",
-    difficulty: "Advanced",
-    distance: "8 km",
-    duration: "6 hrs",
-    height: "918 m",
-    elevation: "790 m",
-    summary:
-      "A classic scrambling mountain with hands-on terrain, route choice, and a strong sense of movement through the landscape.",
-    imageClass: "route-card__media--tryfan",
-  },
-  {
-    id: 4,
-    name: "Pen y Fan Horseshoe",
-    region: "Bannau Brycheiniog",
-    season: "Guided Day",
-    difficulty: "Moderate",
-    distance: "13 km",
-    duration: "5.5 hrs",
-    height: "886 m",
-    elevation: "720 m",
-    summary:
-      "A broader mountain day with flowing ridges, open views, and a balanced challenge ideal for guided progression.",
-    imageClass: "route-card__media--fan",
-  },
-  {
-    id: 5,
-    name: "Scafell Pike Corridor Route",
-    region: "Lake District",
-    season: "Summit Day",
-    difficulty: "Moderate",
-    distance: "14 km",
-    duration: "6.5 hrs",
-    height: "978 m",
-    elevation: "840 m",
-    summary:
-      "A flagship summit experience with classic lines, strong mountain atmosphere, and adaptable guiding options.",
-    imageClass: "route-card__media--scafell",
-  },
-  {
-    id: 6,
-    name: "Crib Goch Traverse",
-    region: "Eryri / Snowdonia",
-    season: "High Exposure",
-    difficulty: "Advanced",
-    distance: "10 km",
-    duration: "7 hrs",
-    height: "923 m",
-    elevation: "850 m",
-    summary:
-      "A high-commitment day with a narrow ridge and premium guiding appeal for experienced clients seeking a memorable line.",
-    imageClass: "route-card__media--crib",
-  },
-];
+import { getRegions, getRoutes } from "../lib/api";
 
 function RoutesPage() {
+  const [regions, setRegions] = useState([]);
+  const [routes, setRoutes] = useState([]);
+  const [filters, setFilters] = useState({
+    region: "all",
+    difficulty: "all",
+    search: "",
+  });
+  const [sortBy, setSortBy] = useState("featured");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadInitialData() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const [regionsData, routesData] = await Promise.all([
+          getRegions(),
+          getRoutes(),
+        ]);
+
+        setRegions(regionsData);
+        setRoutes(routesData);
+      } catch (err) {
+        setError("Unable to load route data right now.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadInitialData();
+  }, []);
+
+  useEffect(() => {
+    async function loadFilteredRoutes() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const routesData = await getRoutes({
+          region: filters.region,
+          difficulty: filters.difficulty,
+        });
+
+        setRoutes(routesData);
+      } catch (err) {
+        setError("Unable to update route results right now.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadFilteredRoutes();
+  }, [filters.region, filters.difficulty]);
+
+  const displayedRoutes = useMemo(() => {
+    let nextRoutes = [...routes];
+
+    if (filters.search.trim()) {
+      const searchValue = filters.search.toLowerCase();
+      nextRoutes = nextRoutes.filter((route) =>
+        route.name.toLowerCase().includes(searchValue)
+      );
+    }
+
+    if (sortBy === "distance") {
+      nextRoutes.sort((a, b) => Number(a.distance_km) - Number(b.distance_km));
+    } else if (sortBy === "duration") {
+      nextRoutes.sort((a, b) => Number(a.duration_hours) - Number(b.duration_hours));
+    } else if (sortBy === "difficulty") {
+      const order = { moderate: 1, hard: 2, advanced: 3 };
+      nextRoutes.sort(
+        (a, b) => (order[a.difficulty] || 0) - (order[b.difficulty] || 0)
+      );
+    } else {
+      nextRoutes.sort((a, b) => Number(b.is_featured) - Number(a.is_featured));
+    }
+
+    return nextRoutes;
+  }, [routes, filters.search, sortBy]);
+
   return (
     <>
       <section className="routes-hero">
@@ -104,8 +101,8 @@ function RoutesPage() {
             </h1>
             <p className="section-copy routes-hero__copy">
               Discover regional mountain days shaped around terrain, season,
-              difficulty, and guiding quality. This page will later connect to
-              live pagination, route data, and Leaflet / OS mapping.
+              difficulty, and guiding quality. This page is now wired to your
+              Django route and region data.
             </p>
           </Reveal>
 
@@ -113,11 +110,11 @@ function RoutesPage() {
             <div className="routes-hero__meta">
               <div className="routes-hero__meta-item">
                 <span className="routes-hero__meta-label">Available Routes</span>
-                <strong className="routes-hero__meta-value">28</strong>
+                <strong className="routes-hero__meta-value">{displayedRoutes.length}</strong>
               </div>
               <div className="routes-hero__meta-item">
                 <span className="routes-hero__meta-label">Regions</span>
-                <strong className="routes-hero__meta-value">5</strong>
+                <strong className="routes-hero__meta-value">{regions.length}</strong>
               </div>
               <div className="routes-hero__meta-item">
                 <span className="routes-hero__meta-label">Map Ready</span>
@@ -138,12 +135,23 @@ function RoutesPage() {
                 <label className="routes-filter-bar__label" htmlFor="region-filter">
                   Region
                 </label>
-                <select id="region-filter" className="routes-filter-bar__control" defaultValue="all">
+                <select
+                  id="region-filter"
+                  className="routes-filter-bar__control"
+                  value={filters.region}
+                  onChange={(event) =>
+                    setFilters((current) => ({
+                      ...current,
+                      region: event.target.value,
+                    }))
+                  }
+                >
                   <option value="all">All Regions</option>
-                  <option value="lake-district">Lake District</option>
-                  <option value="snowdonia">Eryri / Snowdonia</option>
-                  <option value="brecon">Bannau Brycheiniog</option>
-                  <option value="scotland">Scotland</option>
+                  {regions.map((region) => (
+                    <option key={region.id} value={region.slug}>
+                      {region.name}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -151,7 +159,17 @@ function RoutesPage() {
                 <label className="routes-filter-bar__label" htmlFor="difficulty-filter">
                   Difficulty
                 </label>
-                <select id="difficulty-filter" className="routes-filter-bar__control" defaultValue="all">
+                <select
+                  id="difficulty-filter"
+                  className="routes-filter-bar__control"
+                  value={filters.difficulty}
+                  onChange={(event) =>
+                    setFilters((current) => ({
+                      ...current,
+                      difficulty: event.target.value,
+                    }))
+                  }
+                >
                   <option value="all">All Levels</option>
                   <option value="moderate">Moderate</option>
                   <option value="hard">Hard</option>
@@ -161,13 +179,15 @@ function RoutesPage() {
 
               <div className="routes-filter-bar__group">
                 <label className="routes-filter-bar__label" htmlFor="season-filter">
-                  Season
+                  Data Source
                 </label>
-                <select id="season-filter" className="routes-filter-bar__control" defaultValue="all">
-                  <option value="all">All Seasons</option>
-                  <option value="winter">Winter</option>
-                  <option value="summer">Summer</option>
-                </select>
+                <input
+                  id="season-filter"
+                  className="routes-filter-bar__control"
+                  type="text"
+                  value="Live Django API"
+                  readOnly
+                />
               </div>
 
               <div className="routes-filter-bar__group routes-filter-bar__group--search">
@@ -179,6 +199,13 @@ function RoutesPage() {
                   className="routes-filter-bar__control"
                   type="text"
                   placeholder="Search route name"
+                  value={filters.search}
+                  onChange={(event) =>
+                    setFilters((current) => ({
+                      ...current,
+                      search: event.target.value,
+                    }))
+                  }
                 />
               </div>
             </div>
@@ -186,13 +213,26 @@ function RoutesPage() {
 
           <Reveal delay={60} variant="up">
             <div className="routes-toolbar">
-              <p className="routes-toolbar__count">Showing 6 of 28 routes</p>
+              <p className="routes-toolbar__count">
+                {loading
+                  ? "Loading routes..."
+                  : error
+                  ? error
+                  : `Showing ${displayedRoutes.length} route${
+                      displayedRoutes.length === 1 ? "" : "s"
+                    }`}
+              </p>
 
               <div className="routes-toolbar__sort">
                 <label className="routes-filter-bar__label" htmlFor="sort-routes">
                   Sort by
                 </label>
-                <select id="sort-routes" className="routes-filter-bar__control routes-filter-bar__control--small" defaultValue="featured">
+                <select
+                  id="sort-routes"
+                  className="routes-filter-bar__control routes-filter-bar__control--small"
+                  value={sortBy}
+                  onChange={(event) => setSortBy(event.target.value)}
+                >
                   <option value="featured">Featured</option>
                   <option value="difficulty">Difficulty</option>
                   <option value="distance">Distance</option>
@@ -202,41 +242,28 @@ function RoutesPage() {
             </div>
           </Reveal>
 
-          <div className="routes-grid">
-            {mockRoutes.map((route, index) => (
-              <Reveal
-                key={route.id}
-                delay={index * 60}
-                variant={index % 2 === 0 ? "left" : "right"}
-              >
-                <RouteCard route={route} />
-              </Reveal>
-            ))}
-          </div>
-
-          <Reveal delay={120} variant="up">
-            <nav className="pagination-shell" aria-label="Routes pagination">
-              <button type="button" className="pagination-shell__button">
-                <FaChevronLeft />
-                Previous
-              </button>
-
-              <div className="pagination-shell__pages">
-                <button type="button" className="pagination-shell__page is-active">
-                  1
-                </button>
-                <button type="button" className="pagination-shell__page">2</button>
-                <button type="button" className="pagination-shell__page">3</button>
-                <span className="pagination-shell__dots">…</span>
-                <button type="button" className="pagination-shell__page">5</button>
+          {!loading && !error && displayedRoutes.length === 0 ? (
+            <Reveal delay={100} variant="up">
+              <div className="booking-note-card">
+                <h3 className="booking-note-card__title">No routes found</h3>
+                <p className="booking-note-card__copy">
+                  Try changing the filters or add more route data in Django admin.
+                </p>
               </div>
-
-              <button type="button" className="pagination-shell__button">
-                Next
-                <FaChevronRight />
-              </button>
-            </nav>
-          </Reveal>
+            </Reveal>
+          ) : (
+            <div className="routes-grid">
+              {displayedRoutes.map((route, index) => (
+                <Reveal
+                  key={route.id}
+                  delay={index * 60}
+                  variant={index % 2 === 0 ? "left" : "right"}
+                >
+                  <RouteCard route={route} />
+                </Reveal>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>

@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import {
   FaArrowRight,
+  FaCalendarDays,
   FaLocationDot,
   FaMapLocationDot,
   FaMountain,
@@ -9,74 +11,84 @@ import { FiClock } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 import RouteCard from "../components/ui/RouteCard";
+import { getRouteDetail, getRoutes, getScheduledTours } from "../lib/api";
 
-const relatedRoutes = [
-  {
-    id: 2,
-    slug: "blencathra-via-sharp-edge",
-    name: "Blencathra via Sharp Edge",
-    region: "Lake District",
-    season: "Alpine Feel",
-    difficulty: "Advanced",
-    distance: "9 km",
-    duration: "6 hrs",
-    height: "868 m",
-    elevation: "760 m",
-    summary:
-      "A sharper, more dramatic line with exposed movement and a strong mountain character suited to confident clients.",
-    imageClass: "route-card__media--sharp",
-  },
-  {
-    id: 5,
-    slug: "scafell-pike-corridor-route",
-    name: "Scafell Pike Corridor Route",
-    region: "Lake District",
-    season: "Summit Day",
-    difficulty: "Moderate",
-    distance: "14 km",
-    duration: "6.5 hrs",
-    height: "978 m",
-    elevation: "840 m",
-    summary:
-      "A flagship summit experience with classic lines, strong mountain atmosphere, and adaptable guiding options.",
-    imageClass: "route-card__media--scafell",
-  },
-];
+function formatDifficulty(value) {
+  if (!value) return "Route";
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}
 
 function RouteDetailPage() {
   const { slug } = useParams();
 
-  const route = {
-    slug: slug || "helvellyn-via-striding-edge",
-    name: "Helvellyn via Striding Edge",
-    region: "Lake District",
-    season: "Winter Classic",
-    difficulty: "Advanced",
-    distance: "11 km",
-    duration: "7 hrs",
-    height: "950 m",
-    elevation: "860 m",
-    groupSize: "Max 3",
-    guide: "Lead Winter Mountain Guide",
-    summary:
-      "A premium ridge day with steep exposure, winter movement, and one of the UK's most iconic summit approaches.",
-    overview:
-      "This guided day is designed for clients who want a classic mountain line with a strong sense of atmosphere, movement, and exposure. The route combines a premium summit objective with terrain that feels memorable from start to finish.",
-    details:
-      "In winter conditions, Helvellyn via Striding Edge offers a more serious mountain experience, requiring judgement, pacing, and precise guiding. In calmer conditions it becomes a visually striking guided traverse with one of the best-known approaches in the UK.",
-    highlights: [
-      "Iconic ridge line with strong mountain character",
-      "Premium guided day suited to experienced clients",
-      "Excellent route for winter movement and exposure management",
-      "Route detail, mapping, and availability will later connect to live backend data",
-    ],
-    imageClass: "route-detail-hero__image--ridge",
-  };
+  const [route, setRoute] = useState(null);
+  const [scheduledTours, setScheduledTours] = useState([]);
+  const [relatedRoutes, setRelatedRoutes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadRouteData() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const routeData = await getRouteDetail(slug);
+        setRoute(routeData);
+
+        const [toursData, routesData] = await Promise.all([
+          getScheduledTours({ route: slug }),
+          getRoutes({ region: routeData.region.slug }),
+        ]);
+
+        setScheduledTours(toursData);
+        setRelatedRoutes(
+          routesData.filter((item) => item.slug !== routeData.slug).slice(0, 2)
+        );
+      } catch (err) {
+        setError("Unable to load this route right now.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadRouteData();
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <section className="section route-detail-shell">
+        <div className="container">
+          <div className="booking-note-card">
+            <h2 className="booking-note-card__title">Loading route…</h2>
+            <p className="booking-note-card__copy">
+              Pulling live route data from the Django API.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error || !route) {
+    return (
+      <section className="section route-detail-shell">
+        <div className="container">
+          <div className="booking-note-card">
+            <h2 className="booking-note-card__title">Route unavailable</h2>
+            <p className="booking-note-card__copy">
+              {error || "This route could not be found."}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <>
       <section className="route-detail-hero">
-        <div className={`route-detail-hero__image ${route.imageClass}`} />
+        <div className="route-detail-hero__image route-detail-hero__image--ridge" />
         <div className="route-detail-hero__overlay" />
 
         <div className="container route-detail-hero__content">
@@ -89,7 +101,7 @@ function RouteDetailPage() {
               <span>{route.name}</span>
             </div>
 
-            <p className="section-kicker">{route.region}</p>
+            <p className="section-kicker">{route.region.name}</p>
             <h1 className="page-title route-detail-hero__title">{route.name}</h1>
             <p className="route-detail-hero__copy">{route.summary}</p>
           </Reveal>
@@ -98,11 +110,13 @@ function RouteDetailPage() {
             <div className="route-detail-hero__stats">
               <div className="route-detail-hero__stat">
                 <span className="route-detail-hero__stat-icon">
-                  <FaRoute />
+                  <FaMountain />
                 </span>
                 <div>
-                  <span className="route-detail-hero__stat-label">Distance</span>
-                  <strong className="route-detail-hero__stat-value">{route.distance}</strong>
+                  <span className="route-detail-hero__stat-label">Difficulty</span>
+                  <strong className="route-detail-hero__stat-value">
+                    {formatDifficulty(route.difficulty)}
+                  </strong>
                 </div>
               </div>
 
@@ -112,7 +126,9 @@ function RouteDetailPage() {
                 </span>
                 <div>
                   <span className="route-detail-hero__stat-label">Duration</span>
-                  <strong className="route-detail-hero__stat-value">{route.duration}</strong>
+                  <strong className="route-detail-hero__stat-value">
+                    {route.duration_hours} hrs
+                  </strong>
                 </div>
               </div>
 
@@ -122,7 +138,9 @@ function RouteDetailPage() {
                 </span>
                 <div>
                   <span className="route-detail-hero__stat-label">Height</span>
-                  <strong className="route-detail-hero__stat-value">{route.height}</strong>
+                  <strong className="route-detail-hero__stat-value">
+                    {route.mountain_height_m} m
+                  </strong>
                 </div>
               </div>
 
@@ -132,7 +150,9 @@ function RouteDetailPage() {
                 </span>
                 <div>
                   <span className="route-detail-hero__stat-label">Elevation</span>
-                  <strong className="route-detail-hero__stat-value">{route.elevation}</strong>
+                  <strong className="route-detail-hero__stat-value">
+                    {route.elevation_gain_m} m
+                  </strong>
                 </div>
               </div>
             </div>
@@ -150,11 +170,8 @@ function RouteDetailPage() {
                   aria-hidden="true"
                 />
                 <p className="section-kicker">Overview</p>
-                <h2 className="section-title">A flagship guided ridge day</h2>
-                <p className="section-copy">{route.overview}</p>
-                <p className="section-copy route-detail-panel__copy-spaced">
-                  {route.details}
-                </p>
+                <h2 className="section-title">Live route description</h2>
+                <p className="section-copy">{route.description}</p>
               </article>
             </Reveal>
 
@@ -176,8 +193,9 @@ function RouteDetailPage() {
                   <div className="route-detail-map__overlay">
                     <span className="route-detail-map__tag">Interactive map area</span>
                     <p className="route-detail-map__text">
-                      This panel will later hold the live Leaflet map, route line,
-                      OS map link, and supporting route metadata from the backend.
+                      {route.map_embed
+                        ? "This route already has a stored map URL ready for later frontend integration."
+                        : "Map wiring comes next. This route currently has no stored map URL in the backend."}
                     </p>
                   </div>
                 </div>
@@ -186,17 +204,30 @@ function RouteDetailPage() {
 
             <Reveal delay={120} variant="left">
               <article className="route-detail-panel">
-                <p className="section-kicker">Highlights</p>
-                <h2 className="section-title">What to expect on this route</h2>
+                <p className="section-kicker">Scheduled Tours</p>
+                <h2 className="section-title">Upcoming bookable departures</h2>
 
-                <div className="route-detail-highlights">
-                  {route.highlights.map((item) => (
-                    <div key={item} className="route-detail-highlight">
-                      <span className="route-detail-highlight__marker" aria-hidden="true" />
-                      <p className="route-detail-highlight__text">{item}</p>
-                    </div>
-                  ))}
-                </div>
+                {scheduledTours.length === 0 ? (
+                  <div className="route-detail-highlight">
+                    <span className="route-detail-highlight__marker" aria-hidden="true" />
+                    <p className="route-detail-highlight__text">
+                      No open scheduled tours yet for this route. Add some in Django
+                      admin to see live departures here.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="route-detail-highlights">
+                    {scheduledTours.map((tour) => (
+                      <div key={tour.id} className="route-detail-highlight">
+                        <span className="route-detail-highlight__marker" aria-hidden="true" />
+                        <p className="route-detail-highlight__text">
+                          <strong>{tour.date}</strong> at {tour.start_time} — {tour.season} —{" "}
+                          {tour.spaces_remaining} spaces remaining — £{tour.price_pp} pp
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </article>
             </Reveal>
           </div>
@@ -210,26 +241,26 @@ function RouteDetailPage() {
                 <div className="route-booking-card__meta">
                   <div className="route-booking-card__meta-row">
                     <span>Difficulty</span>
-                    <strong>{route.difficulty}</strong>
+                    <strong>{formatDifficulty(route.difficulty)}</strong>
                   </div>
                   <div className="route-booking-card__meta-row">
-                    <span>Guide Type</span>
-                    <strong>{route.guide}</strong>
+                    <span>Region</span>
+                    <strong>{route.region.name}</strong>
                   </div>
                   <div className="route-booking-card__meta-row">
                     <span>Group Size</span>
-                    <strong>{route.groupSize}</strong>
+                    <strong>Max 3</strong>
                   </div>
                   <div className="route-booking-card__meta-row">
-                    <span>Season</span>
-                    <strong>{route.season}</strong>
+                    <span>Available Tours</span>
+                    <strong>{scheduledTours.length}</strong>
                   </div>
                 </div>
 
-                <button type="button" className="route-booking-card__button">
+                <Link to="/book-now" className="route-booking-card__button">
                   Book This Route
                   <FaArrowRight />
-                </button>
+                </Link>
 
                 <button type="button" className="route-booking-card__secondary">
                   View Dates Placeholder
@@ -239,12 +270,12 @@ function RouteDetailPage() {
 
             <Reveal delay={70} variant="right">
               <div className="route-guide-card">
-                <p className="route-guide-card__eyebrow">Guide</p>
+                <p className="route-guide-card__eyebrow">Route Data</p>
                 <div className="route-guide-card__avatar" />
-                <h3 className="route-guide-card__title">Lead Winter Mountain Guide</h3>
+                <h3 className="route-guide-card__title">{route.region.name}</h3>
                 <p className="route-guide-card__copy">
-                  This panel will later show the assigned guide profile, experience,
-                  seasonal qualifications, and availability.
+                  This route is now loading live from Django. Next we can wire guide
+                  assignment, scheduled tour detail, and booking availability rules.
                 </p>
 
                 <div className="route-guide-card__meta">
@@ -253,8 +284,8 @@ function RouteDetailPage() {
                     <span>Small guided groups</span>
                   </div>
                   <div className="route-guide-card__meta-item">
-                    <FaMountain />
-                    <span>Technical terrain support</span>
+                    <FaCalendarDays />
+                    <span>Live departure data ready</span>
                   </div>
                 </div>
               </div>
