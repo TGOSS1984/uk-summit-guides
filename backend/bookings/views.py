@@ -1,5 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Booking, ScheduledTour
 from .serializers import (
@@ -65,3 +66,36 @@ class BookingListAPIView(generics.ListAPIView):
             )
             .order_by("-created_at")
         )
+
+
+class BookingCancelAPIView(APIView):
+    def patch(self, request, pk):
+        try:
+            booking = Booking.objects.select_related(
+                "scheduled_tour",
+                "scheduled_tour__route",
+                "scheduled_tour__route__region",
+            ).get(pk=pk)
+        except Booking.DoesNotExist:
+            return Response(
+                {"detail": "Booking not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        if booking.status == Booking.Status.CANCELLED:
+            return Response(
+                {"detail": "This booking has already been cancelled."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if booking.status not in [Booking.Status.PENDING, Booking.Status.CONFIRMED]:
+            return Response(
+                {"detail": "This booking cannot be cancelled."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        booking.status = Booking.Status.CANCELLED
+        booking.save(update_fields=["status"])
+
+        serializer = BookingDetailSerializer(booking)
+        return Response(serializer.data, status=status.HTTP_200_OK)

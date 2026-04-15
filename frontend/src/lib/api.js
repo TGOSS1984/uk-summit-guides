@@ -75,3 +75,10 @@ export async function createBooking(payload) {
 export async function getMyBookings() {
   return fetchJson("/my-bookings/");
 }
+
+export async function cancelBooking(bookingId) {
+  return sendJson(`/my-bookings/${bookingId}/cancel/`, {
+    method: "PATCH",
+    body: JSON.stringify({}),
+  });
+}

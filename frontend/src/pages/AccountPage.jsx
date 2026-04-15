@@ -8,7 +8,7 @@ import {
 } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
-import { getMyBookings } from "../lib/api";
+import { cancelBooking, getMyBookings } from "../lib/api";
 
 function formatStatus(status) {
   if (!status) return "Unknown";
@@ -19,23 +19,43 @@ function AccountPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionError, setActionError] = useState("");
+  const [actionSuccess, setActionSuccess] = useState("");
+  const [cancellingId, setCancellingId] = useState(null);
+
+  async function loadBookings() {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await getMyBookings();
+      setBookings(data);
+    } catch (err) {
+      setError("Unable to load bookings right now.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function loadBookings() {
-      try {
-        setLoading(true);
-        setError("");
-        const data = await getMyBookings();
-        setBookings(data);
-      } catch (err) {
-        setError("Unable to load bookings right now.");
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadBookings();
   }, []);
+
+  async function handleCancelBooking(bookingId) {
+    setActionError("");
+    setActionSuccess("");
+
+    try {
+      setCancellingId(bookingId);
+      await cancelBooking(bookingId);
+      setActionSuccess("Booking cancelled successfully.");
+      await loadBookings();
+    } catch (err) {
+      const apiError = err?.data?.detail;
+      setActionError(apiError || "Unable to cancel booking right now.");
+    } finally {
+      setCancellingId(null);
+    }
+  }
 
   return (
     <>
@@ -50,9 +70,8 @@ function AccountPage() {
               View created bookings and prepare for future account features
             </h1>
             <p className="account-hero__copy">
-              This page is now connected to your Django booking data. Later it can
-              be restricted to authenticated users and expanded with cancellation,
-              amendment, and payment history.
+              This page is now connected to your Django booking data. It can also
+              cancel eligible bookings, giving you a proper booking lifecycle.
             </p>
           </Reveal>
         </div>
@@ -66,6 +85,24 @@ function AccountPage() {
               <h2 className="section-title">Live bookings from the platform</h2>
             </div>
           </Reveal>
+
+          {actionError ? (
+            <Reveal variant="up">
+              <div className="account-panel">
+                <h3 className="account-benefit-card__title">Action error</h3>
+                <p className="account-benefit-card__copy">{actionError}</p>
+              </div>
+            </Reveal>
+          ) : null}
+
+          {actionSuccess ? (
+            <Reveal variant="up">
+              <div className="account-panel account-panel--success">
+                <h3 className="account-benefit-card__title">Success</h3>
+                <p className="account-benefit-card__copy">{actionSuccess}</p>
+              </div>
+            </Reveal>
+          ) : null}
 
           {loading ? (
             <Reveal variant="up">
@@ -172,6 +209,17 @@ function AccountPage() {
                       <span className="account-booking-card__created">
                         Created: {new Date(booking.created_at).toLocaleString()}
                       </span>
+
+                      {["pending", "confirmed"].includes(booking.status) ? (
+                        <button
+                          type="button"
+                          className="account-booking-card__cancel"
+                          onClick={() => handleCancelBooking(booking.id)}
+                          disabled={cancellingId === booking.id}
+                        >
+                          {cancellingId === booking.id ? "Cancelling..." : "Cancel booking"}
+                        </button>
+                      ) : null}
                     </div>
                   </article>
                 </Reveal>
@@ -202,9 +250,9 @@ function AccountPage() {
 
             <Reveal delay={70} variant="up">
               <article className="account-benefit-card">
-                <h3 className="account-benefit-card__title">Cancel and amend flows</h3>
+                <h3 className="account-benefit-card__title">Amendment flows</h3>
                 <p className="account-benefit-card__copy">
-                  After auth, the natural next step is controlled cancellation and amendment endpoints.
+                  After cancellation, the next lifecycle feature is controlled amendment of dates or party size.
                 </p>
               </article>
             </Reveal>

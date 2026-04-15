@@ -1389,3 +1389,45 @@
     align-items: flex-start;
   }
 }
+
+.account-panel--success {
+  border-color: var(--color-accent);
+}
+
+.account-booking-card__footer {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.account-booking-card__cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0 0.95rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(196, 61, 61, 0.7);
+  background: rgba(196, 61, 61, 0.12);
+  color: var(--color-text);
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.account-booking-card__cancel:hover:enabled {
+  transform: translateY(-1px);
+  border-color: rgba(196, 61, 61, 0.95);
+  background: rgba(196, 61, 61, 0.18);
+}
+
+.account-booking-card__cancel:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
