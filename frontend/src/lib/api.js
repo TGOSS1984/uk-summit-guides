@@ -71,3 +71,7 @@ export async function createBooking(payload) {
     body: JSON.stringify(payload),
   });
 }
+
+export async function getMyBookings() {
+  return fetchJson("/my-bookings/");
+}

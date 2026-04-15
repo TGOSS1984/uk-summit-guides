@@ -17,6 +17,7 @@ def api_root(request):
                 "routes": "/api/routes/",
                 "scheduled_tours": "/api/scheduled-tours/",
                 "bookings": "/api/bookings/",
+                "my_bookings": "/api/my-bookings/",
             },
         }
     )

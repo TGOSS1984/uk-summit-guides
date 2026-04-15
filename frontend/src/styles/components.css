@@ -1261,3 +1261,131 @@
     align-items: stretch;
   }
 }
+
+.account-bookings-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+.account-booking-card {
+  position: relative;
+  padding: 1.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-lg) + 0.1rem);
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 24%),
+    rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-soft);
+}
+
+.account-booking-card__top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.account-booking-card__eyebrow {
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
+  color: var(--color-accent);
+}
+
+.account-booking-card__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  line-height: 1.05;
+}
+
+.account-booking-card__status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.1rem;
+  padding: 0 0.8rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  white-space: nowrap;
+}
+
+.account-booking-card__status--pending {
+  background: rgba(160, 120, 61, 0.16);
+}
+
+.account-booking-card__status--confirmed {
+  background: rgba(121, 151, 138, 0.18);
+}
+
+.account-booking-card__status--cancelled {
+  background: rgba(196, 61, 61, 0.16);
+}
+
+.account-booking-card__status--amended {
+  background: rgba(90, 120, 170, 0.18);
+}
+
+.account-booking-card__route {
+  margin-top: 1rem;
+}
+
+.account-booking-card__route-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.account-booking-card__route-region {
+  margin: 0.25rem 0 0;
+  color: var(--color-text-soft);
+}
+
+.account-booking-card__meta {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.account-booking-card__meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-soft);
+}
+
+.account-booking-card__meta-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.account-booking-card__meta-row strong {
+  color: var(--color-text);
+}
+
+.account-booking-card__footer {
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.account-booking-card__created {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .account-booking-card__meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

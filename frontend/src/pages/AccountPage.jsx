@@ -1,8 +1,42 @@
-import { FaArrowRight, FaEnvelope, FaLock, FaUserPlus } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import {
+  FaArrowRight,
+  FaCalendarDays,
+  FaLocationDot,
+  FaReceipt,
+  FaUserGroup,
+} from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
+import { getMyBookings } from "../lib/api";
+
+function formatStatus(status) {
+  if (!status) return "Unknown";
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
 
 function AccountPage() {
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    async function loadBookings() {
+      try {
+        setLoading(true);
+        setError("");
+        const data = await getMyBookings();
+        setBookings(data);
+      } catch (err) {
+        setError("Unable to load bookings right now.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadBookings();
+  }, []);
+
   return (
     <>
       <section className="account-hero">
@@ -13,59 +47,137 @@ function AccountPage() {
           <Reveal variant="up">
             <p className="section-kicker">Account</p>
             <h1 className="page-title account-hero__title">
-              Login, create an account, and manage future bookings
+              View created bookings and prepare for future account features
             </h1>
             <p className="account-hero__copy">
-              This page is the placeholder shell for account access. Later it will
-              support login, registration, saved details, booking history, booking
-              management, and account-linked confirmations.
+              This page is now connected to your Django booking data. Later it can
+              be restricted to authenticated users and expanded with cancellation,
+              amendment, and payment history.
             </p>
           </Reveal>
         </div>
       </section>
 
       <section className="section account-shell">
-        <div className="container account-layout">
-          <Reveal variant="left">
-            <div className="account-panel">
-              <p className="section-kicker">Returning customers</p>
-              <h2 className="section-title">Login to your account</h2>
-              <p className="section-copy">
-                Later this will connect to Django authentication and let customers
-                view, manage, amend, or cancel bookings from one account area.
-              </p>
-
-              <div className="account-actions">
-                <button type="button" className="route-card__link route-card__link--primary">
-                  <FaLock />
-                  Login Placeholder
-                </button>
-
-                <button type="button" className="route-card__link">
-                  <FaEnvelope />
-                  Reset Password Later
-                </button>
-              </div>
+        <div className="container">
+          <Reveal variant="up">
+            <div className="services-section-heading">
+              <p className="section-kicker">Booking overview</p>
+              <h2 className="section-title">Live bookings from the platform</h2>
             </div>
           </Reveal>
 
-          <Reveal delay={80} variant="right">
-            <div className="account-panel">
-              <p className="section-kicker">New customers</p>
-              <h2 className="section-title">Create your account</h2>
-              <p className="section-copy">
-                Account creation will later support faster checkout, booking history,
-                confirmation emails, and access to future booking management tools.
-              </p>
-
-              <div className="account-actions">
-                <button type="button" className="route-card__link route-card__link--primary">
-                  <FaUserPlus />
-                  Create Account Placeholder
-                </button>
+          {loading ? (
+            <Reveal variant="up">
+              <div className="account-panel">
+                <h3 className="account-benefit-card__title">Loading bookings…</h3>
+                <p className="account-benefit-card__copy">
+                  Pulling live booking records from Django.
+                </p>
               </div>
+            </Reveal>
+          ) : error ? (
+            <Reveal variant="up">
+              <div className="account-panel">
+                <h3 className="account-benefit-card__title">Booking data unavailable</h3>
+                <p className="account-benefit-card__copy">{error}</p>
+              </div>
+            </Reveal>
+          ) : bookings.length === 0 ? (
+            <Reveal variant="up">
+              <div className="account-panel">
+                <h3 className="account-benefit-card__title">No bookings yet</h3>
+                <p className="account-benefit-card__copy">
+                  Create your first booking from the Book Now page and it will appear here.
+                </p>
+
+                <div className="account-actions">
+                  <Link to="/book-now" className="route-card__link route-card__link--primary">
+                    Start Booking
+                    <FaArrowRight />
+                  </Link>
+                </div>
+              </div>
+            </Reveal>
+          ) : (
+            <div className="account-bookings-grid">
+              {bookings.map((booking, index) => (
+                <Reveal
+                  key={booking.id}
+                  delay={index * 60}
+                  variant={index % 2 === 0 ? "left" : "right"}
+                >
+                  <article className="account-booking-card">
+                    <div className="account-booking-card__top">
+                      <div>
+                        <p className="account-booking-card__eyebrow">Booking reference</p>
+                        <h3 className="account-booking-card__title">
+                          {booking.booking_reference}
+                        </h3>
+                      </div>
+
+                      <span
+                        className={`account-booking-card__status account-booking-card__status--${booking.status}`}
+                      >
+                        {formatStatus(booking.status)}
+                      </span>
+                    </div>
+
+                    <div className="account-booking-card__route">
+                      <p className="account-booking-card__route-name">
+                        {booking.scheduled_tour.route.name}
+                      </p>
+                      <p className="account-booking-card__route-region">
+                        {booking.scheduled_tour.route.region.name}
+                      </p>
+                    </div>
+
+                    <div className="account-booking-card__meta">
+                      <div className="account-booking-card__meta-row">
+                        <span>
+                          <FaCalendarDays />
+                          Departure
+                        </span>
+                        <strong>
+                          {booking.scheduled_tour.date} {booking.scheduled_tour.start_time}
+                        </strong>
+                      </div>
+
+                      <div className="account-booking-card__meta-row">
+                        <span>
+                          <FaUserGroup />
+                          Party size
+                        </span>
+                        <strong>{booking.party_size}</strong>
+                      </div>
+
+                      <div className="account-booking-card__meta-row">
+                        <span>
+                          <FaLocationDot />
+                          Contact
+                        </span>
+                        <strong>{booking.contact_name}</strong>
+                      </div>
+
+                      <div className="account-booking-card__meta-row">
+                        <span>
+                          <FaReceipt />
+                          Total
+                        </span>
+                        <strong>£{booking.total_price}</strong>
+                      </div>
+                    </div>
+
+                    <div className="account-booking-card__footer">
+                      <span className="account-booking-card__created">
+                        Created: {new Date(booking.created_at).toLocaleString()}
+                      </span>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
             </div>
-          </Reveal>
+          )}
         </div>
       </section>
 
@@ -73,63 +185,39 @@ function AccountPage() {
         <div className="container">
           <Reveal variant="up">
             <div className="services-section-heading">
-              <p className="section-kicker">Why accounts matter</p>
-              <h2 className="section-title">Designed to support the full booking journey</h2>
+              <p className="section-kicker">What comes next</p>
+              <h2 className="section-title">This page is now ready for the next account features</h2>
             </div>
           </Reveal>
 
           <div className="account-benefits__grid">
             <Reveal variant="left">
               <article className="account-benefit-card">
-                <h3 className="account-benefit-card__title">Manage bookings</h3>
+                <h3 className="account-benefit-card__title">Authenticated access</h3>
                 <p className="account-benefit-card__copy">
-                  Customers will later be able to view booking details, track status,
-                  and manage future guided days from one account area.
+                  Next we can restrict this page so each customer only sees their own bookings.
                 </p>
               </article>
             </Reveal>
 
             <Reveal delay={70} variant="up">
               <article className="account-benefit-card">
-                <h3 className="account-benefit-card__title">Faster checkout</h3>
+                <h3 className="account-benefit-card__title">Cancel and amend flows</h3>
                 <p className="account-benefit-card__copy">
-                  Saved details and account-linked bookings will help create a smoother
-                  booking experience once the backend is connected.
+                  After auth, the natural next step is controlled cancellation and amendment endpoints.
                 </p>
               </article>
             </Reveal>
 
             <Reveal delay={140} variant="right">
               <article className="account-benefit-card">
-                <h3 className="account-benefit-card__title">Booking history</h3>
+                <h3 className="account-benefit-card__title">Payment linkage</h3>
                 <p className="account-benefit-card__copy">
-                  This will later become the customer area for tour history,
-                  confirmation emails, and future amendments or cancellations.
+                  This page can also become the customer view for payment status and confirmations.
                 </p>
               </article>
             </Reveal>
           </div>
-
-          <Reveal delay={180} variant="up">
-            <div className="account-cta-panel">
-              <p className="section-kicker">Explore first</p>
-              <h2 className="section-title">
-                Browse routes and services before account features are connected
-              </h2>
-
-              <div className="account-actions">
-                <Link to="/routes" className="route-detail-action route-detail-action--link">
-                  Explore Routes
-                  <FaArrowRight />
-                </Link>
-
-                <Link to="/book-now" className="route-card__link route-card__link--primary">
-                  Start Booking
-                  <FaArrowRight />
-                </Link>
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
     </>

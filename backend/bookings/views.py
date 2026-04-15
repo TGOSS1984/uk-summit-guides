@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 
-from .models import ScheduledTour
+from .models import Booking, ScheduledTour
 from .serializers import (
     BookingCreateSerializer,
     BookingDetailSerializer,
@@ -49,4 +49,19 @@ class BookingCreateAPIView(generics.CreateAPIView):
             output_serializer.data,
             status=status.HTTP_201_CREATED,
             headers=headers,
+        )
+
+
+class BookingListAPIView(generics.ListAPIView):
+    serializer_class = BookingDetailSerializer
+
+    def get_queryset(self):
+        return (
+            Booking.objects.select_related(
+                "scheduled_tour",
+                "scheduled_tour__route",
+                "scheduled_tour__route__region",
+                "scheduled_tour__guide",
+            )
+            .order_by("-created_at")
         )
