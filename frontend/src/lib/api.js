@@ -1,34 +1,89 @@
-const API_BASE = "http://127.0.0.1:8000/api";
+const API_HOST = window.location.hostname;
+const API_BASE = `http://${API_HOST}:8000/api`;
 
-async function fetchJson(endpoint) {
-  const response = await fetch(`${API_BASE}${endpoint}`);
-
-  if (!response.ok) {
-    throw new Error(`API request failed: ${response.status}`);
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) {
+    return parts.pop().split(";").shift();
   }
-
-  return response.json();
+  return "";
 }
 
-async function sendJson(endpoint, options = {}) {
+async function parseResponse(response) {
+  const contentType = response.headers.get("content-type") || "";
+
+  if (contentType.includes("application/json")) {
+    return response.json();
+  }
+
+  const text = await response.text();
+  return { detail: text || `HTTP ${response.status}` };
+}
+
+async function fetchJson(endpoint, options = {}) {
   const response = await fetch(`${API_BASE}${endpoint}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {}),
-    },
+    credentials: "include",
     ...options,
   });
 
-  const data = await response.json().catch(() => ({}));
+  const data = await parseResponse(response);
 
   if (!response.ok) {
-    const error = new Error("API request failed");
+    const error = new Error(
+      data?.detail || `API request failed: ${response.status}`
+    );
     error.data = data;
     error.status = response.status;
     throw error;
   }
 
   return data;
+}
+
+async function sendJson(endpoint, options = {}) {
+  const csrfToken = getCookie("csrftoken");
+
+  return fetchJson(endpoint, {
+    headers: {
+      "Content-Type": "application/json",
+      ...(csrfToken ? { "X-CSRFToken": csrfToken } : {}),
+      ...(options.headers || {}),
+    },
+    ...options,
+  });
+}
+
+export async function ensureCsrf() {
+  return fetchJson("/auth/csrf/");
+}
+
+export async function registerUser(payload) {
+  await ensureCsrf();
+  return sendJson("/auth/register/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function loginUser(payload) {
+  await ensureCsrf();
+  return sendJson("/auth/login/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function logoutUser() {
+  await ensureCsrf();
+  return sendJson("/auth/logout/", {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+}
+
+export async function getCurrentUser() {
+  return fetchJson("/auth/me/");
 }
 
 export async function getRegions() {
@@ -66,6 +121,7 @@ export async function getScheduledTours(params = {}) {
 }
 
 export async function createBooking(payload) {
+  await ensureCsrf();
   return sendJson("/bookings/", {
     method: "POST",
     body: JSON.stringify(payload),
@@ -77,6 +133,7 @@ export async function getMyBookings() {
 }
 
 export async function cancelBooking(bookingId) {
+  await ensureCsrf();
   return sendJson(`/my-bookings/${bookingId}/cancel/`, {
     method: "PATCH",
     body: JSON.stringify({}),

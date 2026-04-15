@@ -157,7 +157,9 @@ function BookNowPage() {
     } catch (err) {
       const apiErrors = err?.data;
 
-      if (apiErrors?.party_size?.[0]) {
+      if (err?.status === 401) {
+        setSubmitError("Please log in or create an account before booking.");
+      } else if (apiErrors?.party_size?.[0]) {
         setSubmitError(apiErrors.party_size[0]);
       } else if (apiErrors?.scheduled_tour_id?.[0]) {
         setSubmitError(apiErrors.scheduled_tour_id[0]);
@@ -191,7 +193,7 @@ function BookNowPage() {
             </h1>
             <p className="booking-hero__copy">
               This page now pulls live route and departure data from Django and can
-              create real booking records with server-side validation.
+              create real booking records once the customer is logged in.
             </p>
           </Reveal>
 
@@ -207,7 +209,7 @@ function BookNowPage() {
               </div>
               <div className="booking-hero__meta-item">
                 <span className="booking-hero__meta-label">Status</span>
-                <strong className="booking-hero__meta-value">Live Booking Flow</strong>
+                <strong className="booking-hero__meta-value">Auth Enabled</strong>
               </div>
             </div>
           </Reveal>
@@ -526,7 +528,7 @@ function BookNowPage() {
                 </div>
 
                 <p className="booking-summary-card__note">
-                  This booking now posts to Django and creates a real booking record.
+                  Booking now requires an authenticated customer session.
                 </p>
               </div>
             </Reveal>

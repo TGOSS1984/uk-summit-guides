@@ -12,6 +12,11 @@ def api_root(request):
             "status": "ok",
             "endpoints": {
                 "health": "/api/health/",
+                "csrf": "/api/auth/csrf/",
+                "register": "/api/auth/register/",
+                "login": "/api/auth/login/",
+                "logout": "/api/auth/logout/",
+                "me": "/api/auth/me/",
                 "regions": "/api/regions/",
                 "guides": "/api/guides/",
                 "routes": "/api/routes/",
@@ -27,6 +32,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", api_root, name="api-root"),
     path("api/", include("core.urls")),
+    path("api/", include("accounts.urls")),
     path("api/", include("routes_app.urls")),
     path("api/", include("bookings.urls")),
 ]

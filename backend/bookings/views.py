@@ -1,4 +1,4 @@
-from rest_framework import generics, status
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -38,9 +38,13 @@ class ScheduledTourListAPIView(generics.ListAPIView):
 
 class BookingCreateAPIView(generics.CreateAPIView):
     serializer_class = BookingCreateSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(
+            data=request.data,
+            context={"request": request},
+        )
         serializer.is_valid(raise_exception=True)
         booking = serializer.save()
 
@@ -55,6 +59,7 @@ class BookingCreateAPIView(generics.CreateAPIView):
 
 class BookingListAPIView(generics.ListAPIView):
     serializer_class = BookingDetailSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return (
@@ -64,18 +69,21 @@ class BookingListAPIView(generics.ListAPIView):
                 "scheduled_tour__route__region",
                 "scheduled_tour__guide",
             )
+            .filter(user=self.request.user)
             .order_by("-created_at")
         )
 
 
 class BookingCancelAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
     def patch(self, request, pk):
         try:
             booking = Booking.objects.select_related(
                 "scheduled_tour",
                 "scheduled_tour__route",
                 "scheduled_tour__route__region",
-            ).get(pk=pk)
+            ).get(pk=pk, user=request.user)
         except Booking.DoesNotExist:
             return Response(
                 {"detail": "Booking not found."},
