@@ -822,7 +822,7 @@ function AccountPage() {
                                   disabled={savingAmendId === booking.id}
                                 >
                                   <FaPenToSquare />
-                                  Amend
+                                  {savingAmendId === booking.id ? "Opening..." : "Amend booking"}
                                 </button>
                               ) : null}
 
