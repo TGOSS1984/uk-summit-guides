@@ -157,3 +157,7 @@ export async function createCheckoutSession(bookingId) {
     }),
   });
 }
+
+export async function getCheckoutSession(sessionId) {
+  return fetchJson(`/payments/checkout-session/${sessionId}/`);
+}

@@ -1,11 +1,12 @@
-import os
 from pathlib import Path
+
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "django-insecure-change-me-later"
+SECRET_KEY = config("DJANGO_SECRET_KEY", default="django-insecure-change-me-later")
 
-DEBUG = True
+DEBUG = config("DJANGO_DEBUG", default=True, cast=bool)
 
 ALLOWED_HOSTS: list[str] = ["127.0.0.1", "localhost"]
 
@@ -118,7 +119,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-STRIPE_SECRET_KEY = os.getenv("STRIPE_SECRET_KEY", "")
-STRIPE_PUBLISHABLE_KEY = os.getenv("STRIPE_PUBLISHABLE_KEY", "")
-STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET", "")
-FRONTEND_BASE_URL = os.getenv("FRONTEND_BASE_URL", "http://localhost:5175")
+STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY", default="")
+STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY", default="")
+STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET", default="")
+FRONTEND_BASE_URL = config("FRONTEND_BASE_URL", default="http://localhost:5175")

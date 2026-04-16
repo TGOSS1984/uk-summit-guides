@@ -980,3 +980,11 @@
     grid-template-columns: 1fr;
   }
 }
+
+/*Payment Results*/
+
+.payment-result-shell {
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.025), transparent 18%),
+    var(--section-surface-dark);
+}

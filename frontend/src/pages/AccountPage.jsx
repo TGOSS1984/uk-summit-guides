@@ -69,7 +69,6 @@ function AccountPage() {
       try {
         setLoading(true);
         setError("");
-
         const currentUser = await getCurrentUser();
         setUser(currentUser);
       } catch {
@@ -554,81 +553,93 @@ function AccountPage() {
                 </Reveal>
               ) : (
                 <div className="account-bookings-grid">
-                  {bookings.map((booking, index) => (
-                    <Reveal
-                      key={booking.id}
-                      delay={index * 60}
-                      variant={index % 2 === 0 ? "left" : "right"}
-                    >
-                      <article className="account-booking-card">
-                        <div className="account-booking-card__top">
-                          <div>
-                            <p className="account-booking-card__eyebrow">Booking reference</p>
-                            <h3 className="account-booking-card__title">
-                              {booking.booking_reference}
-                            </h3>
-                          </div>
+                  {bookings.map((booking, index) => {
+                    const canPay =
+                      ["pending", "confirmed"].includes(booking.status) &&
+                      booking.payment_status !== "paid";
 
-                          <span
-                            className={`account-booking-card__status account-booking-card__status--${booking.status}`}
-                          >
-                            {formatStatus(booking.status)}
-                          </span>
-                        </div>
+                    return (
+                      <Reveal
+                        key={booking.id}
+                        delay={index * 60}
+                        variant={index % 2 === 0 ? "left" : "right"}
+                      >
+                        <article className="account-booking-card">
+                          <div className="account-booking-card__top">
+                            <div>
+                              <p className="account-booking-card__eyebrow">Booking reference</p>
+                              <h3 className="account-booking-card__title">
+                                {booking.booking_reference}
+                              </h3>
+                            </div>
 
-                        <div className="account-booking-card__route">
-                          <p className="account-booking-card__route-name">
-                            {booking.scheduled_tour.route.name}
-                          </p>
-                          <p className="account-booking-card__route-region">
-                            {booking.scheduled_tour.route.region.name}
-                          </p>
-                        </div>
-
-                        <div className="account-booking-card__meta">
-                          <div className="account-booking-card__meta-row">
-                            <span>
-                              <FaCalendarDays />
-                              Departure
+                            <span
+                              className={`account-booking-card__status account-booking-card__status--${booking.status}`}
+                            >
+                              {formatStatus(booking.status)}
                             </span>
-                            <strong>
-                              {booking.scheduled_tour.date} {booking.scheduled_tour.start_time}
-                            </strong>
                           </div>
 
-                          <div className="account-booking-card__meta-row">
-                            <span>
-                              <FaUserGroup />
-                              Party size
+                          <div className="account-booking-card__route">
+                            <p className="account-booking-card__route-name">
+                              {booking.scheduled_tour.route.name}
+                            </p>
+                            <p className="account-booking-card__route-region">
+                              {booking.scheduled_tour.route.region.name}
+                            </p>
+                          </div>
+
+                          <div className="account-booking-card__meta">
+                            <div className="account-booking-card__meta-row">
+                              <span>
+                                <FaCalendarDays />
+                                Departure
+                              </span>
+                              <strong>
+                                {booking.scheduled_tour.date} {booking.scheduled_tour.start_time}
+                              </strong>
+                            </div>
+
+                            <div className="account-booking-card__meta-row">
+                              <span>
+                                <FaUserGroup />
+                                Party size
+                              </span>
+                              <strong>{booking.party_size}</strong>
+                            </div>
+
+                            <div className="account-booking-card__meta-row">
+                              <span>
+                                <FaLocationDot />
+                                Contact
+                              </span>
+                              <strong>{booking.contact_name}</strong>
+                            </div>
+
+                            <div className="account-booking-card__meta-row">
+                              <span>
+                                <FaReceipt />
+                                Total
+                              </span>
+                              <strong>£{booking.total_price}</strong>
+                            </div>
+
+                            <div className="account-booking-card__meta-row">
+                              <span>
+                                <FaReceipt />
+                                Payment
+                              </span>
+                              <strong>{formatStatus(booking.payment_status)}</strong>
+                            </div>
+                          </div>
+
+                          <div className="account-booking-card__footer">
+                            <span className="account-booking-card__created">
+                              Created: {new Date(booking.created_at).toLocaleString()}
                             </span>
-                            <strong>{booking.party_size}</strong>
-                          </div>
 
-                          <div className="account-booking-card__meta-row">
-                            <span>
-                              <FaLocationDot />
-                              Contact
-                            </span>
-                            <strong>{booking.contact_name}</strong>
-                          </div>
-
-                          <div className="account-booking-card__meta-row">
-                            <span>
-                              <FaReceipt />
-                              Total
-                            </span>
-                            <strong>£{booking.total_price}</strong>
-                          </div>
-                        </div>
-
-                        <div className="account-booking-card__footer">
-                          <span className="account-booking-card__created">
-                            Created: {new Date(booking.created_at).toLocaleString()}
-                          </span>
-
-                          <div className="account-booking-card__actions">
-                            {["pending", "confirmed"].includes(booking.status) ? (
-                              <>
+                            <div className="account-booking-card__actions">
+                              {canPay ? (
                                 <button
                                   type="button"
                                   className="account-booking-card__pay"
@@ -637,7 +648,9 @@ function AccountPage() {
                                 >
                                   {payingId === booking.id ? "Opening Stripe..." : "Pay now"}
                                 </button>
+                              ) : null}
 
+                              {["pending", "confirmed"].includes(booking.status) ? (
                                 <button
                                   type="button"
                                   className="account-booking-card__cancel"
@@ -646,13 +659,13 @@ function AccountPage() {
                                 >
                                   {cancellingId === booking.id ? "Cancelling..." : "Cancel booking"}
                                 </button>
-                              </>
-                            ) : null}
+                              ) : null}
+                            </div>
                           </div>
-                        </div>
-                      </article>
-                    </Reveal>
-                  ))}
+                        </article>
+                      </Reveal>
+                    );
+                  })}
                 </div>
               )}
             </>

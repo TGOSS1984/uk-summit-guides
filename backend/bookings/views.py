@@ -68,6 +68,7 @@ class BookingListAPIView(generics.ListAPIView):
                 "scheduled_tour__route",
                 "scheduled_tour__route__region",
                 "scheduled_tour__guide",
+                "payment",
             )
             .filter(user=self.request.user)
             .order_by("-created_at")

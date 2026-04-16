@@ -25,6 +25,8 @@ def api_root(request):
                 "my_bookings": "/api/my-bookings/",
                 "contact": "/api/contact/",
                 "checkout": "/api/payments/create-checkout-session/",
+                "checkout_session": "/api/payments/checkout-session/<session_id>/",
+                "webhook": "/api/payments/webhook/",
             },
         }
     )

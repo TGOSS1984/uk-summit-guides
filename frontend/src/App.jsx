@@ -8,6 +8,8 @@ import RouteDetailPage from "./pages/RouteDetailPage";
 import BookNowPage from "./pages/BookNowPage";
 import AccountPage from "./pages/AccountPage";
 import ContactPage from "./pages/ContactPage";
+import PaymentSuccessPage from "./pages/PaymentSuccessPage";
+import PaymentCancelledPage from "./pages/PaymentCancelledPage";
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
         <Route path="/book-now" element={<BookNowPage />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/payment-success" element={<PaymentSuccessPage />} />
+        <Route path="/payment-cancelled" element={<PaymentCancelledPage />} />
       </Routes>
     </AppShell>
   );

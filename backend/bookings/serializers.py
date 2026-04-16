@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from rest_framework import serializers
 
+from payments.models import Payment
 from routes_app.serializers import GuideSerializer, RouteListSerializer
 from .models import Booking, ScheduledTour
 
@@ -103,6 +104,8 @@ class BookingCreateSerializer(serializers.ModelSerializer):
 
 class BookingDetailSerializer(serializers.ModelSerializer):
     scheduled_tour = ScheduledTourSerializer(read_only=True)
+    payment_status = serializers.SerializerMethodField()
+    payment_id = serializers.SerializerMethodField()
 
     class Meta:
         model = Booking
@@ -119,4 +122,16 @@ class BookingDetailSerializer(serializers.ModelSerializer):
             "status",
             "total_price",
             "created_at",
+            "payment_status",
+            "payment_id",
         ]
+
+    def get_payment_status(self, obj):
+        if hasattr(obj, "payment"):
+            return obj.payment.status
+        return None
+
+    def get_payment_id(self, obj):
+        if hasattr(obj, "payment"):
+            return obj.payment.id
+        return None
