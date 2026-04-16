@@ -1,16 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaUser } from "react-icons/fa6";
+import { FaRightFromBracket, FaUser } from "react-icons/fa6";
 import siteNav from "../../data/siteNav";
+import { getCurrentUser, logoutUser } from "../../lib/api";
 import ThemeToggle from "../ui/ThemeToggle";
 import BrandLogo from "../ui/BrandLogo";
 
 function Navbar({ theme, onToggleTheme }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   function closeMenu() {
     setMenuOpen(false);
   }
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadCurrentUser() {
+      try {
+        setAuthLoading(true);
+        const currentUser = await getCurrentUser();
+
+        if (isMounted) {
+          setUser(currentUser);
+        }
+      } catch {
+        if (isMounted) {
+          setUser(null);
+        }
+      } finally {
+        if (isMounted) {
+          setAuthLoading(false);
+        }
+      }
+    }
+
+    loadCurrentUser();
+
+    function handleAuthChanged() {
+      loadCurrentUser();
+    }
+
+    window.addEventListener("auth-changed", handleAuthChanged);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener("auth-changed", handleAuthChanged);
+    };
+  }, []);
+
+  async function handleLogout() {
+    try {
+      setIsLoggingOut(true);
+      await logoutUser();
+      setUser(null);
+      setMenuOpen(false);
+      window.dispatchEvent(new Event("auth-changed"));
+    } catch {
+      // Keep this silent in the navbar for now.
+    } finally {
+      setIsLoggingOut(false);
+    }
+  }
+
+  const accountLabel = authLoading
+    ? "Account"
+    : user?.first_name || user?.username || "Account";
 
   return (
     <header className="site-header">
@@ -40,11 +98,27 @@ function Navbar({ theme, onToggleTheme }) {
                 : "site-account-link"
             }
             aria-label="Account"
-            title="Login or create account"
+            title={user ? "My account" : "Login or create account"}
           >
             <FaUser aria-hidden="true" />
-            <span className="site-account-link__label">Account</span>
+            <span className="site-account-link__label">{accountLabel}</span>
           </NavLink>
+
+          {user ? (
+            <button
+              type="button"
+              className="site-logout-link"
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              aria-label="Logout"
+              title="Logout"
+            >
+              <FaRightFromBracket aria-hidden="true" />
+              <span className="site-logout-link__label">
+                {isLoggingOut ? "Logging out..." : "Logout"}
+              </span>
+            </button>
+          ) : null}
         </nav>
 
         <div className="site-header__actions site-header__actions--mobile">
@@ -55,8 +129,9 @@ function Navbar({ theme, onToggleTheme }) {
                 ? "site-account-link site-account-link--compact is-active"
                 : "site-account-link site-account-link--compact"
             }
-            aria-label="Account"
-            title="Login or create account"
+            aria-label={user ? "My account" : "Account"}
+            title={user ? accountLabel : "Login or create account"}
+            onClick={closeMenu}
           >
             <FaUser aria-hidden="true" />
           </NavLink>
@@ -92,6 +167,27 @@ function Navbar({ theme, onToggleTheme }) {
                 {item.label}
               </NavLink>
             ))}
+
+            <NavLink
+              to="/account"
+              className={({ isActive }) =>
+                isActive ? "mobile-nav__link is-active" : "mobile-nav__link"
+              }
+              onClick={closeMenu}
+            >
+              {user ? `My Account (${accountLabel})` : "Login / Create Account"}
+            </NavLink>
+
+            {user ? (
+              <button
+                type="button"
+                className="mobile-nav__logout"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+              >
+                {isLoggingOut ? "Logging out..." : "Logout"}
+              </button>
+            ) : null}
           </nav>
         </div>
       </div>

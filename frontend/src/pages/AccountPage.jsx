@@ -54,7 +54,7 @@ function AccountPage() {
       setBookingsLoading(true);
       const data = await getMyBookings();
       setBookings(data);
-    } catch (err) {
+    } catch {
       setError("Unable to load bookings right now.");
     } finally {
       setBookingsLoading(false);
@@ -69,7 +69,7 @@ function AccountPage() {
 
         const currentUser = await getCurrentUser();
         setUser(currentUser);
-      } catch (err) {
+      } catch {
         setUser(null);
       } finally {
         setLoading(false);
@@ -121,6 +121,7 @@ function AccountPage() {
         username: "",
         password: "",
       });
+      window.dispatchEvent(new Event("auth-changed"));
     } catch (err) {
       setActionError(err?.data?.detail || "Unable to log in right now.");
     } finally {
@@ -154,6 +155,7 @@ function AccountPage() {
         password: "",
         passwordConfirm: "",
       });
+      window.dispatchEvent(new Event("auth-changed"));
     } catch (err) {
       const data = err?.data || {};
       const firstError =
@@ -181,7 +183,8 @@ function AccountPage() {
       setUser(null);
       setBookings([]);
       setActionSuccess("Logged out successfully.");
-    } catch (err) {
+      window.dispatchEvent(new Event("auth-changed"));
+    } catch {
       setActionError("Unable to log out right now.");
     }
   }
