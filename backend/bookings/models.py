@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 
 from routes_app.models import Guide, Route
 
@@ -114,6 +115,7 @@ class Booking(models.Model):
         decimal_places=2,
         validators=[MinValueValidator(Decimal("0.00"))],
     )
+    archived_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -123,6 +125,10 @@ class Booking(models.Model):
         if not self.booking_reference:
             self.booking_reference = uuid.uuid4().hex[:10].upper()
         super().save(*args, **kwargs)
+
+    def archive(self):
+        self.archived_at = timezone.now()
+        self.save(update_fields=["archived_at"])
 
     def __str__(self) -> str:
         return f"{self.booking_reference} - {self.contact_name}"

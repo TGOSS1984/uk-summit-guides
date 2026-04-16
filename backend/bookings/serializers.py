@@ -2,7 +2,6 @@ from decimal import Decimal
 
 from rest_framework import serializers
 
-from payments.models import Payment
 from routes_app.serializers import GuideSerializer, RouteListSerializer
 from .models import Booking, ScheduledTour
 
@@ -106,6 +105,7 @@ class BookingDetailSerializer(serializers.ModelSerializer):
     scheduled_tour = ScheduledTourSerializer(read_only=True)
     payment_status = serializers.SerializerMethodField()
     payment_id = serializers.SerializerMethodField()
+    is_archived = serializers.SerializerMethodField()
 
     class Meta:
         model = Booking
@@ -124,6 +124,7 @@ class BookingDetailSerializer(serializers.ModelSerializer):
             "created_at",
             "payment_status",
             "payment_id",
+            "is_archived",
         ]
 
     def get_payment_status(self, obj):
@@ -135,3 +136,6 @@ class BookingDetailSerializer(serializers.ModelSerializer):
         if hasattr(obj, "payment"):
             return obj.payment.id
         return None
+
+    def get_is_archived(self, obj):
+        return obj.archived_at is not None

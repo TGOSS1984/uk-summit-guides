@@ -1,13 +1,18 @@
+import stripe
+from django.conf import settings
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from payments.models import Payment
 from .models import Booking, ScheduledTour
 from .serializers import (
     BookingCreateSerializer,
     BookingDetailSerializer,
     ScheduledTourSerializer,
 )
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class ScheduledTourListAPIView(generics.ListAPIView):
@@ -62,7 +67,11 @@ class BookingListAPIView(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return (
+        include_archived = (
+            self.request.query_params.get("archived", "false").lower() == "true"
+        )
+
+        queryset = (
             Booking.objects.select_related(
                 "scheduled_tour",
                 "scheduled_tour__route",
@@ -74,6 +83,11 @@ class BookingListAPIView(generics.ListAPIView):
             .order_by("-created_at")
         )
 
+        if not include_archived:
+            queryset = queryset.filter(archived_at__isnull=True)
+
+        return queryset
+
 
 class BookingCancelAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -84,6 +98,7 @@ class BookingCancelAPIView(APIView):
                 "scheduled_tour",
                 "scheduled_tour__route",
                 "scheduled_tour__route__region",
+                "payment",
             ).get(pk=pk, user=request.user)
         except Booking.DoesNotExist:
             return Response(
@@ -97,14 +112,71 @@ class BookingCancelAPIView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        if booking.status not in [Booking.Status.PENDING, Booking.Status.CONFIRMED]:
-            return Response(
-                {"detail": "This booking cannot be cancelled."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+        payment = getattr(booking, "payment", None)
+
+        if payment and payment.status == Payment.Status.PAID:
+            if not settings.STRIPE_SECRET_KEY:
+                return Response(
+                    {"detail": "Stripe secret key is not configured."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
+            if not payment.stripe_payment_intent_id:
+                return Response(
+                    {"detail": "This paid booking cannot be refunded because no payment intent was stored."},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+            try:
+                refund = stripe.Refund.create(
+                    payment_intent=payment.stripe_payment_intent_id,
+                    metadata={
+                        "booking_id": str(booking.id),
+                        "booking_reference": booking.booking_reference,
+                        "payment_id": str(payment.id),
+                    },
+                )
+            except stripe.error.StripeError as exc:
+                return Response(
+                    {"detail": f"Stripe refund error: {str(exc)}"},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                )
+
+            payment.status = Payment.Status.REFUND_PENDING
+            payment.stripe_refund_id = refund.id
+            payment.save(update_fields=["status", "stripe_refund_id"])
 
         booking.status = Booking.Status.CANCELLED
         booking.save(update_fields=["status"])
 
+        serializer = BookingDetailSerializer(booking)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class BookingArchiveAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, pk):
+        try:
+            booking = Booking.objects.get(pk=pk, user=request.user)
+        except Booking.DoesNotExist:
+            return Response(
+                {"detail": "Booking not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        if booking.status != Booking.Status.CANCELLED:
+            return Response(
+                {"detail": "Only cancelled bookings can be archived."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if booking.archived_at is not None:
+            return Response(
+                {"detail": "This booking is already archived."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        booking.archive()
         serializer = BookingDetailSerializer(booking)
         return Response(serializer.data, status=status.HTTP_200_OK)

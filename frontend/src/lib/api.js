@@ -140,6 +140,22 @@ export async function cancelBooking(bookingId) {
   });
 }
 
+export async function refundBooking(bookingId) {
+  await ensureCsrf();
+  return sendJson(`/my-bookings/${bookingId}/refund/`, {
+    method: "PATCH",
+    body: JSON.stringify({}),
+  });
+}
+
+export async function archiveBooking(bookingId) {
+  await ensureCsrf();
+  return sendJson(`/my-bookings/${bookingId}/archive/`, {
+    method: "PATCH",
+    body: JSON.stringify({}),
+  });
+}
+
 export async function createContactMessage(payload) {
   await ensureCsrf();
   return sendJson("/contact/", {

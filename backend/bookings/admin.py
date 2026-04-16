@@ -28,9 +28,10 @@ class BookingAdmin(admin.ModelAdmin):
         "party_size",
         "status",
         "total_price",
+        "archived_at",
         "created_at",
     )
-    list_filter = ("status", "created_at")
+    list_filter = ("status", "created_at", "archived_at")
     search_fields = (
         "booking_reference",
         "contact_name",

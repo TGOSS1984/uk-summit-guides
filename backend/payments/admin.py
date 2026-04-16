@@ -11,10 +11,12 @@ class PaymentAdmin(admin.ModelAdmin):
         "currency",
         "status",
         "paid_at",
+        "refunded_at",
     )
     list_filter = ("status", "currency")
     search_fields = (
         "booking__booking_reference",
         "stripe_payment_intent_id",
         "stripe_checkout_session_id",
+        "stripe_refund_id",
     )

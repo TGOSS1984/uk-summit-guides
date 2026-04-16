@@ -1,27 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FaArrowRight,
+  FaBoxArchive,
   FaCalendarDays,
   FaLocationDot,
   FaReceipt,
   FaRightFromBracket,
+  FaRotateLeft,
   FaUserGroup,
 } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 import {
+  archiveBooking,
   cancelBooking,
   createCheckoutSession,
   getCurrentUser,
   getMyBookings,
   loginUser,
   logoutUser,
+  refundBooking,
   registerUser,
 } from "../lib/api";
 
 function formatStatus(status) {
   if (!status) return "Unknown";
   return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function getPaymentTone(paymentStatus) {
+  if (paymentStatus === "paid") return "is-paid";
+  if (paymentStatus === "refunded") return "is-refunded";
+  return "";
 }
 
 function AccountPage() {
@@ -32,8 +42,12 @@ function AccountPage() {
   const [error, setError] = useState("");
   const [actionError, setActionError] = useState("");
   const [actionSuccess, setActionSuccess] = useState("");
+
   const [cancellingId, setCancellingId] = useState(null);
   const [payingId, setPayingId] = useState(null);
+  const [refundingId, setRefundingId] = useState(null);
+  const [archivingId, setArchivingId] = useState(null);
+
   const [authMode, setAuthMode] = useState("login");
   const [authSubmitting, setAuthSubmitting] = useState(false);
 
@@ -89,6 +103,10 @@ function AccountPage() {
     }
   }, [user]);
 
+  const visibleBookings = useMemo(() => {
+    return bookings.filter((booking) => !booking.is_archived);
+  }, [bookings]);
+
   function handleLoginChange(event) {
     const { name, value } = event.target;
     setLoginForm((current) => ({
@@ -112,6 +130,7 @@ function AccountPage() {
 
     try {
       setAuthSubmitting(true);
+
       const loggedInUser = await loginUser({
         username: loginForm.username,
         password: loginForm.password,
@@ -123,6 +142,7 @@ function AccountPage() {
         username: "",
         password: "",
       });
+
       window.dispatchEvent(new Event("auth-changed"));
     } catch (err) {
       setActionError(err?.data?.detail || "Unable to log in right now.");
@@ -138,6 +158,7 @@ function AccountPage() {
 
     try {
       setAuthSubmitting(true);
+
       const registeredUser = await registerUser({
         username: registerForm.username,
         email: registerForm.email,
@@ -157,6 +178,7 @@ function AccountPage() {
         password: "",
         passwordConfirm: "",
       });
+
       window.dispatchEvent(new Event("auth-changed"));
     } catch (err) {
       const data = err?.data || {};
@@ -201,8 +223,7 @@ function AccountPage() {
       setActionSuccess("Booking cancelled successfully.");
       await loadBookings();
     } catch (err) {
-      const apiError = err?.data?.detail;
-      setActionError(apiError || "Unable to cancel booking right now.");
+      setActionError(err?.data?.detail || "Unable to cancel booking right now.");
     } finally {
       setCancellingId(null);
     }
@@ -231,6 +252,38 @@ function AccountPage() {
       setActionError(apiError);
     } finally {
       setPayingId(null);
+    }
+  }
+
+  async function handleRefundBooking(bookingId) {
+    setActionError("");
+    setActionSuccess("");
+
+    try {
+      setRefundingId(bookingId);
+      await refundBooking(bookingId);
+      setActionSuccess("Refund processed successfully.");
+      await loadBookings();
+    } catch (err) {
+      setActionError(err?.data?.detail || "Unable to process refund right now.");
+    } finally {
+      setRefundingId(null);
+    }
+  }
+
+  async function handleArchiveBooking(bookingId) {
+    setActionError("");
+    setActionSuccess("");
+
+    try {
+      setArchivingId(bookingId);
+      await archiveBooking(bookingId);
+      setActionSuccess("Booking archived from your account view.");
+      await loadBookings();
+    } catch (err) {
+      setActionError(err?.data?.detail || "Unable to archive booking right now.");
+    } finally {
+      setArchivingId(null);
     }
   }
 
@@ -535,12 +588,12 @@ function AccountPage() {
                     <p className="account-benefit-card__copy">{error}</p>
                   </div>
                 </Reveal>
-              ) : bookings.length === 0 ? (
+              ) : visibleBookings.length === 0 ? (
                 <Reveal variant="up">
                   <div className="account-panel">
-                    <h3 className="account-benefit-card__title">No bookings yet</h3>
+                    <h3 className="account-benefit-card__title">No visible bookings</h3>
                     <p className="account-benefit-card__copy">
-                      Create your first booking from the Book Now page and it will appear here.
+                      Create a booking from the Book Now page or unarchive records later if you add that feature.
                     </p>
 
                     <div className="account-actions">
@@ -553,10 +606,19 @@ function AccountPage() {
                 </Reveal>
               ) : (
                 <div className="account-bookings-grid">
-                  {bookings.map((booking, index) => {
+                  {visibleBookings.map((booking, index) => {
                     const canPay =
                       ["pending", "confirmed"].includes(booking.status) &&
-                      booking.payment_status !== "paid";
+                      booking.payment_status !== "paid" &&
+                      booking.payment_status !== "refunded";
+
+                    const canRefund =
+                      booking.status === "cancelled" &&
+                      booking.payment_status === "paid";
+
+                    const canArchive =
+                      booking.status === "cancelled" ||
+                      booking.payment_status === "refunded";
 
                     return (
                       <Reveal
@@ -629,7 +691,9 @@ function AccountPage() {
                                 <FaReceipt />
                                 Payment
                               </span>
-                              <strong>{formatStatus(booking.payment_status)}</strong>
+                              <strong className={getPaymentTone(booking.payment_status)}>
+                                {formatStatus(booking.payment_status)}
+                              </strong>
                             </div>
                           </div>
 
@@ -658,6 +722,35 @@ function AccountPage() {
                                   disabled={cancellingId === booking.id || payingId === booking.id}
                                 >
                                   {cancellingId === booking.id ? "Cancelling..." : "Cancel booking"}
+                                </button>
+                              ) : null}
+
+                              {canRefund ? (
+                                <button
+                                  type="button"
+                                  className="account-booking-card__refund"
+                                  onClick={() => handleRefundBooking(booking.id)}
+                                  disabled={refundingId === booking.id}
+                                >
+                                  {refundingId === booking.id ? "Refunding..." : "Refund payment"}
+                                </button>
+                              ) : null}
+
+                              {canArchive ? (
+                                <button
+                                  type="button"
+                                  className="account-booking-card__archive"
+                                  onClick={() => handleArchiveBooking(booking.id)}
+                                  disabled={archivingId === booking.id}
+                                >
+                                  {archivingId === booking.id ? (
+                                    "Archiving..."
+                                  ) : (
+                                    <>
+                                      <FaBoxArchive />
+                                      Archive
+                                    </>
+                                  )}
                                 </button>
                               ) : null}
                             </div>

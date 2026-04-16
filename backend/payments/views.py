@@ -53,6 +53,12 @@ class CreateCheckoutSessionAPIView(APIView):
             },
         )
 
+        if payment.status == Payment.Status.PAID:
+            return Response(
+                {"detail": "This booking has already been paid."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         try:
             session = stripe.checkout.Session.create(
                 mode="payment",
@@ -185,7 +191,9 @@ class StripeWebhookAPIView(APIView):
         except stripe.error.SignatureVerificationError:
             return HttpResponse(status=400)
 
-        if event["type"] == "checkout.session.completed":
+        event_type = event["type"]
+
+        if event_type == "checkout.session.completed":
             session = event["data"]["object"]
             session_id = session.get("id")
 
@@ -196,15 +204,16 @@ class StripeWebhookAPIView(APIView):
             except Payment.DoesNotExist:
                 return HttpResponse(status=200)
 
-            payment.status = Payment.Status.PAID
             payment.stripe_payment_intent_id = session.get("payment_intent", "") or ""
             if session.get("amount_total") is not None:
                 payment.amount = session["amount_total"] / 100
+            payment.mark_paid()
             payment.save(
                 update_fields=[
-                    "status",
                     "stripe_payment_intent_id",
                     "amount",
+                    "status",
+                    "paid_at",
                 ]
             )
 
@@ -212,5 +221,38 @@ class StripeWebhookAPIView(APIView):
             if booking.status == Booking.Status.PENDING:
                 booking.status = Booking.Status.CONFIRMED
                 booking.save(update_fields=["status"])
+
+        elif event_type == "refund.updated":
+            refund = event["data"]["object"]
+            payment_intent_id = refund.get("payment_intent")
+            refund_status = refund.get("status")
+
+            if payment_intent_id:
+                try:
+                    payment = Payment.objects.select_related("booking").get(
+                        stripe_payment_intent_id=payment_intent_id
+                    )
+                except Payment.DoesNotExist:
+                    return HttpResponse(status=200)
+
+                payment.stripe_refund_id = refund.get("id", "") or payment.stripe_refund_id
+
+                if refund_status == "succeeded":
+                    payment.mark_refunded()
+                    payment.save(
+                        update_fields=[
+                            "stripe_refund_id",
+                            "status",
+                            "refunded_at",
+                        ]
+                    )
+                elif refund_status == "failed":
+                    payment.status = Payment.Status.PAID
+                    payment.save(
+                        update_fields=[
+                            "stripe_refund_id",
+                            "status",
+                        ]
+                    )
 
         return HttpResponse(status=200)
