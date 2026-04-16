@@ -24,6 +24,7 @@ def api_root(request):
                 "bookings": "/api/bookings/",
                 "my_bookings": "/api/my-bookings/",
                 "contact": "/api/contact/",
+                "checkout": "/api/payments/create-checkout-session/",
             },
         }
     )
@@ -37,4 +38,5 @@ urlpatterns = [
     path("api/", include("routes_app.urls")),
     path("api/", include("bookings.urls")),
     path("api/", include("contact.urls")),
+    path("api/", include("payments.urls")),
 ]
