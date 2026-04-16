@@ -23,6 +23,7 @@ def api_root(request):
                 "scheduled_tours": "/api/scheduled-tours/",
                 "bookings": "/api/bookings/",
                 "my_bookings": "/api/my-bookings/",
+                "contact": "/api/contact/",
             },
         }
     )
@@ -35,4 +36,5 @@ urlpatterns = [
     path("api/", include("accounts.urls")),
     path("api/", include("routes_app.urls")),
     path("api/", include("bookings.urls")),
+    path("api/", include("contact.urls")),
 ]

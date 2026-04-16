@@ -139,3 +139,11 @@ export async function cancelBooking(bookingId) {
     body: JSON.stringify({}),
   });
 }
+
+export async function createContactMessage(payload) {
+  await ensureCsrf();
+  return sendJson("/contact/", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}

@@ -4,6 +4,7 @@ const siteNav = [
   { label: "Services", href: "/services" },
   { label: "Routes", href: "/routes" },
   { label: "Book Now", href: "/book-now" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export default siteNav;

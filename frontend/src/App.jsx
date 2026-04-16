@@ -7,6 +7,7 @@ import RoutesPage from "./pages/RoutesPage";
 import RouteDetailPage from "./pages/RouteDetailPage";
 import BookNowPage from "./pages/BookNowPage";
 import AccountPage from "./pages/AccountPage";
+import ContactPage from "./pages/ContactPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/routes/:slug" element={<RouteDetailPage />} />
         <Route path="/book-now" element={<BookNowPage />} />
         <Route path="/account" element={<AccountPage />} />
+        <Route path="/contact" element={<ContactPage />} />
       </Routes>
     </AppShell>
   );
