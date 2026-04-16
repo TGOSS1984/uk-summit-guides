@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from rest_framework import serializers
 
+from payments.models import Payment
 from routes_app.serializers import GuideSerializer, RouteListSerializer
 from .models import Booking, ScheduledTour
 
@@ -99,6 +100,110 @@ class BookingCreateSerializer(serializers.ModelSerializer):
             total_price=total_price,
         )
         return booking
+
+
+class BookingAmendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Booking
+        fields = [
+            "party_size",
+            "contact_name",
+            "contact_email",
+            "contact_phone",
+            "emergency_contact",
+            "notes",
+        ]
+        extra_kwargs = {
+            "party_size": {"required": False},
+            "contact_name": {"required": False},
+            "contact_email": {"required": False},
+            "contact_phone": {"required": False},
+            "emergency_contact": {"required": False},
+            "notes": {"required": False},
+        }
+
+    def validate_party_size(self, value):
+        if value < 1 or value > 3:
+            raise serializers.ValidationError(
+                "Party size must be between 1 and 3."
+            )
+        return value
+
+    def validate(self, attrs):
+        booking = self.instance
+        payment = getattr(booking, "payment", None)
+
+        if booking.status == Booking.Status.CANCELLED:
+            raise serializers.ValidationError(
+                {"detail": "Cancelled bookings cannot be amended."}
+            )
+
+        if booking.archived_at is not None:
+            raise serializers.ValidationError(
+                {"detail": "Archived bookings cannot be amended."}
+            )
+
+        if "party_size" in attrs:
+            if payment and payment.status in [
+                Payment.Status.PAID,
+                Payment.Status.REFUND_PENDING,
+                Payment.Status.REFUNDED,
+            ]:
+                raise serializers.ValidationError(
+                    {
+                        "party_size": (
+                            "Party size cannot be changed after payment or refund processing."
+                        )
+                    }
+                )
+
+            scheduled_tour = booking.scheduled_tour
+            new_party_size = attrs["party_size"]
+
+            other_booked_spaces = sum(
+                scheduled_tour.bookings.exclude(pk=booking.pk)
+                .filter(
+                    status__in=[
+                        Booking.Status.PENDING,
+                        Booking.Status.CONFIRMED,
+                        Booking.Status.AMENDED,
+                    ]
+                )
+                .values_list("party_size", flat=True)
+            )
+
+            spaces_remaining_for_amendment = max(
+                scheduled_tour.max_group_size - other_booked_spaces,
+                0,
+            )
+
+            if new_party_size > spaces_remaining_for_amendment:
+                raise serializers.ValidationError(
+                    {
+                        "party_size": (
+                            f"Only {spaces_remaining_for_amendment} space(s) remain "
+                            "for this departure."
+                        )
+                    }
+                )
+
+        return attrs
+
+    def update(self, instance, validated_data):
+        original_party_size = instance.party_size
+        new_party_size = validated_data.get("party_size", original_party_size)
+
+        for field, value in validated_data.items():
+            setattr(instance, field, value)
+
+        if new_party_size != original_party_size:
+            instance.total_price = Decimal(instance.scheduled_tour.price_pp) * Decimal(
+                new_party_size
+            )
+
+        instance.status = Booking.Status.AMENDED
+        instance.save()
+        return instance
 
 
 class BookingDetailSerializer(serializers.ModelSerializer):

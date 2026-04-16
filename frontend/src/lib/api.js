@@ -128,6 +128,14 @@ export async function createBooking(payload) {
   });
 }
 
+export async function amendBooking(bookingId, payload) {
+  await ensureCsrf();
+  return sendJson(`/my-bookings/${bookingId}/amend/`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function getMyBookings() {
   return fetchJson("/my-bookings/");
 }

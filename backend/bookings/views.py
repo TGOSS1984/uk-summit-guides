@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from payments.models import Payment
 from .models import Booking, ScheduledTour
 from .serializers import (
+    BookingAmendSerializer,
     BookingCreateSerializer,
     BookingDetailSerializer,
     ScheduledTourSerializer,
@@ -89,6 +90,35 @@ class BookingListAPIView(generics.ListAPIView):
         return queryset
 
 
+class BookingAmendAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def patch(self, request, pk):
+        try:
+            booking = Booking.objects.select_related(
+                "scheduled_tour",
+                "scheduled_tour__route",
+                "scheduled_tour__route__region",
+                "payment",
+            ).get(pk=pk, user=request.user)
+        except Booking.DoesNotExist:
+            return Response(
+                {"detail": "Booking not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        serializer = BookingAmendSerializer(
+            booking,
+            data=request.data,
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+        booking = serializer.save()
+
+        output_serializer = BookingDetailSerializer(booking)
+        return Response(output_serializer.data, status=status.HTTP_200_OK)
+
+
 class BookingCancelAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -123,7 +153,11 @@ class BookingCancelAPIView(APIView):
 
             if not payment.stripe_payment_intent_id:
                 return Response(
-                    {"detail": "This paid booking cannot be refunded because no payment intent was stored."},
+                    {
+                        "detail": (
+                            "This paid booking cannot be refunded because no payment intent was stored."
+                        )
+                    },
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 

@@ -4,14 +4,15 @@ import {
   FaBoxArchive,
   FaCalendarDays,
   FaLocationDot,
+  FaPenToSquare,
   FaReceipt,
   FaRightFromBracket,
-  FaRotateLeft,
   FaUserGroup,
 } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 import {
+  amendBooking,
   archiveBooking,
   cancelBooking,
   createCheckoutSession,
@@ -34,7 +35,7 @@ function formatPaymentStatus(status) {
     case "refunded":
       return "Refunded";
     default:
-      return status;
+      return status || "Unknown";
   }
 }
 
@@ -45,6 +46,17 @@ function formatStatus(status) {
 
 function getPaymentTone(paymentStatus) {
   return `status-badge status-badge--${paymentStatus}`;
+}
+
+function buildAmendForm(booking) {
+  return {
+    party_size: String(booking.party_size),
+    contact_name: booking.contact_name || "",
+    contact_email: booking.contact_email || "",
+    contact_phone: booking.contact_phone || "",
+    emergency_contact: booking.emergency_contact || "",
+    notes: booking.notes || "",
+  };
 }
 
 function AccountPage() {
@@ -60,6 +72,17 @@ function AccountPage() {
   const [payingId, setPayingId] = useState(null);
   const [refundingId, setRefundingId] = useState(null);
   const [archivingId, setArchivingId] = useState(null);
+
+  const [amendingId, setAmendingId] = useState(null);
+  const [savingAmendId, setSavingAmendId] = useState(null);
+  const [amendForm, setAmendForm] = useState({
+    party_size: "1",
+    contact_name: "",
+    contact_email: "",
+    contact_phone: "",
+    emergency_contact: "",
+    notes: "",
+  });
 
   const [authMode, setAuthMode] = useState("login");
   const [authSubmitting, setAuthSubmitting] = useState(false);
@@ -134,6 +157,26 @@ function AccountPage() {
       ...current,
       [name]: value,
     }));
+  }
+
+  function handleAmendFieldChange(event) {
+    const { name, value } = event.target;
+    setAmendForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
+  }
+
+  function openAmendForm(booking) {
+    setActionError("");
+    setActionSuccess("");
+    setAmendingId(booking.id);
+    setAmendForm(buildAmendForm(booking));
+  }
+
+  function closeAmendForm() {
+    setAmendingId(null);
+    setSavingAmendId(null);
   }
 
   async function handleLoginSubmit(event) {
@@ -297,6 +340,52 @@ function AccountPage() {
       setActionError(err?.data?.detail || "Unable to archive booking right now.");
     } finally {
       setArchivingId(null);
+    }
+  }
+
+  async function handleAmendSubmit(event, booking) {
+    event.preventDefault();
+    setActionError("");
+    setActionSuccess("");
+
+    try {
+      setSavingAmendId(booking.id);
+
+      const payload = {
+        contact_name: amendForm.contact_name,
+        contact_email: amendForm.contact_email,
+        contact_phone: amendForm.contact_phone,
+        emergency_contact: amendForm.emergency_contact,
+        notes: amendForm.notes,
+      };
+
+      const canChangePartySize =
+        booking.payment_status !== "paid" &&
+        booking.payment_status !== "refund_pending" &&
+        booking.payment_status !== "refunded";
+
+      if (canChangePartySize) {
+        payload.party_size = Number(amendForm.party_size);
+      }
+
+      await amendBooking(booking.id, payload);
+      setActionSuccess("Booking amended successfully.");
+      closeAmendForm();
+      await loadBookings();
+    } catch (err) {
+      const data = err?.data || {};
+      const firstError =
+        data.detail ||
+        data.party_size?.[0] ||
+        data.contact_name?.[0] ||
+        data.contact_email?.[0] ||
+        data.contact_phone?.[0] ||
+        data.non_field_errors?.[0] ||
+        "Unable to amend booking right now.";
+
+      setActionError(firstError);
+    } finally {
+      setSavingAmendId(null);
     }
   }
 
@@ -621,7 +710,7 @@ function AccountPage() {
                 <div className="account-bookings-grid">
                   {visibleBookings.map((booking, index) => {
                     const canPay =
-                      ["pending", "confirmed"].includes(booking.status) &&
+                      ["pending", "confirmed", "amended"].includes(booking.status) &&
                       booking.payment_status !== "paid" &&
                       booking.payment_status !== "refunded";
 
@@ -632,6 +721,15 @@ function AccountPage() {
                     const canArchive =
                       booking.status === "cancelled" ||
                       booking.payment_status === "refunded";
+
+                    const canAmend =
+                      !booking.is_archived &&
+                      booking.status !== "cancelled";
+
+                    const canChangePartySize =
+                      booking.payment_status !== "paid" &&
+                      booking.payment_status !== "refund_pending" &&
+                      booking.payment_status !== "refunded";
 
                     return (
                       <Reveal
@@ -705,7 +803,7 @@ function AccountPage() {
                                 Payment
                               </span>
                               <strong className={getPaymentTone(booking.payment_status)}>
-                                {formatStatus(booking.payment_status)}
+                                {formatPaymentStatus(booking.payment_status)}
                               </strong>
                             </div>
                           </div>
@@ -716,6 +814,18 @@ function AccountPage() {
                             </span>
 
                             <div className="account-booking-card__actions">
+                              {canAmend ? (
+                                <button
+                                  type="button"
+                                  className="account-booking-card__amend"
+                                  onClick={() => openAmendForm(booking)}
+                                  disabled={savingAmendId === booking.id}
+                                >
+                                  <FaPenToSquare />
+                                  Amend
+                                </button>
+                              ) : null}
+
                               {canPay ? (
                                 <button
                                   type="button"
@@ -727,7 +837,7 @@ function AccountPage() {
                                 </button>
                               ) : null}
 
-                              {["pending", "confirmed"].includes(booking.status) ? (
+                              {["pending", "confirmed", "amended"].includes(booking.status) ? (
                                 <button
                                   type="button"
                                   className="account-booking-card__cancel"
@@ -768,6 +878,132 @@ function AccountPage() {
                               ) : null}
                             </div>
                           </div>
+
+                          {amendingId === booking.id ? (
+                            <form
+                              className="account-amend-form"
+                              onSubmit={(event) => handleAmendSubmit(event, booking)}
+                            >
+                              <div className="account-amend-form__grid">
+                                <div className="booking-field">
+                                  <label className="booking-field__label" htmlFor={`amend-name-${booking.id}`}>
+                                    Contact name
+                                  </label>
+                                  <input
+                                    id={`amend-name-${booking.id}`}
+                                    name="contact_name"
+                                    className="booking-field__control"
+                                    type="text"
+                                    value={amendForm.contact_name}
+                                    onChange={handleAmendFieldChange}
+                                    disabled={savingAmendId === booking.id}
+                                  />
+                                </div>
+
+                                <div className="booking-field">
+                                  <label className="booking-field__label" htmlFor={`amend-email-${booking.id}`}>
+                                    Contact email
+                                  </label>
+                                  <input
+                                    id={`amend-email-${booking.id}`}
+                                    name="contact_email"
+                                    className="booking-field__control"
+                                    type="email"
+                                    value={amendForm.contact_email}
+                                    onChange={handleAmendFieldChange}
+                                    disabled={savingAmendId === booking.id}
+                                  />
+                                </div>
+
+                                <div className="booking-field">
+                                  <label className="booking-field__label" htmlFor={`amend-phone-${booking.id}`}>
+                                    Contact phone
+                                  </label>
+                                  <input
+                                    id={`amend-phone-${booking.id}`}
+                                    name="contact_phone"
+                                    className="booking-field__control"
+                                    type="text"
+                                    value={amendForm.contact_phone}
+                                    onChange={handleAmendFieldChange}
+                                    disabled={savingAmendId === booking.id}
+                                  />
+                                </div>
+
+                                <div className="booking-field">
+                                  <label className="booking-field__label" htmlFor={`amend-emergency-${booking.id}`}>
+                                    Emergency contact
+                                  </label>
+                                  <input
+                                    id={`amend-emergency-${booking.id}`}
+                                    name="emergency_contact"
+                                    className="booking-field__control"
+                                    type="text"
+                                    value={amendForm.emergency_contact}
+                                    onChange={handleAmendFieldChange}
+                                    disabled={savingAmendId === booking.id}
+                                  />
+                                </div>
+
+                                <div className="booking-field">
+                                  <label className="booking-field__label" htmlFor={`amend-party-size-${booking.id}`}>
+                                    Party size
+                                  </label>
+                                  <select
+                                    id={`amend-party-size-${booking.id}`}
+                                    name="party_size"
+                                    className="booking-field__control"
+                                    value={amendForm.party_size}
+                                    onChange={handleAmendFieldChange}
+                                    disabled={!canChangePartySize || savingAmendId === booking.id}
+                                  >
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                  </select>
+                                </div>
+
+                                <div className="booking-field booking-field--full">
+                                  <label className="booking-field__label" htmlFor={`amend-notes-${booking.id}`}>
+                                    Notes
+                                  </label>
+                                  <textarea
+                                    id={`amend-notes-${booking.id}`}
+                                    name="notes"
+                                    className="booking-field__control booking-field__control--textarea"
+                                    value={amendForm.notes}
+                                    onChange={handleAmendFieldChange}
+                                    disabled={savingAmendId === booking.id}
+                                  />
+                                </div>
+                              </div>
+
+                              {!canChangePartySize ? (
+                                <p className="account-amend-form__note">
+                                  Party size cannot be changed after payment or refund processing.
+                                </p>
+                              ) : null}
+
+                              <div className="account-amend-form__actions">
+                                <button
+                                  type="submit"
+                                  className="route-card__link route-card__link--primary"
+                                  disabled={savingAmendId === booking.id}
+                                >
+                                  {savingAmendId === booking.id ? "Saving..." : "Save changes"}
+                                </button>
+
+                                <button
+                                  type="button"
+                                  className="route-card__link"
+                                  onClick={closeAmendForm}
+                                  disabled={savingAmendId === booking.id}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </form>
+                          ) : null}
                         </article>
                       </Reveal>
                     );
