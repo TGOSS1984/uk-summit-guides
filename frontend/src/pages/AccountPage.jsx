@@ -23,15 +23,28 @@ import {
   registerUser,
 } from "../lib/api";
 
+function formatPaymentStatus(status) {
+  switch (status) {
+    case "paid":
+      return "Paid";
+    case "pending":
+      return "Pending";
+    case "refund_pending":
+      return "Refund pending";
+    case "refunded":
+      return "Refunded";
+    default:
+      return status;
+  }
+}
+
 function formatStatus(status) {
   if (!status) return "Unknown";
   return status.charAt(0).toUpperCase() + status.slice(1);
 }
 
 function getPaymentTone(paymentStatus) {
-  if (paymentStatus === "paid") return "is-paid";
-  if (paymentStatus === "refunded") return "is-refunded";
-  return "";
+  return `status-badge status-badge--${paymentStatus}`;
 }
 
 function AccountPage() {
