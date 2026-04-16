@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 import {
   cancelBooking,
+  createCheckoutSession,
   getCurrentUser,
   getMyBookings,
   loginUser,
@@ -32,6 +33,7 @@ function AccountPage() {
   const [actionError, setActionError] = useState("");
   const [actionSuccess, setActionSuccess] = useState("");
   const [cancellingId, setCancellingId] = useState(null);
+  const [payingId, setPayingId] = useState(null);
   const [authMode, setAuthMode] = useState("login");
   const [authSubmitting, setAuthSubmitting] = useState(false);
 
@@ -52,6 +54,7 @@ function AccountPage() {
   async function loadBookings() {
     try {
       setBookingsLoading(true);
+      setError("");
       const data = await getMyBookings();
       setBookings(data);
     } catch {
@@ -203,6 +206,32 @@ function AccountPage() {
       setActionError(apiError || "Unable to cancel booking right now.");
     } finally {
       setCancellingId(null);
+    }
+  }
+
+  async function handlePayNow(bookingId) {
+    setActionError("");
+    setActionSuccess("");
+
+    try {
+      setPayingId(bookingId);
+      const response = await createCheckoutSession(bookingId);
+
+      if (!response?.checkout_url) {
+        setActionError("Stripe checkout URL was not returned.");
+        return;
+      }
+
+      window.location.href = response.checkout_url;
+    } catch (err) {
+      const apiError =
+        err?.data?.detail ||
+        err?.data?.error?.message ||
+        "Unable to start payment right now.";
+
+      setActionError(apiError);
+    } finally {
+      setPayingId(null);
     }
   }
 
@@ -597,16 +626,29 @@ function AccountPage() {
                             Created: {new Date(booking.created_at).toLocaleString()}
                           </span>
 
-                          {["pending", "confirmed"].includes(booking.status) ? (
-                            <button
-                              type="button"
-                              className="account-booking-card__cancel"
-                              onClick={() => handleCancelBooking(booking.id)}
-                              disabled={cancellingId === booking.id}
-                            >
-                              {cancellingId === booking.id ? "Cancelling..." : "Cancel booking"}
-                            </button>
-                          ) : null}
+                          <div className="account-booking-card__actions">
+                            {["pending", "confirmed"].includes(booking.status) ? (
+                              <>
+                                <button
+                                  type="button"
+                                  className="account-booking-card__pay"
+                                  onClick={() => handlePayNow(booking.id)}
+                                  disabled={payingId === booking.id}
+                                >
+                                  {payingId === booking.id ? "Opening Stripe..." : "Pay now"}
+                                </button>
+
+                                <button
+                                  type="button"
+                                  className="account-booking-card__cancel"
+                                  onClick={() => handleCancelBooking(booking.id)}
+                                  disabled={cancellingId === booking.id || payingId === booking.id}
+                                >
+                                  {cancellingId === booking.id ? "Cancelling..." : "Cancel booking"}
+                                </button>
+                              </>
+                            ) : null}
+                          </div>
                         </div>
                       </article>
                     </Reveal>

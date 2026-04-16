@@ -1486,6 +1486,38 @@
   }
 }
 
+.account-booking-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.account-booking-card__pay {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.7rem;
+  padding: 0 0.95rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  transition:
+    transform var(--transition-fast),
+    filter var(--transition-fast);
+}
+
+.account-booking-card__pay:hover:enabled {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+.account-booking-card__pay:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
 /*Contact Page*/
 
 .contact-form-panel,

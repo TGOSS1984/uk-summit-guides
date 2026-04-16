@@ -147,3 +147,13 @@ export async function createContactMessage(payload) {
     body: JSON.stringify(payload),
   });
 }
+
+export async function createCheckoutSession(bookingId) {
+  await ensureCsrf();
+  return sendJson("/payments/create-checkout-session/", {
+    method: "POST",
+    body: JSON.stringify({
+      booking_id: bookingId,
+    }),
+  });
+}
