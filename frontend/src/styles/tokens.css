@@ -59,25 +59,35 @@
     linear-gradient(180deg, rgba(7, 15, 22, 0.08), rgba(7, 15, 22, 0.42)),
     radial-gradient(circle at 50% 12%, rgba(230, 238, 240, 0.18), transparent 28%),
     linear-gradient(180deg, rgba(18, 31, 39, 0.12) 0%, rgba(8, 16, 24, 0.72) 100%),
-    url("/images/shared/footer-mountains.jpg"),
+    url("/images/ui/home/home-4.jpeg"),
     linear-gradient(180deg, #8ea4a7 0%, #526873 35%, #243543 72%, #0c1a23 100%);
 
   --card-image-alt:
     linear-gradient(180deg, rgba(8, 14, 22, 0.06), rgba(8, 14, 22, 0.52)),
     radial-gradient(circle at 28% 18%, rgba(255, 247, 220, 0.08), transparent 22%),
     linear-gradient(135deg, rgba(107, 124, 138, 0.2), rgba(12, 24, 32, 0.22)),
-    url("/images/shared/footer-mountains.jpg"),
+    url("/images/ui/home/home-1.jpeg"),
     linear-gradient(180deg, #7f9298 0%, #475c67 35%, #24333d 72%, #0b151d 100%);
 
   --card-image-night:
     linear-gradient(180deg, rgba(4, 9, 16, 0.08), rgba(4, 9, 16, 0.68)),
     radial-gradient(circle at 26% 16%, rgba(199, 220, 255, 0.16), transparent 18%),
     linear-gradient(135deg, rgba(56, 73, 92, 0.22), rgba(8, 17, 24, 0.24)),
-    url("/images/shared/footer-mountains.jpg"),
+    url("/images/ui/home/home-2.jpeg"),
     linear-gradient(180deg, #435260 0%, #243543 45%, #101a23 100%);
 
   --section-surface-dark:
     linear-gradient(180deg, rgba(10, 19, 27, 0.96), rgba(7, 15, 21, 0.98));
+
+  --image-home-editorial-1: url("/images/ui/home/home-1.jpeg");
+  --image-home-editorial-2: url("/images/ui/home/home-2.jpeg");
+  --image-home-scenic-1: url("/images/ui/home/home-3.jpeg");
+  --image-home-scenic-2: url("/images/ui/home/home-4.jpeg");
+
+  --image-about-story: url("/images/ui/about/about-1.jpeg");
+  --image-about-split: url("/images/ui/about/about-2.jpeg");
+
+  --image-services-feature: url("/images/ui/services/services-1.jpeg");
 
   --footer-image: url("/images/shared/footer-mountains.jpg");
   --footer-overlay:
@@ -154,6 +164,16 @@
     linear-gradient(135deg, rgba(85, 108, 90, 0.16), rgba(27, 40, 34, 0.24)),
     url("/images/shared/footer-mountains.jpg"),
     linear-gradient(180deg, #7b8f74 0%, #4c6457 45%, #253730 100%);
+
+  --image-home-editorial-1: url("/images/ui/home/home-1-summer.jpeg");
+  --image-home-editorial-2: url("/images/ui/home/home-2-summer.jpeg");
+  --image-home-scenic-1: url("/images/ui/home/home-3-summer.jpeg");
+  --image-home-scenic-2: url("/images/ui/home/home-4-summer.jpeg");
+
+  --image-about-story: url("/images/ui/about/about-1-summer.jpeg");
+  --image-about-split: url("/images/ui/about/about-2-summer.jpeg");
+
+  --image-services-feature: url("/images/ui/services/services-1-summer.jpeg");
 
   --section-surface-dark:
     linear-gradient(180deg, rgba(27, 39, 34, 0.96), rgba(23, 34, 29, 0.98));

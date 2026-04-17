@@ -489,7 +489,7 @@
 }
 
 .about-story__media--primary {
-  background-image: var(--card-image-night);
+  background-image: var(--image-about-story);
 }
 
 .about-split__layout {
@@ -498,7 +498,7 @@
 
 .about-split__media--tall {
   min-height: 360px;
-  background-image: var(--card-image-alt);
+  background-image: var(--image-about-split);
 }
 
 .services-feature__layout {
@@ -507,7 +507,7 @@
 
 .services-feature__media {
   min-height: 360px;
-  background-image: var(--card-image-night);
+  background-image: var(--image-services-feature);
 }
 
 .booking-layout {

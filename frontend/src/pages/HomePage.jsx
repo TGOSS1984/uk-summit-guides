@@ -161,7 +161,7 @@ function HomePage() {
                   className="accent-box accent-box--media accent-box--top-left"
                   aria-hidden="true"
                 />
-                <div className="editorial-block__media" />
+                <div className="editorial-block__media editorial-block__media--primary" />
               </div>
             </article>
           </Reveal>
