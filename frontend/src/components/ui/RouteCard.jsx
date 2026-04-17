@@ -27,7 +27,18 @@ function formatDifficulty(value) {
 }
 
 function RouteCard({ route }) {
-  const imageClass = route.imageClass || getImageClass(route);
+  const fallbackImageClass = route.imageClass || getImageClass(route);
+  const hasCustomImage = Boolean(route.card_image);
+
+  const mediaStyle = hasCustomImage
+    ? {
+        backgroundImage: `url(${route.card_image})`,
+      }
+    : undefined;
+
+  const mediaClassName = hasCustomImage
+    ? "route-card__media"
+    : `route-card__media ${fallbackImageClass}`;
 
   return (
     <article className="route-card">
@@ -36,7 +47,7 @@ function RouteCard({ route }) {
           className="accent-box accent-box--media accent-box--top-left"
           aria-hidden="true"
         />
-        <div className={`route-card__media ${imageClass}`}>
+        <div className={mediaClassName} style={mediaStyle}>
           <span className="route-card__region-badge">
             {route.region?.name || route.region || "Region"}
           </span>

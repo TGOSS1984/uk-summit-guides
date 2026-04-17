@@ -577,6 +577,88 @@
   line-height: 1.65;
 }
 
+/*Route Detail/Maps*/
+
+.route-detail-action--static {
+  cursor: default;
+}
+
+.route-map {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.route-map__canvas {
+  width: 100%;
+  min-height: 420px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-soft);
+  z-index: 1;
+}
+
+.route-map__canvas .leaflet-control-zoom a {
+  color: #111;
+}
+
+.route-map__canvas .leaflet-control-attribution {
+  font-size: 0.68rem;
+}
+
+.route-map__canvas .leaflet-tooltip {
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  background: rgba(10, 18, 24, 0.92);
+  color: #f4f7f6;
+  box-shadow: var(--shadow-soft);
+}
+
+.route-map__canvas .leaflet-tooltip-top:before {
+  border-top-color: rgba(10, 18, 24, 0.92);
+}
+
+.route-map__line {
+  stroke: #d34242;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.route-map__marker-icon {
+  background: transparent;
+  border: 0;
+}
+
+.route-map__marker-icon span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(11, 20, 28, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #f1f5f6;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  box-shadow: var(--shadow-soft);
+}
+
+.route-map__status {
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.route-map__status-text {
+  margin: 0;
+  color: var(--color-text-soft);
+  line-height: 1.65;
+}
+
 .route-booking-card__eyebrow,
 .route-guide-card__eyebrow,
 .booking-summary-card__eyebrow,

@@ -11,6 +11,7 @@ import { FiClock } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 import RouteCard from "../components/ui/RouteCard";
+import RouteMap from "../components/ui/RouteMap";
 import { getRouteDetail, getRoutes, getScheduledTours } from "../lib/api";
 
 function formatDifficulty(value) {
@@ -180,25 +181,22 @@ function RouteDetailPage() {
                 <div className="route-detail-panel__header">
                   <div>
                     <p className="section-kicker">Mapping</p>
-                    <h2 className="section-title">Leaflet / OS map integration placeholder</h2>
+                    <h2 className="section-title">Interactive route overview</h2>
                   </div>
 
-                  <button type="button" className="route-detail-action">
+                  <div className="route-detail-action route-detail-action--static">
                     <FaMapLocationDot />
-                    Open Map Placeholder
-                  </button>
-                </div>
-
-                <div className="route-detail-map">
-                  <div className="route-detail-map__overlay">
-                    <span className="route-detail-map__tag">Interactive map area</span>
-                    <p className="route-detail-map__text">
-                      {route.map_embed
-                        ? "This route already has a stored map URL ready for later frontend integration."
-                        : "Map wiring comes next. This route currently has no stored map URL in the backend."}
-                    </p>
+                    GPX + Leaflet
                   </div>
                 </div>
+
+                <RouteMap
+                  routeName={route.name}
+                  gpxFile={route.gpx_file}
+                  mapCenterLat={route.map_center_lat}
+                  mapCenterLng={route.map_center_lng}
+                  mapZoom={route.map_zoom || 12}
+                />
               </article>
             </Reveal>
 
@@ -274,8 +272,9 @@ function RouteDetailPage() {
                 <div className="route-guide-card__avatar" />
                 <h3 className="route-guide-card__title">{route.region.name}</h3>
                 <p className="route-guide-card__copy">
-                  This route is now loading live from Django. Next we can wire guide
-                  assignment, scheduled tour detail, and booking availability rules.
+                  This route now supports GPX-based mapping with a fallback map centre.
+                  Next we can layer in richer route styling, route stats, and start/end
+                  journey detail.
                 </p>
 
                 <div className="route-guide-card__meta">
