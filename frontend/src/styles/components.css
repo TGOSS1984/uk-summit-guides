@@ -1220,6 +1220,7 @@
 .account-cta-panel {
   position: relative;
   padding: 1.4rem;
+  margin-bottom: 2rem;
   border: 1px solid var(--color-border);
   border-radius: calc(var(--radius-lg) + 0.1rem);
   background:

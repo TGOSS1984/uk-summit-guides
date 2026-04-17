@@ -52,6 +52,10 @@ class RouteListSerializer(serializers.ModelSerializer):
             "mountain_height_m",
             "elevation_gain_m",
             "card_image",
+            "gpx_file",
+            "map_center_lat",
+            "map_center_lng",
+            "map_zoom",
             "is_featured",
             "active",
         ]
@@ -77,6 +81,10 @@ class RouteDetailSerializer(serializers.ModelSerializer):
             "hero_image",
             "card_image",
             "map_embed",
+            "gpx_file",
+            "map_center_lat",
+            "map_center_lng",
+            "map_zoom",
             "is_featured",
             "active",
         ]

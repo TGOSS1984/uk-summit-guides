@@ -77,6 +77,33 @@ class Route(models.Model):
     hero_image = models.URLField(blank=True)
     card_image = models.URLField(blank=True)
     map_embed = models.URLField(blank=True)
+
+    gpx_file = models.CharField(max_length=255, blank=True)
+    map_center_lat = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(Decimal("-90.000000")),
+            MaxValueValidator(Decimal("90.000000")),
+        ],
+    )
+    map_center_lng = models.DecimalField(
+        max_digits=9,
+        decimal_places=6,
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(Decimal("-180.000000")),
+            MaxValueValidator(Decimal("180.000000")),
+        ],
+    )
+    map_zoom = models.PositiveSmallIntegerField(
+        default=12,
+        validators=[MinValueValidator(1), MaxValueValidator(18)],
+    )
+
     is_featured = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
 
