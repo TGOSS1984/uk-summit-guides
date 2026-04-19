@@ -74,8 +74,8 @@ class Route(models.Model):
     )
     mountain_height_m = models.PositiveIntegerField()
     elevation_gain_m = models.PositiveIntegerField()
-    hero_image = models.URLField(blank=True)
-    card_image = models.URLField(blank=True)
+    hero_image = models.CharField(max_length=255, blank=True)
+    card_image = models.CharField(max_length=255, blank=True)
     map_embed = models.URLField(blank=True)
 
     gpx_file = models.CharField(max_length=255, blank=True)
