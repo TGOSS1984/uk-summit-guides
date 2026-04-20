@@ -11,6 +11,10 @@ from .email_utils import (
     send_payment_notification_email_to_admin,
 )
 from .models import Payment
+from .refund_email_utils import (
+    send_refund_completed_email,
+    send_refund_notification_email_to_admin,
+)
 from .serializers import CreateCheckoutSessionSerializer
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -244,12 +248,18 @@ class StripeWebhookAPIView(APIView):
 
             if payment_intent_id:
                 try:
-                    payment = Payment.objects.select_related("booking").get(
+                    payment = Payment.objects.select_related(
+                        "booking",
+                        "booking__scheduled_tour",
+                        "booking__scheduled_tour__route",
+                        "booking__scheduled_tour__route__region",
+                    ).get(
                         stripe_payment_intent_id=payment_intent_id
                     )
                 except Payment.DoesNotExist:
                     return HttpResponse(status=200)
 
+                old_status = payment.status
                 payment.stripe_refund_id = refund.get("id", "") or payment.stripe_refund_id
 
                 if refund_status == "succeeded":
@@ -261,6 +271,14 @@ class StripeWebhookAPIView(APIView):
                             "refunded_at",
                         ]
                     )
+
+                    if old_status != Payment.Status.REFUNDED:
+                        send_refund_completed_email(payment)
+                        send_refund_notification_email_to_admin(
+                            payment,
+                            label="Refund completed",
+                        )
+
                 elif refund_status == "failed":
                     payment.status = Payment.Status.PAID
                     payment.save(

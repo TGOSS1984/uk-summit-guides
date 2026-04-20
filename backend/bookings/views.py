@@ -5,6 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from payments.models import Payment
+from .cancel_email_utils import (
+    send_booking_cancelled_email,
+    send_booking_cancelled_notification_email_to_admin,
+)
 from .email_utils import (
     send_booking_confirmation_email,
     send_booking_notification_email_to_admin,
@@ -189,6 +193,9 @@ class BookingCancelAPIView(APIView):
 
         booking.status = Booking.Status.CANCELLED
         booking.save(update_fields=["status"])
+
+        send_booking_cancelled_email(booking)
+        send_booking_cancelled_notification_email_to_admin(booking)
 
         serializer = BookingDetailSerializer(booking)
         return Response(serializer.data, status=status.HTTP_200_OK)
