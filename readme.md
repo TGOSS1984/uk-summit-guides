@@ -13,6 +13,24 @@
 
 ---
 
+## 📚 Table of Contents
+
+* [📸 Preview](#-preview)
+* [🌐 Live Project](#-live-project)
+* [📖 Overview](#-overview)
+* [🚀 Key Features](#-key-features)
+* [🏗️ Tech Stack](#️-tech-stack)
+* [📂 Project Structure](#-project-structure)
+* [⚙️ Setup & Installation](#️-setup--installation)
+* [💳 Stripe Webhook](#-stripe-webhook-local-testing)
+* [🧪 Testing](#-testing)
+* [🚀 Deployment](#-deployment-planned)
+* [📌 Future Enhancements](#-future-enhancements)
+* [📬 Contact](#-contact)
+* [⭐ Final Notes](#-final-notes)
+
+---
+
 ## 📸 Preview
 
 ### 🏠 Homepage
@@ -133,7 +151,7 @@ The project is designed to reflect a **production-ready commercial system**, wit
 
 ## 📂 Project Structure
 
-```
+```bash
 uk-summit-guides/
 │
 ├── backend/
