@@ -901,6 +901,87 @@
   }
 }
 
+/*Services*/
+
+/* Services page responsive safeguards */
+
+.services-feature__layout > *,
+.services-grid > *,
+.services-process__grid > * {
+  min-width: 0;
+}
+
+.services-feature__content,
+.services-feature__media-wrap {
+  min-width: 0;
+}
+
+.services-hero__meta-item {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .services-feature__layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .services-grid,
+  .services-process__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .services-feature__content {
+    max-width: none;
+  }
+
+  .services-feature__media {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 640px) {
+  .services-hero__meta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .services-hero__meta-item {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .services-feature__media {
+    min-height: 260px;
+  }
+
+  .service-card,
+  .services-process__card,
+  .services-cta__panel {
+    padding: 1.15rem;
+  }
+
+  .services-feature__badges {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .services-feature__badge {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .services-cta__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .services-cta__actions > * {
+    width: 100%;
+  }
+}
+
 /*AccountPage*/
 
 .account-hero {
