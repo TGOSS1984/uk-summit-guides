@@ -1302,11 +1302,14 @@
   }
 
   .stats-band__grid,
-  .about-pillars__grid,
   .services-grid,
   .services-process__grid,
   .booking-notes__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .about-pillars__grid {
+    grid-template-columns: 1fr;
   }
 
   .booking-form-grid {

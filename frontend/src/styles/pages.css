@@ -822,6 +822,85 @@
   }
 }
 
+/*About*/
+
+/* About page responsive safeguards */
+
+.about-story__layout > *,
+.about-split__layout > *,
+.about-pillars__grid > * {
+  min-width: 0;
+}
+
+.about-story__content,
+.about-split__content,
+.about-split__stack {
+  min-width: 0;
+}
+
+.about-hero__meta-item {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .about-story__layout,
+  .about-split__layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .about-pillars__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-story__content,
+  .about-split__content {
+    max-width: none;
+  }
+
+  .about-story__media,
+  .about-split__media {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-hero__meta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .about-hero__meta-item {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .about-story__media,
+  .about-split__media {
+    min-height: 260px;
+  }
+
+  .about-pillar-card,
+  .about-stat-panel,
+  .about-cta__panel {
+    padding: 1.15rem;
+  }
+
+  .about-stat-panel__item {
+    align-items: flex-start;
+  }
+
+  .about-cta__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .about-cta__actions > * {
+    width: 100%;
+  }
+}
+
 /*AccountPage*/
 
 .account-hero {
