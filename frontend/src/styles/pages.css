@@ -982,6 +982,82 @@
   }
 }
 
+/*Booking Page*/
+
+/* Book now page responsive safeguards */
+
+.booking-layout > *,
+.booking-form-grid > *,
+.booking-notes__grid > *,
+.booking-hero__meta > * {
+  min-width: 0;
+}
+
+.booking-main,
+.booking-aside,
+.booking-summary-card,
+.booking-support-card {
+  min-width: 0;
+}
+
+.booking-hero__meta-item {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+@media (max-width: 980px) {
+  .booking-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .booking-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-notes__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .booking-hero__meta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .booking-hero__meta-item {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .booking-form-shell,
+  .booking-summary-card,
+  .booking-support-card,
+  .booking-note-card {
+    padding: 1.15rem;
+  }
+
+  .booking-form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .booking-form-actions > * {
+    width: 100%;
+  }
+
+  .booking-summary-card__meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .booking-summary-card__meta-row span,
+  .booking-summary-card__meta-row strong {
+    min-width: 0;
+  }
+}
+
 /*AccountPage*/
 
 .account-hero {
