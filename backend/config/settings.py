@@ -127,3 +127,29 @@ STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY", default="")
 STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY", default="")
 STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET", default="")
 FRONTEND_BASE_URL = config("FRONTEND_BASE_URL", default="http://localhost:5175")
+
+# Email
+EMAIL_BACKEND = config(
+    "EMAIL_BACKEND",
+    default="django.core.mail.backends.console.EmailBackend",
+)
+DEFAULT_FROM_EMAIL = config(
+    "DEFAULT_FROM_EMAIL",
+    default="UK Summit Guides <noreply@uksummitguides.local>",
+)
+BOOKINGS_NOTIFICATION_EMAIL = config(
+    "BOOKINGS_NOTIFICATION_EMAIL",
+    default="",
+)
+CONTACT_NOTIFICATION_EMAIL = config(
+    "CONTACT_NOTIFICATION_EMAIL",
+    default="",
+)
+
+EMAIL_HOST = config("EMAIL_HOST", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
+EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=10, cast=int)
