@@ -52,6 +52,20 @@ function Navbar({ theme, onToggleTheme }) {
     };
   }, []);
 
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth > 900) {
+        setMenuOpen(false);
+      }
+    }
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   async function handleLogout() {
     try {
       setIsLoggingOut(true);

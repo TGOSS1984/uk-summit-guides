@@ -13,6 +13,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  min-width: 0;
 }
 
 .brand-logo {
@@ -22,6 +23,7 @@
   color: var(--color-text);
   text-decoration: none;
   min-width: 0;
+  flex: 1 1 auto;
 }
 
 .brand-logo__mark {
@@ -74,6 +76,8 @@
   font-weight: 800;
   letter-spacing: 0.03em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .brand-logo__subtitle {
@@ -83,6 +87,8 @@
   letter-spacing: 0.17em;
   color: var(--brand-logo-subtitle, var(--color-text-muted));
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .site-brand {
@@ -160,6 +166,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .site-header__actions--mobile {
@@ -177,6 +184,7 @@
   justify-content: center;
   flex-direction: column;
   gap: 0.26rem;
+  flex-shrink: 0;
 }
 
 .menu-toggle span {
@@ -563,13 +571,18 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
   .site-nav--desktop {
     display: none;
   }
 
+  .site-header__inner {
+    gap: 0.75rem;
+  }
+
   .site-header__actions--mobile {
     display: flex;
+    gap: 0.6rem;
   }
 
   .menu-toggle {
@@ -624,7 +637,74 @@
   }
 }
 
-@media (min-width: 901px) {
+@media (max-width: 560px) {
+  .site-header__inner {
+    gap: 0.55rem;
+  }
+
+  .site-header__actions--mobile {
+    gap: 0.45rem;
+  }
+
+  .brand-logo {
+    gap: 0.65rem;
+  }
+
+  .brand-logo__mark {
+    width: 2.2rem;
+    height: 1.7rem;
+  }
+
+  .brand-logo__title {
+    font-size: 0.92rem;
+  }
+
+  .brand-logo__subtitle {
+    display: none;
+  }
+
+  .site-account-link--compact,
+  .menu-toggle {
+    width: 2.65rem;
+    min-width: 2.65rem;
+    height: 2.65rem;
+    min-height: 2.65rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-header__inner {
+    gap: 0.4rem;
+  }
+
+  .brand-logo {
+    gap: 0.55rem;
+  }
+
+  .brand-logo__mark {
+    width: 2rem;
+    height: 1.55rem;
+  }
+
+  .brand-logo__title {
+    font-size: 0.84rem;
+    letter-spacing: 0.02em;
+  }
+
+  .site-header__actions--mobile {
+    gap: 0.35rem;
+  }
+
+  .site-account-link--compact,
+  .menu-toggle {
+    width: 2.5rem;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    min-height: 2.5rem;
+  }
+}
+
+@media (min-width: 1101px) {
   .theme-toggle--compact,
   .mobile-menu {
     display: none;
