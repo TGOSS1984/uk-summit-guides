@@ -6,6 +6,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from bookings.models import Booking
+from .email_utils import (
+    send_payment_confirmation_email,
+    send_payment_notification_email_to_admin,
+)
 from .models import Payment
 from .serializers import CreateCheckoutSessionSerializer
 
@@ -198,11 +202,18 @@ class StripeWebhookAPIView(APIView):
             session_id = session.get("id")
 
             try:
-                payment = Payment.objects.select_related("booking").get(
+                payment = Payment.objects.select_related(
+                    "booking",
+                    "booking__scheduled_tour",
+                    "booking__scheduled_tour__route",
+                    "booking__scheduled_tour__route__region",
+                ).get(
                     stripe_checkout_session_id=session_id
                 )
             except Payment.DoesNotExist:
                 return HttpResponse(status=200)
+
+            was_paid_before = payment.status == Payment.Status.PAID
 
             payment.stripe_payment_intent_id = session.get("payment_intent", "") or ""
             if session.get("amount_total") is not None:
@@ -221,6 +232,10 @@ class StripeWebhookAPIView(APIView):
             if booking.status == Booking.Status.PENDING:
                 booking.status = Booking.Status.CONFIRMED
                 booking.save(update_fields=["status"])
+
+            if not was_paid_before:
+                send_payment_confirmation_email(payment)
+                send_payment_notification_email_to_admin(payment)
 
         elif event_type == "refund.updated":
             refund = event["data"]["object"]
