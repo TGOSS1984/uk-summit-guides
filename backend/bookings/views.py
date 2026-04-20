@@ -5,6 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from payments.models import Payment
+from .email_utils import (
+    send_booking_confirmation_email,
+    send_booking_notification_email_to_admin,
+)
 from .models import Booking, ScheduledTour
 from .serializers import (
     BookingAmendSerializer,
@@ -53,6 +57,9 @@ class BookingCreateAPIView(generics.CreateAPIView):
         )
         serializer.is_valid(raise_exception=True)
         booking = serializer.save()
+
+        send_booking_confirmation_email(booking)
+        send_booking_notification_email_to_admin(booking)
 
         output_serializer = BookingDetailSerializer(booking)
         headers = self.get_success_headers(output_serializer.data)
