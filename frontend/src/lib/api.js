@@ -1,5 +1,6 @@
-const API_HOST = window.location.hostname;
-const API_BASE = `http://${API_HOST}:8000/api`;
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ||
+  `http://${window.location.hostname}:8000/api`;
 
 function getCookie(name) {
   const value = `; ${document.cookie}`;
