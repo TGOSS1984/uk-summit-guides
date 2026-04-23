@@ -53,8 +53,8 @@
 
 ## 🌐 Live Project
 
-* 🔗 Frontend: **[LIVE LINK HERE](#)**
-* 🔗 Backend API: **[API LINK HERE](#)**
+* 🔗 Frontend: **[https://uk-summit-guides.vercel.app](https://uk-summit-guides.vercel.app)**
+* 🔗 Backend API: **[https://uk-summit-guides-api.onrender.com/api](https://uk-summit-guides-api.onrender.com/api)**
 
 ---
 
