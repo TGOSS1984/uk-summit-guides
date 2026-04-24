@@ -1224,3 +1224,110 @@
     radial-gradient(circle at top center, rgba(255, 255, 255, 0.025), transparent 18%),
     var(--section-surface-dark);
 }
+
+/* Route Detail page responsive safeguards */
+
+.route-detail-layout > *,
+.route-detail-main,
+.route-detail-aside,
+.route-detail-panel,
+.route-booking-card,
+.route-guide-card,
+.route-detail-hero__stats > *,
+.route-detail-highlights > * {
+  min-width: 0;
+}
+
+.route-detail-hero__copy,
+.route-detail-panel .section-copy,
+.route-guide-card__copy,
+.route-detail-highlight__text {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 980px) {
+  .route-detail-layout {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .route-detail-hero__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .route-detail-aside {
+    order: 2;
+  }
+
+  .route-detail-main {
+    order: 1;
+  }
+}
+
+@media (max-width: 700px) {
+  .route-detail-hero {
+    min-height: auto;
+  }
+
+  .route-detail-hero__content {
+    padding-top: 4rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .route-detail-hero__breadcrumb {
+    flex-wrap: wrap;
+  }
+
+  .route-detail-hero__title {
+    max-width: none;
+  }
+
+  .route-detail-hero__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .route-detail-panel,
+  .route-booking-card,
+  .route-guide-card {
+    padding: 1.15rem;
+  }
+
+  .route-detail-panel__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .route-detail-action,
+  .route-booking-card__button,
+  .route-booking-card__secondary {
+    width: 100%;
+  }
+
+  .route-booking-card__meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .route-guide-card__avatar {
+    height: 220px;
+  }
+
+  .route-map__canvas {
+    min-height: 320px;
+  }
+}
+
+@media (max-width: 480px) {
+  .route-detail-hero__content {
+    padding-top: 3rem;
+  }
+
+  .route-guide-card__avatar {
+    height: 190px;
+  }
+
+  .route-map__canvas {
+    min-height: 280px;
+  }
+}
