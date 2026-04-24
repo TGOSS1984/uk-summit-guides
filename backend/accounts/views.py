@@ -1,10 +1,18 @@
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import ensure_csrf_cookie
 from rest_framework import permissions, status
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
 from .serializers import RegisterSerializer, UserSerializer
+
+
+def user_with_token_response(user):
+    token, _ = Token.objects.get_or_create(user=user)
+    data = UserSerializer(user).data
+    data["token"] = token.key
+    return data
 
 
 @ensure_csrf_cookie
@@ -21,7 +29,7 @@ def register_view(request):
     serializer.is_valid(raise_exception=True)
     user = serializer.save()
     login(request, user)
-    return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+    return Response(user_with_token_response(user), status=status.HTTP_201_CREATED)
 
 
 @api_view(["POST"])
@@ -38,11 +46,14 @@ def login_view(request):
         )
 
     login(request, user)
-    return Response(UserSerializer(user).data, status=status.HTTP_200_OK)
+    return Response(user_with_token_response(user), status=status.HTTP_200_OK)
 
 
 @api_view(["POST"])
 def logout_view(request):
+    if request.user.is_authenticated:
+        Token.objects.filter(user=request.user).delete()
+
     logout(request)
     return Response({"detail": "Logged out successfully."}, status=status.HTTP_200_OK)
 

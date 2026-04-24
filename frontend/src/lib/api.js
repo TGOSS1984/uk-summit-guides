@@ -2,6 +2,22 @@ const API_BASE =
   import.meta.env.VITE_API_BASE_URL ||
   `http://${window.location.hostname}:8000/api`;
 
+const AUTH_TOKEN_KEY = "uksummit-auth-token";
+
+export function getAuthToken() {
+  return window.localStorage.getItem(AUTH_TOKEN_KEY);
+}
+
+export function setAuthToken(token) {
+  if (token) {
+    window.localStorage.setItem(AUTH_TOKEN_KEY, token);
+  }
+}
+
+export function clearAuthToken() {
+  window.localStorage.removeItem(AUTH_TOKEN_KEY);
+}
+
 function getCookie(name) {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -23,9 +39,15 @@ async function parseResponse(response) {
 }
 
 async function fetchJson(endpoint, options = {}) {
+  const token = getAuthToken();
+
   const response = await fetch(`${API_BASE}${endpoint}`, {
     credentials: "include",
     ...options,
+    headers: {
+      ...(token ? { Authorization: `Token ${token}` } : {}),
+      ...(options.headers || {}),
+    },
   });
 
   const data = await parseResponse(response);
@@ -44,11 +66,13 @@ async function fetchJson(endpoint, options = {}) {
 
 async function sendJson(endpoint, options = {}) {
   const csrfToken = getCookie("csrftoken");
+  const token = getAuthToken();
 
   return fetchJson(endpoint, {
     headers: {
       "Content-Type": "application/json",
       ...(csrfToken ? { "X-CSRFToken": csrfToken } : {}),
+      ...(token ? { Authorization: `Token ${token}` } : {}),
       ...(options.headers || {}),
     },
     ...options,
@@ -61,26 +85,37 @@ export async function ensureCsrf() {
 
 export async function registerUser(payload) {
   await ensureCsrf();
-  return sendJson("/auth/register/", {
+  const user = await sendJson("/auth/register/", {
     method: "POST",
     body: JSON.stringify(payload),
   });
+
+  setAuthToken(user.token);
+  return user;
 }
 
 export async function loginUser(payload) {
   await ensureCsrf();
-  return sendJson("/auth/login/", {
+  const user = await sendJson("/auth/login/", {
     method: "POST",
     body: JSON.stringify(payload),
   });
+
+  setAuthToken(user.token);
+  return user;
 }
 
 export async function logoutUser() {
   await ensureCsrf();
-  return sendJson("/auth/logout/", {
-    method: "POST",
-    body: JSON.stringify({}),
-  });
+
+  try {
+    return await sendJson("/auth/logout/", {
+      method: "POST",
+      body: JSON.stringify({}),
+    });
+  } finally {
+    clearAuthToken();
+  }
 }
 
 export async function getCurrentUser() {
