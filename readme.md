@@ -10,6 +10,8 @@
 [![JavaScript](https://img.shields.io/badge/JS-ES6-F7DF1E?logo=javascript\&logoColor=black)]()
 [![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python\&logoColor=white)]()
 [![CSS](https://img.shields.io/badge/Styling-CSS3-1572B6?logo=css3\&logoColor=white)]()
+![Backend Coverage](https://img.shields.io/badge/backend%20coverage-92%25-brightgreen)
+![Frontend Tests](https://img.shields.io/badge/frontend%20tests-smoke%20coverage-blue)
 
 ---
 
@@ -343,6 +345,17 @@ From frontend/:
 
 npm run test:run
 ```
+
+### Coverage Summary
+
+Current coverage snapshot:
+
+- Backend coverage: **92%**
+- Frontend coverage: **smoke tests only**
+
+The backend test suite focuses on the production-critical logic: authentication, route filtering, booking creation, booking amendments, Stripe checkout, webhook payment confirmation, refunds, cancellations, archive flow, and contact form validation.
+
+Frontend tests currently cover lightweight smoke/helper behaviour. Full React component coverage is planned as a future enhancement.
 
 ---
 
