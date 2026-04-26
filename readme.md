@@ -247,13 +247,102 @@ Copy the webhook secret into your `.env`.
 
 ## 🧪 Testing
 
-*(To be implemented)*
+This project includes backend and frontend tests to demonstrate core application reliability across the main booking, payment, authentication, route, and contact workflows.
 
-Planned:
+### Backend Tests
 
-* Booking lifecycle tests
-* Payment webhook tests
-* API endpoint tests
+Backend tests are written with Django's built-in test runner and Django REST Framework's `APITestCase`.
+
+Covered backend areas include:
+
+- User registration, login, logout, and authenticated `/me/` endpoint
+- Route list, route filtering, region data, and route detail endpoints
+- Contact form validation and message creation
+- Auth-protected booking creation
+- Booking visibility scoped to the authenticated user
+- Booking capacity validation
+- Booking amendment rules
+- Booking cancellation and archive rules
+- Stripe checkout session creation
+- Prevention of duplicate payment attempts
+- Stripe webhook handling for successful payments
+- Refund webhook handling for successful and failed refunds
+
+Run backend tests:
+
+```bash
+cd backend
+python manage.py test routes_app accounts contact bookings
+```
+
+Run backend coverage:
+
+cd backend
+coverage run manage.py test routes_app accounts contact bookings
+coverage report
+coverage html
+
+The HTML coverage report is generated at:
+
+backend/htmlcov/index.html
+Frontend Tests
+
+Frontend tests use Vitest with React Testing Library.
+
+Covered frontend areas include:
+
+Auth token storage helpers
+Payment status formatting helpers
+
+Run frontend tests:
+
+cd frontend
+npm run test:run
+
+Run frontend coverage:
+
+cd frontend
+npm run test:coverage
+
+The frontend coverage report is generated at:
+
+frontend/coverage/index.html
+Manual End-to-End Testing
+
+The deployed production flow has also been manually tested:
+
+Register or log in
+Select a route and scheduled departure
+Create a booking
+Pay through Stripe Checkout in test mode
+Return to the payment success page
+Confirm booking status updates to paid
+Cancel a paid booking
+Confirm refund pending/refund state is reflected
+Archive cancelled bookings from the account view
+Confirm transactional email is received
+
+Stripe test card used:
+
+4242 4242 4242 4242
+Any future expiry date
+Any CVC
+Any postcode
+
+---
+
+### 6. Run everything
+
+From `backend/`:
+
+```bash
+coverage run manage.py test routes_app accounts contact bookings
+coverage report
+
+From frontend/:
+
+npm run test:run
+```
 
 ---
 

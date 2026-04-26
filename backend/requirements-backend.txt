@@ -8,3 +8,4 @@ whitenoise==6.11.0
 gunicorn==23.0.0
 stripe==14.2.0
 ipython==9.4.0
+coverage

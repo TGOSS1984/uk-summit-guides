@@ -26,3 +26,10 @@ Thumbs.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Test coverage
+.coverage
+htmlcov/
+backend/.coverage
+backend/htmlcov/
+frontend/coverage/
