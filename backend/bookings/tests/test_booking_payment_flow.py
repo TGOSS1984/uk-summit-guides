@@ -431,3 +431,223 @@ class BookingPaymentFlowTests(APITestCase):
         self.assertEqual(booking.status, Booking.Status.CANCELLED)
         self.assertEqual(booking.payment.status, Payment.Status.REFUND_PENDING)
         self.assertEqual(booking.payment.stripe_refund_id, "re_test_123")
+
+    def test_user_cannot_create_checkout_for_another_users_booking(self):
+        other_user = get_user_model().objects.create_user(
+            username="othercheckoutuser",
+            email="othercheckout@example.com",
+            password="TestPassword123",
+        )
+
+        booking = Booking.objects.create(
+            user=other_user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Other User",
+            contact_email="other@example.com",
+            contact_phone="07111111111",
+            total_price=Decimal("145.00"),
+        )
+
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.post(
+            "/api/payments/create-checkout-session/",
+            {"booking_id": booking.id},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data["detail"], "Booking not found.")
+
+    def test_cancelled_booking_cannot_create_checkout_session(self):
+        self.client.force_authenticate(user=self.user)
+
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            status=Booking.Status.CANCELLED,
+            total_price=Decimal("145.00"),
+        )
+
+        response = self.client.post(
+            "/api/payments/create-checkout-session/",
+            {"booking_id": booking.id},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["detail"], "Cancelled bookings cannot be paid.")
+
+    @patch("payments.views.stripe.checkout.Session.create")
+    def test_checkout_session_creates_payment_record_when_missing(
+        self,
+        mock_session_create,
+    ):
+        self.client.force_authenticate(user=self.user)
+
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            total_price=Decimal("145.00"),
+        )
+
+        mock_session = Mock(
+            id="cs_test_created",
+            url="https://checkout.stripe.com/test-session",
+        )
+        mock_session_create.return_value = mock_session
+
+        response = self.client.post(
+            "/api/payments/create-checkout-session/",
+            {"booking_id": booking.id},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["session_id"], "cs_test_created")
+        self.assertEqual(response.data["checkout_url"], mock_session.url)
+
+        payment = Payment.objects.get(booking=booking)
+        self.assertEqual(payment.status, Payment.Status.PENDING)
+        self.assertEqual(payment.amount, Decimal("145.00"))
+        self.assertEqual(payment.stripe_checkout_session_id, "cs_test_created")
+
+    @patch("payments.views.stripe.Webhook.construct_event")
+    def test_checkout_webhook_ignores_unknown_session_safely(
+        self,
+        mock_construct_event,
+    ):
+        mock_construct_event.return_value = {
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "id": "cs_unknown",
+                    "payment_intent": "pi_unknown",
+                    "amount_total": 14500,
+                }
+            },
+        }
+
+        response = self.client.post(
+            "/api/payments/webhook/",
+            data=b"{}",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="test_signature",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    @patch("payments.views.stripe.Webhook.construct_event")
+    def test_duplicate_checkout_webhook_does_not_break_paid_payment(
+        self,
+        mock_construct_event,
+    ):
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            status=Booking.Status.CONFIRMED,
+            total_price=Decimal("145.00"),
+        )
+
+        payment = Payment.objects.create(
+            booking=booking,
+            amount=Decimal("145.00"),
+            currency="GBP",
+            status=Payment.Status.PAID,
+            stripe_checkout_session_id="cs_test_paid",
+            stripe_payment_intent_id="pi_test_paid",
+        )
+
+        payment.mark_paid()
+        payment.refresh_from_db()
+        original_paid_at = payment.paid_at
+
+        mock_construct_event.return_value = {
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "id": "cs_test_paid",
+                    "payment_intent": "pi_test_paid",
+                    "amount_total": 14500,
+                }
+            },
+        }
+
+        response = self.client.post(
+            "/api/payments/webhook/",
+            data=b"{}",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="test_signature",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payment.refresh_from_db()
+        booking.refresh_from_db()
+
+        self.assertEqual(payment.status, Payment.Status.PAID)
+        self.assertEqual(payment.stripe_payment_intent_id, "pi_test_paid")
+        self.assertEqual(payment.paid_at, original_paid_at)
+        self.assertEqual(booking.status, Booking.Status.CONFIRMED)
+
+    @patch("payments.views.stripe.Webhook.construct_event")
+    def test_failed_refund_webhook_restores_payment_to_paid(
+        self,
+        mock_construct_event,
+    ):
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            status=Booking.Status.CANCELLED,
+            total_price=Decimal("145.00"),
+        )
+
+        payment = Payment.objects.create(
+            booking=booking,
+            amount=Decimal("145.00"),
+            currency="GBP",
+            status=Payment.Status.REFUND_PENDING,
+            stripe_payment_intent_id="pi_test_refund_failed",
+            stripe_refund_id="re_test_failed",
+        )
+
+        mock_construct_event.return_value = {
+            "type": "refund.updated",
+            "data": {
+                "object": {
+                    "id": "re_test_failed",
+                    "payment_intent": "pi_test_refund_failed",
+                    "status": "failed",
+                }
+            },
+        }
+
+        response = self.client.post(
+            "/api/payments/webhook/",
+            data=b"{}",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="test_signature",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payment.refresh_from_db()
+        self.assertEqual(payment.status, Payment.Status.PAID)
+        self.assertEqual(payment.stripe_refund_id, "re_test_failed")
