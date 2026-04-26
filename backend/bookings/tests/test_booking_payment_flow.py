@@ -75,6 +75,229 @@ class BookingPaymentFlowTests(APITestCase):
             "notes": "Test booking notes.",
         }
 
+    def test_booking_blocks_over_capacity_party_size(self):
+        self.client.force_authenticate(user=self.user)
+
+        Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=2,
+            contact_name="Existing User",
+            contact_email="existing@example.com",
+            contact_phone="07111111111",
+            total_price=Decimal("290.00"),
+        )
+
+        payload = {
+            **self.booking_payload,
+            "party_size": 2,
+        }
+
+        response = self.client.post("/api/bookings/", payload, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("party_size", response.data)
+
+    def test_user_cannot_see_another_users_booking(self):
+        other_user = get_user_model().objects.create_user(
+            username="otheruser",
+            email="other@example.com",
+            password="TestPassword123",
+        )
+
+        Booking.objects.create(
+            user=other_user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Other User",
+            contact_email="other@example.com",
+            contact_phone="07111111111",
+            total_price=Decimal("145.00"),
+        )
+
+        self.client.force_authenticate(user=self.user)
+
+        response = self.client.get("/api/my-bookings/")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_pending_booking_party_size_can_be_amended(self):
+        self.client.force_authenticate(user=self.user)
+
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            total_price=Decimal("145.00"),
+        )
+
+        response = self.client.patch(
+            f"/api/my-bookings/{booking.id}/amend/",
+            {"party_size": 2},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        booking.refresh_from_db()
+        self.assertEqual(booking.party_size, 2)
+        self.assertEqual(booking.total_price, Decimal("290.00"))
+        self.assertEqual(booking.status, Booking.Status.AMENDED)
+
+    def test_paid_booking_party_size_cannot_be_amended(self):
+        self.client.force_authenticate(user=self.user)
+
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            total_price=Decimal("145.00"),
+        )
+
+        Payment.objects.create(
+            booking=booking,
+            amount=Decimal("145.00"),
+            currency="GBP",
+            status=Payment.Status.PAID,
+            stripe_payment_intent_id="pi_test_123",
+        )
+
+        response = self.client.patch(
+            f"/api/my-bookings/{booking.id}/amend/",
+            {"party_size": 2},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("party_size", response.data)
+
+    def test_only_cancelled_booking_can_be_archived(self):
+        self.client.force_authenticate(user=self.user)
+
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            total_price=Decimal("145.00"),
+        )
+
+        response = self.client.patch(f"/api/my-bookings/{booking.id}/archive/")
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIsNone(booking.archived_at)
+
+    def test_cancelled_booking_can_be_archived(self):
+        self.client.force_authenticate(user=self.user)
+
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            status=Booking.Status.CANCELLED,
+            total_price=Decimal("145.00"),
+        )
+
+        response = self.client.patch(f"/api/my-bookings/{booking.id}/archive/")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        booking.refresh_from_db()
+        self.assertIsNotNone(booking.archived_at)
+
+    def test_paid_booking_cannot_create_new_checkout_session(self):
+        self.client.force_authenticate(user=self.user)
+
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            status=Booking.Status.CONFIRMED,
+            total_price=Decimal("145.00"),
+        )
+
+        Payment.objects.create(
+            booking=booking,
+            amount=Decimal("145.00"),
+            currency="GBP",
+            status=Payment.Status.PAID,
+            stripe_checkout_session_id="cs_test_123",
+            stripe_payment_intent_id="pi_test_123",
+        )
+
+        response = self.client.post(
+            "/api/payments/create-checkout-session/",
+            {"booking_id": booking.id},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data["detail"], "This booking has already been paid.")
+
+    @patch("payments.views.stripe.Webhook.construct_event")
+    def test_refund_updated_webhook_marks_payment_as_refunded(
+        self,
+        mock_construct_event,
+    ):
+        booking = Booking.objects.create(
+            user=self.user,
+            scheduled_tour=self.scheduled_tour,
+            party_size=1,
+            contact_name="Test User",
+            contact_email="test@example.com",
+            contact_phone="07123456789",
+            status=Booking.Status.CANCELLED,
+            total_price=Decimal("145.00"),
+        )
+
+        payment = Payment.objects.create(
+            booking=booking,
+            amount=Decimal("145.00"),
+            currency="GBP",
+            status=Payment.Status.REFUND_PENDING,
+            stripe_payment_intent_id="pi_test_123",
+            stripe_refund_id="re_test_123",
+        )
+
+        mock_construct_event.return_value = {
+            "type": "refund.updated",
+            "data": {
+                "object": {
+                    "id": "re_test_123",
+                    "payment_intent": "pi_test_123",
+                    "status": "succeeded",
+                }
+            },
+        }
+
+        response = self.client.post(
+            "/api/payments/webhook/",
+            data=b"{}",
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE="test_signature",
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        payment.refresh_from_db()
+        self.assertEqual(payment.status, Payment.Status.REFUNDED)
+        self.assertIsNotNone(payment.refunded_at)
+
     def test_booking_requires_login(self):
         response = self.client.post("/api/bookings/", self.booking_payload, format="json")
 
