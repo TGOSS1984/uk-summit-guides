@@ -48,6 +48,39 @@ function getPaymentTone(paymentStatus) {
   return `status-badge status-badge--${paymentStatus}`;
 }
 
+function getBookingTimeline(booking) {
+  const isCancelled = booking.status === "cancelled";
+  const isPaid = booking.payment_status === "paid";
+  const isRefundPending = booking.payment_status === "refund_pending";
+  const isRefunded = booking.payment_status === "refunded";
+
+  if (isCancelled) {
+    return [
+      { label: "Created", active: true, complete: true },
+      { label: "Cancelled", active: true, complete: true },
+      {
+        label: isRefunded ? "Refunded" : isRefundPending ? "Refund pending" : "Refund",
+        active: isRefunded || isRefundPending,
+        complete: isRefunded,
+      },
+    ];
+  }
+
+  return [
+    { label: "Created", active: true, complete: true },
+    {
+      label: booking.status === "amended" ? "Amended" : "Confirmed",
+      active: booking.status === "confirmed" || booking.status === "amended" || isPaid,
+      complete: booking.status === "confirmed" || booking.status === "amended" || isPaid,
+    },
+    {
+      label: "Paid",
+      active: isPaid,
+      complete: isPaid,
+    },
+  ];
+}
+
 function buildAmendForm(booking) {
   return {
     party_size: String(booking.party_size),
@@ -760,6 +793,26 @@ function AccountPage() {
                             <p className="account-booking-card__route-region">
                               {booking.scheduled_tour.route.region.name}
                             </p>
+                          </div>
+
+                          <div className="booking-timeline" aria-label="Booking progress">
+                            {getBookingTimeline(booking).map((step, stepIndex) => (
+                              <div
+                                key={step.label}
+                                className={[
+                                  "booking-timeline__step",
+                                  step.active ? "is-active" : "",
+                                  step.complete ? "is-complete" : "",
+                                ]
+                                  .filter(Boolean)
+                                  .join(" ")}
+                              >
+                                <span className="booking-timeline__dot">
+                                  {step.complete ? "✓" : stepIndex + 1}
+                                </span>
+                                <span className="booking-timeline__label">{step.label}</span>
+                              </div>
+                            ))}
                           </div>
 
                           <div className="account-booking-card__meta">
