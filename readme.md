@@ -151,6 +151,115 @@ The project is designed to reflect a **production-ready commercial system**, wit
 
 ---
 
+## 🧠 Architecture Overview
+
+The application follows a **decoupled full-stack architecture**, with a React frontend communicating with a Django REST API.
+
+### System Flow
+
+```mermaid
+flowchart LR
+    User --> Frontend[React Frontend (Vercel)]
+    Frontend --> API[Django REST API (Render)]
+    API --> DB[(PostgreSQL Database)]
+
+    API --> Stripe[Stripe Checkout]
+    Stripe --> Webhook[Stripe Webhook Endpoint]
+    Webhook --> API
+
+    API --> Email[Email Service (SendGrid / Console)]
+
+Key Architectural Decisions
+API-first design
+The frontend consumes all data via REST endpoints, allowing future expansion (mobile app, external integrations).
+Webhook-driven payments
+Payment success is handled via Stripe webhooks, ensuring reliability even if users close the browser.
+Separation of concerns
+bookings → booking lifecycle
+payments → Stripe + payment state
+routes_app → route data & discovery
+accounts → authentication
+Stateless frontend
+All critical logic (validation, payments, booking rules) lives in the backend.
+Environment-based configuration
+Secure handling of Stripe keys, email settings, and deployment environments.
+
+
+---
+
+# 🔌 2. API Overview
+
+Add this **after Testing or Deployment**:
+
+```markdown
+## 🔌 API Overview
+
+The backend exposes a RESTful API used by the React frontend.
+
+### Authentication
+
+| Method | Endpoint | Description |
+|------|--------|------------|
+| POST | `/api/auth/register/` | Create account |
+| POST | `/api/auth/login/` | Login |
+| POST | `/api/auth/logout/` | Logout |
+| GET | `/api/auth/me/` | Current user |
+
+---
+
+### Routes & Regions
+
+| Method | Endpoint | Description |
+|------|--------|------------|
+| GET | `/api/routes/` | List routes (filterable) |
+| GET | `/api/routes/<slug>/` | Route detail |
+| GET | `/api/regions/` | List regions |
+| GET | `/api/scheduled-tours/` | Available departures |
+
+---
+
+### Bookings
+
+| Method | Endpoint | Description |
+|------|--------|------------|
+| POST | `/api/bookings/` | Create booking |
+| GET | `/api/my-bookings/` | User bookings |
+| PATCH | `/api/my-bookings/<id>/amend/` | Amend booking |
+| PATCH | `/api/my-bookings/<id>/cancel/` | Cancel booking |
+| PATCH | `/api/my-bookings/<id>/archive/` | Archive booking |
+
+---
+
+### Payments
+
+| Method | Endpoint | Description |
+|------|--------|------------|
+| POST | `/api/payments/create-checkout-session/` | Create Stripe session |
+| GET | `/api/payments/checkout-session/<id>/` | Get session status |
+| POST | `/api/payments/webhook/` | Stripe webhook endpoint |
+
+---
+
+### Contact
+
+| Method | Endpoint | Description |
+|------|--------|------------|
+| POST | `/api/contact/` | Submit contact form |
+
+---
+
+### API Design Notes
+
+- All booking/payment endpoints are **authenticated**
+- User data is **scoped to the logged-in user**
+- Stripe integration is handled entirely server-side
+- Validation ensures:
+  - No overbooking
+  - No duplicate payments
+  - Correct booking state transitions
+
+---
+
 ## 📂 Project Structure
 
 ```bash
@@ -353,30 +462,141 @@ Current coverage snapshot:
 - Backend coverage: **92%**
 - Frontend coverage: **smoke tests only**
 
-The backend test suite focuses on the production-critical logic: authentication, route filtering, booking creation, booking amendments, Stripe checkout, webhook payment confirmation, refunds, cancellations, archive flow, and contact form validation.
+Backend tests focus on:
+
+Booking validation & lifecycle
+Stripe payment & webhook handling
+Refund logic
+Authentication & security
+Contact and route endpoints
 
 Frontend tests currently cover lightweight smoke/helper behaviour. Full React component coverage is planned as a future enhancement.
 
+Manual Testing
+Register / login
+Create booking
+Pay via Stripe test mode
+Confirm booking updates
+Cancel booking → refund flow
+Archive bookings
+Email notifications received
+
 ---
 
-## 🚀 Deployment (Planned)
+## 🚀 Deployment
+Current
+Frontend: Vercel
+Backend: Render
+Database: PostgreSQL
+Notes
+Environment variables configured per service
+Stripe webhook endpoint exposed publicly
+CORS + CSRF configured for cross-origin requests
 
-* Backend: Render / Railway / Heroku
-* Frontend: Vercel / Netlify
-* Database: PostgreSQL
-* Static/media: Cloudinary / CDN
+---
+
+## 🧩 Challenges & Solutions
+
+### 💳 Reliable Payment Handling
+
+**Challenge:**  
+Ensuring bookings are only marked as paid when Stripe confirms the payment, even if the user closes the browser.
+
+**Solution:**  
+Implemented a **webhook-driven payment system**:
+- Stripe sends `checkout.session.completed`
+- Backend validates event
+- Payment marked as `PAID`
+- Booking updated to `CONFIRMED`
+
+---
+
+### 🔁 Duplicate Webhook Events
+
+**Challenge:**  
+Stripe may send the same webhook event multiple times.
+
+**Solution:**  
+Implemented **idempotent handling**:
+- If payment is already `PAID`, webhook does nothing
+- Prevents duplicate state changes
+
+---
+
+### 🚫 Preventing Duplicate Payments
+
+**Challenge:**  
+Users could attempt to pay multiple times for the same booking.
+
+**Solution:**  
+Backend validation prevents:
+- Creating a new checkout session if already paid
+- Ensures single payment per booking
+
+---
+
+### 👥 Booking Capacity Control
+
+**Challenge:**  
+Avoid overbooking scheduled tours.
+
+**Solution:**  
+- Track `booked_spaces` dynamically
+- Validate against `max_group_size`
+- Reject bookings exceeding capacity
+
+---
+
+### 🔐 Secure API Access
+
+**Challenge:**  
+Ensure users can only access their own bookings.
+
+**Solution:**  
+- All booking queries scoped to `request.user`
+- Unauthorized access returns `404` or `403`
+
+---
+
+### 📧 Email Reliability in Development vs Production
+
+**Challenge:**  
+Email sending behaves differently locally vs deployed.
+
+**Solution:**  
+- Console email backend for development
+- SendGrid integration for production
+- Environment-based configuration
+
+---
+
+### 🌐 Cross-Origin Deployment (Vercel + Render)
+
+**Challenge:**  
+Frontend and backend deployed on different domains.
+
+**Solution:**  
+- Configured **CORS + CSRF properly**
+- Ensured cookies/authentication work across origins
 
 ---
 
 ## 📌 Future Enhancements
 
-* Email provider (SendGrid / AWS SES)
-* Advanced booking calendar UI
-* GPX elevation charts
-* Weather integration
-* Guide assignment automation
-* Admin dashboard analytics
-* Caching & performance optimisation
+High Impact
+Full frontend test coverage
+GitHub Actions CI pipeline
+Booking calendar UI
+Admin analytics dashboard
+Features
+Weather API integration
+Elevation charts for routes
+Guide assignment automation
+User profile enhancements
+Performance
+API caching (Redis)
+Query optimisation
+Pagination scaling
 
 ---
 
@@ -387,16 +607,130 @@ Frontend tests currently cover lightweight smoke/helper behaviour. Full React co
 
 ---
 
+## 📈 Business Context & Value
+
+This project is designed to simulate a **real-world guided tours business platform**, focusing on the key operational challenges such a business would face.
+
+### 🎯 Problem Being Solved
+
+A mountain guiding business needs to:
+
+- Manage multiple routes across different regions
+- Offer scheduled tours with limited capacity
+- Prevent overbooking
+- Handle secure online payments
+- Track booking lifecycle (pending → confirmed → cancelled → refunded)
+- Communicate clearly with customers via email
+- Provide a smooth, modern booking experience
+
+Traditional solutions (manual spreadsheets, email bookings, offline payments) introduce:
+
+- Risk of overbooking
+- Lack of real-time availability
+- Poor customer experience
+- Manual administrative overhead
+
+---
+
+### 💡 Solution Provided
+
+UK Summit Guides delivers a **fully digital booking platform** that:
+
+- Automates booking validation and capacity management
+- Integrates secure Stripe payments
+- Uses webhook-driven logic for reliable payment confirmation
+- Provides a self-service user dashboard
+- Sends automated transactional emails
+- Offers an intuitive, mobile-friendly interface
+
+---
+
+### 📊 Key Value Areas
+
+#### 🧾 Operational Efficiency
+
+- Eliminates manual booking handling
+- Reduces admin workload through automation
+- Ensures consistent booking validation
+
+---
+
+#### 💳 Payment Reliability
+
+- Webhook-driven payment system ensures **data integrity**
+- Prevents duplicate or incomplete transactions
+- Supports refunds and lifecycle tracking
+
+---
+
+#### 👤 Customer Experience
+
+- Clear booking flow from discovery → payment → confirmation
+- Account dashboard for managing bookings
+- Immediate feedback and email confirmations
+
+---
+
+#### 📈 Scalability
+
+The system is designed to scale with:
+
+- Additional routes and regions
+- Larger booking volumes
+- Multiple guides and scheduling complexity
+- Future integrations (weather APIs, analytics, etc.)
+
+---
+
+### 🧠 Engineering Perspective
+
+This project demonstrates the ability to:
+
+- Translate business requirements into technical systems
+- Design reliable backend workflows
+- Handle real-world edge cases (payments, concurrency, validation)
+- Build a clean, modular architecture
+
+It reflects a shift from **building features → building systems that solve problems**.
+
+---
+
+## 🎤 Talking Points
+
+This project can be summarised as:
+
+- A full-stack booking platform built with React and Django REST
+- Designed to simulate a real commercial guided tours business
+- Focused on reliable backend workflows and payment handling
+- Uses Stripe webhooks for production-grade payment confirmation
+- Includes booking lifecycle management, refunds, and email notifications
+- Achieves high backend test coverage (~92%) focused on critical logic
+
+Key strengths demonstrated:
+
+- API design and backend architecture
+- Payment system integration (Stripe)
+- Handling real-world edge cases
+- Building scalable, maintainable systems
+
+---
+
 ## ⭐ Final Notes
 
 This project demonstrates:
 
-* Full-stack architecture (React + Django)
-* Real-world business logic (bookings, payments)
-* API-driven frontend
-* Secure payment integration
-* Scalable and maintainable code structure
+Full-stack architecture (React + Django)
+Real-world booking & payment systems
+Stripe webhook-driven workflows
+Secure API design
+High backend test coverage
+Production-style deployment
 
-It is designed as a **portfolio-grade commercial application** combining development and product thinking.
+It is designed as a portfolio-grade commercial application, combining:
+
+Software engineering
+Product thinking
+Data handling
+User experience design
 
 ---
