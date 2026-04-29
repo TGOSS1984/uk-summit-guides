@@ -1,0 +1,64 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+  {% if summary %}
+    <div class="module" style="margin-bottom: 20px;">
+      <h2>Booking Operations Summary</h2>
+
+      <div style="
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin: 12px 0;
+      ">
+        <div style="
+          padding: 16px;
+          border-radius: 8px;
+          background: #0f172a;
+          color: #f8fafc;
+        ">
+          <div style="font-size: 12px; text-transform: uppercase; color: #94a3b8;">
+            Bookings in view
+          </div>
+          <strong style="display:block; font-size: 28px; margin-top: 6px;">
+            {{ summary.booking_count }}
+          </strong>
+        </div>
+
+        <div style="
+          padding: 16px;
+          border-radius: 8px;
+          background: #064e3b;
+          color: #f8fafc;
+        ">
+          <div style="font-size: 12px; text-transform: uppercase; color: #a7f3d0;">
+            Paid revenue
+          </div>
+          <strong style="display:block; font-size: 28px; margin-top: 6px;">
+            £{{ summary.paid_revenue }}
+          </strong>
+        </div>
+
+        <div style="
+          padding: 16px;
+          border-radius: 8px;
+          background: #1e293b;
+          color: #f8fafc;
+        ">
+          <div style="font-size: 12px; text-transform: uppercase; color: #cbd5e1;">
+            Total booking value
+          </div>
+          <strong style="display:block; font-size: 28px; margin-top: 6px;">
+            £{{ summary.total_revenue }}
+          </strong>
+        </div>
+      </div>
+
+      <p style="margin: 8px 0 0; color: #64748b;">
+        These figures update based on the current admin filters/search results.
+      </p>
+    </div>
+  {% endif %}
+
+  {{ block.super }}
+{% endblock %}

@@ -35,6 +35,7 @@ class ScheduledTourAdmin(admin.ModelAdmin):
 
 @admin.register(Booking)
 class BookingAdmin(admin.ModelAdmin):
+    change_list_template = "admin/booking_change_list.html"
     list_display = (
         "booking_reference",
         "contact_name",
