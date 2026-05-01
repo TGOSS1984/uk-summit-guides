@@ -2588,3 +2588,122 @@
     order: 1;
   }
 }
+
+/* Weather condition icons */
+
+.route-weather-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.65rem 0 0.75rem;
+  font-size: clamp(2.2rem, 3vw, 3.2rem);
+  line-height: 1;
+}
+
+.route-weather-card__icon svg {
+  display: block;
+}
+
+.route-weather-card__icon--sun {
+  color: #f6c453;
+  filter: drop-shadow(0 0 14px rgba(246, 196, 83, 0.28));
+}
+
+.route-weather-card__icon--cloud {
+  color: #bfd3e6;
+  filter: drop-shadow(0 0 12px rgba(191, 211, 230, 0.2));
+}
+
+.route-weather-card__icon--rain {
+  color: #69bdf7;
+  filter: drop-shadow(0 0 14px rgba(105, 189, 247, 0.25));
+}
+
+.route-weather-card__icon--snow {
+  color: #7dd3fc;
+  filter: drop-shadow(0 0 14px rgba(125, 211, 252, 0.3));
+}
+
+.route-weather-card__icon--storm {
+  color: #c4b5fd;
+  filter: drop-shadow(0 0 14px rgba(196, 181, 253, 0.28));
+}
+
+.route-weather-card__list--wide .route-weather-card__day {
+  align-content: start;
+}
+
+/* Mobile swipe forecast strip */
+
+@media (max-width: 640px) {
+  .route-weather-card {
+    padding: 1rem;
+  }
+
+  .route-weather-card__header {
+    align-items: center;
+  }
+
+  .route-weather-card__title {
+    font-size: 1.55rem;
+  }
+
+  .route-weather-card__list--wide {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-left: 0.1rem;
+    padding: 0.2rem 0 0.8rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .route-weather-card__list--wide::-webkit-scrollbar {
+    height: 0.45rem;
+  }
+
+  .route-weather-card__list--wide::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 999px;
+  }
+
+  .route-weather-card__list--wide::-webkit-scrollbar-thumb {
+    background: var(--color-border-strong);
+    border-radius: 999px;
+  }
+
+  .route-weather-card__list--wide .route-weather-card__day {
+    flex: 0 0 72%;
+    min-width: 210px;
+    max-width: 240px;
+    scroll-snap-align: start;
+    padding: 0.95rem;
+    gap: 0.55rem;
+  }
+
+  .route-weather-card__day strong {
+    font-size: 0.95rem;
+  }
+
+  .route-weather-card__day span {
+    font-size: 0.9rem;
+  }
+
+  .route-weather-card__icon {
+    font-size: 1.55rem;
+    margin: 0.25rem 0 0.15rem;
+  }
+
+  .route-weather-card__metrics {
+    gap: 0.2rem;
+  }
+
+  .route-weather-card__metrics span {
+    font-size: 0.82rem;
+  }
+
+  .route-weather-card__note {
+    margin-top: 0.65rem;
+    font-size: 0.8rem;
+  }
+}

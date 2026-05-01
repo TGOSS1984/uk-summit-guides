@@ -7,6 +7,17 @@ import {
   FaMountain,
   FaUserGroup,
 } from "react-icons/fa6";
+import {
+  WiCloud,
+  WiDaySunny,
+  WiDaySunnyOvercast,
+  WiFog,
+  WiRain,
+  WiRaindrops,
+  WiShowers,
+  WiSnow,
+  WiThunderstorm,
+} from "react-icons/wi";
 import { FiClock } from "react-icons/fi";
 import { Link, useParams } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
@@ -58,6 +69,32 @@ function describeWeatherCode(code) {
   };
 
   return weatherMap[code] || "Mixed conditions";
+}
+
+function getWeatherIcon(code) {
+  if ([0].includes(code)) return <WiDaySunny />;
+  if ([1, 2].includes(code)) return <WiDaySunnyOvercast />;
+  if ([3].includes(code)) return <WiCloud />;
+  if ([45, 48].includes(code)) return <WiFog />;
+  if ([51, 53, 55].includes(code)) return <WiRaindrops />;
+  if ([61, 63, 65].includes(code)) return <WiRain />;
+  if ([71, 73, 75].includes(code)) return <WiSnow />;
+  if ([80, 81, 82].includes(code)) return <WiShowers />;
+  if ([95].includes(code)) return <WiThunderstorm />;
+
+  return <WiCloud />;
+}
+
+function getWeatherIconClass(code) {
+  if ([0, 1].includes(code)) return "route-weather-card__icon--sun";
+  if ([2, 3, 45, 48].includes(code)) return "route-weather-card__icon--cloud";
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
+    return "route-weather-card__icon--rain";
+  }
+  if ([71, 73, 75].includes(code)) return "route-weather-card__icon--snow";
+  if ([95].includes(code)) return "route-weather-card__icon--storm";
+
+  return "route-weather-card__icon--cloud";
 }
 
 function RouteDetailPage() {
@@ -273,6 +310,15 @@ function RouteDetailPage() {
                         <div>
                           <strong>{formatWeatherDate(day.date)}</strong>
                           <span>{describeWeatherCode(day.weather_code)}</span>
+
+                          <span
+                            className={`route-weather-card__icon ${getWeatherIconClass(
+                              day.weather_code
+                            )}`}
+                            aria-hidden="true"
+                          >
+                            {getWeatherIcon(day.weather_code)}
+                          </span>
                         </div>
 
                         <div className="route-weather-card__metrics">
