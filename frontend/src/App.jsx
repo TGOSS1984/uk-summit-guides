@@ -8,8 +8,10 @@ import RouteDetailPage from "./pages/RouteDetailPage";
 import BookNowPage from "./pages/BookNowPage";
 import AccountPage from "./pages/AccountPage";
 import ContactPage from "./pages/ContactPage";
+import GalleryPage from "./pages/GalleryPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentCancelledPage from "./pages/PaymentCancelledPage";
+
 
 function App() {
   return (
@@ -20,6 +22,7 @@ function App() {
         <Route path="/services" element={<ServicesPage />} />
         <Route path="/routes" element={<RoutesPage />} />
         <Route path="/routes/:slug" element={<RouteDetailPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
         <Route path="/book-now" element={<BookNowPage />} />
         <Route path="/account" element={<AccountPage />} />
         <Route path="/contact" element={<ContactPage />} />
