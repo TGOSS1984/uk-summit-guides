@@ -3,6 +3,7 @@ const siteNav = [
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Routes", href: "/routes" },
+  { label: "Gallery", href: "/gallery" },
   { label: "Book Now", href: "/book-now" },
   { label: "Contact", href: "/contact" },
 ];
