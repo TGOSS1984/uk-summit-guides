@@ -76,6 +76,33 @@ The project is designed to reflect a **production-ready commercial system**, wit
 
 ---
 
+## 🗂️ Project Management
+
+This project is tracked through a GitHub Project board with a structured roadmap covering UX, frontend features, backend features, bookings, payments, email, testing, deployment, and documentation.
+
+- [Project Board — UK Summit Guides MVP Roadmap](https://github.com/users/TGOSS1984/projects/5/views/1)
+- [All GitHub Issues](https://github.com/TGOSS1984/uk-summit-guides/issues)
+
+The board uses the following workflow:
+
+- **Todo** — planned or documented work
+- **In Progress** — active development
+- **Done** — completed features, fixes, tests, and deployment tasks
+
+Key tracked areas include:
+
+- Authenticated customer booking flow
+- Stripe Checkout and webhook payment lifecycle
+- Booking amendment, cancellation, refund, and archive tools
+- Transactional email confirmations
+- Admin booking/payment operations dashboard
+- Backend and frontend automated tests
+- GitHub Actions CI
+- Render and Vercel deployment
+- README, screenshots, and portfolio documentation
+
+---
+
 ## 🚀 Key Features
 
 ### 🗺️ Route Discovery

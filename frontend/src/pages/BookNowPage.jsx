@@ -11,12 +11,62 @@ import {
 import Reveal from "../components/ui/Reveal";
 import { createBooking, getRoutes, getScheduledTours } from "../lib/api";
 
+function formatDateLabel(dateValue) {
+  if (!dateValue) return "";
+  const date = new Date(`${dateValue}T00:00:00`);
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+  }).format(date);
+}
+
+function formatMonthLabel(dateValue) {
+  if (!dateValue) return "Available dates";
+  const date = new Date(`${dateValue}T00:00:00`);
+  return new Intl.DateTimeFormat("en-GB", {
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
+
+function getMonthKey(dateValue) {
+  if (!dateValue) return "";
+  const date = new Date(`${dateValue}T00:00:00`);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function getCalendarDays(monthKey) {
+  if (!monthKey) return [];
+
+  const [year, month] = monthKey.split("-").map(Number);
+  const firstDay = new Date(year, month - 1, 1);
+  const lastDay = new Date(year, month, 0);
+
+  const startOffset = (firstDay.getDay() + 6) % 7;
+  const days = [];
+
+  for (let index = 0; index < startOffset; index += 1) {
+    days.push(null);
+  }
+
+  for (let day = 1; day <= lastDay.getDate(); day += 1) {
+    const date = new Date(year, month - 1, day);
+    days.push(date.toISOString().slice(0, 10));
+  }
+
+  return days;
+}
+
 function BookNowPage() {
   const [routes, setRoutes] = useState([]);
   const [scheduledTours, setScheduledTours] = useState([]);
   const [selectedRouteSlug, setSelectedRouteSlug] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
   const [selectedTourId, setSelectedTourId] = useState("");
   const [partySize, setPartySize] = useState("1");
+
   const [loadingRoutes, setLoadingRoutes] = useState(true);
   const [loadingTours, setLoadingTours] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -36,17 +86,17 @@ function BookNowPage() {
     {
       title: "Small group model",
       copy:
-        "Bookings are being designed around a premium small-group experience, with a default maximum group size of 3.",
+        "Bookings are designed around a premium small-group experience, with a default maximum group size of 3.",
     },
     {
       title: "Availability protection",
       copy:
-        "The booking endpoint now validates capacity server-side, so overbooking is blocked even if the frontend changes.",
+        "Capacity is validated server-side, so overbooking is blocked even if frontend data changes.",
     },
     {
       title: "Payments and confirmation",
       copy:
-        "Stripe checkout, booking confirmation emails, and account-linked booking management come next after this booking creation flow.",
+        "Bookings connect into Stripe Checkout, email confirmation, and account-based booking management.",
     },
   ];
 
@@ -57,7 +107,7 @@ function BookNowPage() {
         setPageError("");
         const routeData = await getRoutes();
         setRoutes(routeData);
-      } catch (err) {
+      } catch {
         setPageError("Unable to load routes right now.");
       } finally {
         setLoadingRoutes(false);
@@ -71,6 +121,8 @@ function BookNowPage() {
     async function loadTours() {
       if (!selectedRouteSlug) {
         setScheduledTours([]);
+        setSelectedDate("");
+        setSelectedMonth("");
         setSelectedTourId("");
         return;
       }
@@ -80,8 +132,10 @@ function BookNowPage() {
         setPageError("");
         const tourData = await getScheduledTours({ route: selectedRouteSlug });
         setScheduledTours(tourData);
+        setSelectedDate("");
+        setSelectedMonth("");
         setSelectedTourId("");
-      } catch (err) {
+      } catch {
         setPageError("Unable to load scheduled tours right now.");
       } finally {
         setLoadingTours(false);
@@ -95,6 +149,68 @@ function BookNowPage() {
     return routes.find((route) => route.slug === selectedRouteSlug) || null;
   }, [routes, selectedRouteSlug]);
 
+  const availableDates = useMemo(() => {
+    const map = new Map();
+
+    scheduledTours.forEach((tour) => {
+      if (!map.has(tour.date)) {
+        map.set(tour.date, {
+          date: tour.date,
+          tours: [],
+          totalSpaces: 0,
+        });
+      }
+
+      const item = map.get(tour.date);
+      item.tours.push(tour);
+      item.totalSpaces += Number(tour.spaces_remaining || 0);
+    });
+
+    return Array.from(map.values()).sort((a, b) =>
+      a.date.localeCompare(b.date)
+    );
+  }, [scheduledTours]);
+
+  const shouldUseCalendarView = availableDates.length > 10;
+
+  const monthOptions = useMemo(() => {
+    const uniqueMonths = new Map();
+
+    availableDates.forEach((item) => {
+      const monthKey = getMonthKey(item.date);
+
+      if (!uniqueMonths.has(monthKey)) {
+        uniqueMonths.set(monthKey, formatMonthLabel(item.date));
+      }
+    });
+
+    return Array.from(uniqueMonths.entries()).map(([value, label]) => ({
+      value,
+      label,
+    }));
+  }, [availableDates]);
+
+  const selectedMonthKey = selectedMonth || monthOptions[0]?.value || "";
+
+  const calendarDays = useMemo(() => {
+    return getCalendarDays(selectedMonthKey);
+  }, [selectedMonthKey]);
+
+  const datesByValue = useMemo(() => {
+    const map = new Map();
+
+    availableDates.forEach((item) => {
+      map.set(item.date, item);
+    });
+
+    return map;
+  }, [availableDates]);
+
+  const toursForSelectedDate = useMemo(() => {
+    if (!selectedDate) return [];
+    return scheduledTours.filter((tour) => tour.date === selectedDate);
+  }, [scheduledTours, selectedDate]);
+
   const selectedTour = useMemo(() => {
     return (
       scheduledTours.find((tour) => String(tour.id) === String(selectedTourId)) ||
@@ -106,6 +222,25 @@ function BookNowPage() {
     if (!selectedTour) return null;
     return Number(selectedTour.price_pp) * Number(partySize);
   }, [selectedTour, partySize]);
+
+  function handleRouteChange(event) {
+    setSelectedRouteSlug(event.target.value);
+    setSubmitSuccess(null);
+    setSubmitError("");
+  }
+
+  function handleDateSelect(dateValue) {
+    setSelectedDate(dateValue);
+    setSelectedTourId("");
+    setSubmitSuccess(null);
+    setSubmitError("");
+  }
+
+  function handleTourSelect(tourId) {
+    setSelectedTourId(String(tourId));
+    setSubmitSuccess(null);
+    setSubmitError("");
+  }
 
   function handleFieldChange(event) {
     const { name, value } = event.target;
@@ -122,7 +257,7 @@ function BookNowPage() {
     setSubmitSuccess(null);
 
     if (!selectedTour) {
-      setSubmitError("Please select a route and departure before continuing.");
+      setSubmitError("Please select a route, date, and departure time before continuing.");
       return;
     }
 
@@ -192,8 +327,8 @@ function BookNowPage() {
               Start your guided mountain booking
             </h1>
             <p className="booking-hero__copy">
-              This page now pulls live route and departure data from Django and can
-              create real booking records once the customer is logged in.
+              Choose a route, select an available departure date, then complete
+              your booking details before moving into payment.
             </p>
           </Reveal>
 
@@ -209,7 +344,7 @@ function BookNowPage() {
               </div>
               <div className="booking-hero__meta-item">
                 <span className="booking-hero__meta-label">Status</span>
-                <strong className="booking-hero__meta-value">Auth Enabled</strong>
+                <strong className="booking-hero__meta-value">Live Availability</strong>
               </div>
             </div>
           </Reveal>
@@ -252,57 +387,203 @@ function BookNowPage() {
                     </div>
                   ) : null}
 
+                  <div className="booking-field">
+                    <label className="booking-field__label" htmlFor="route">
+                      Route
+                    </label>
+                    <select
+                      id="route"
+                      className="booking-field__control"
+                      value={selectedRouteSlug}
+                      onChange={handleRouteChange}
+                      disabled={loadingRoutes || submitting}
+                    >
+                      <option value="">
+                        {loadingRoutes ? "Loading routes..." : "Select a route"}
+                      </option>
+                      {routes.map((route) => (
+                        <option key={route.id} value={route.slug}>
+                          {route.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="booking-calendar-panel">
+                    <div className="booking-calendar-panel__header">
+                      <div>
+                        <p className="section-kicker">Available dates</p>
+                        <h3 className="booking-calendar-panel__title">
+                          {selectedRoute
+                            ? shouldUseCalendarView
+                              ? formatMonthLabel(`${selectedMonthKey}-01`)
+                              : formatMonthLabel(availableDates[0]?.date)
+                            : "Select a route first"}
+                        </h3>
+                      </div>
+
+                      <span className="booking-calendar-panel__count">
+                        {availableDates.length} date{availableDates.length === 1 ? "" : "s"}
+                      </span>
+                    </div>
+
+                    {!selectedRouteSlug ? (
+                      <p className="booking-calendar-panel__empty">
+                        Choose a route above to view available departure dates.
+                      </p>
+                    ) : loadingTours ? (
+                      <p className="booking-calendar-panel__empty">
+                        Loading available departures…
+                      </p>
+                    ) : availableDates.length === 0 ? (
+                      <p className="booking-calendar-panel__empty">
+                        No open departures are currently available for this route.
+                      </p>
+                    ) : shouldUseCalendarView ? (
+                      <>
+                        <div className="booking-calendar-toolbar">
+                          <label className="booking-field__label" htmlFor="booking-month">
+                            Month
+                          </label>
+                          <select
+                            id="booking-month"
+                            className="booking-field__control"
+                            value={selectedMonthKey}
+                            onChange={(event) => setSelectedMonth(event.target.value)}
+                            disabled={submitting}
+                          >
+                            {monthOptions.map((month) => (
+                              <option key={month.value} value={month.value}>
+                                {month.label}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+
+                        <div className="booking-calendar-grid">
+                          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                            <div key={day} className="booking-calendar-grid__weekday">
+                              {day}
+                            </div>
+                          ))}
+
+                          {calendarDays.map((dateValue, index) => {
+                            if (!dateValue) {
+                              return (
+                                <div
+                                  key={`blank-${index}`}
+                                  className="booking-calendar-day booking-calendar-day--blank"
+                                />
+                              );
+                            }
+
+                            const item = datesByValue.get(dateValue);
+                            const isAvailable = Boolean(item);
+                            const isSelected = selectedDate === dateValue;
+                            const isFull = item ? item.totalSpaces <= 0 : true;
+                            const dayNumber = Number(dateValue.slice(-2));
+
+                            return (
+                              <button
+                                key={dateValue}
+                                type="button"
+                                className={
+                                  isSelected
+                                    ? "booking-calendar-day is-selected"
+                                    : isAvailable
+                                    ? "booking-calendar-day is-available"
+                                    : "booking-calendar-day"
+                                }
+                                onClick={() => item && handleDateSelect(dateValue)}
+                                disabled={!item || isFull || submitting}
+                              >
+                                <span className="booking-calendar-day__number">
+                                  {dayNumber}
+                                </span>
+
+                                {item ? (
+                                  <span className="booking-calendar-day__meta">
+                                    {item.totalSpaces} left
+                                  </span>
+                                ) : (
+                                  <span className="booking-calendar-day__meta">—</span>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </>
+                    ) : (
+                      <div className="booking-date-grid">
+                        {availableDates.map((item) => {
+                          const isSelected = item.date === selectedDate;
+                          const isFull = item.totalSpaces <= 0;
+
+                          return (
+                            <button
+                              key={item.date}
+                              type="button"
+                              className={
+                                isSelected
+                                  ? "booking-date-card is-selected"
+                                  : "booking-date-card"
+                              }
+                              onClick={() => handleDateSelect(item.date)}
+                              disabled={isFull || submitting}
+                            >
+                              <span className="booking-date-card__date">
+                                {formatDateLabel(item.date)}
+                              </span>
+                              <span className="booking-date-card__spaces">
+                                {item.totalSpaces} space{item.totalSpaces === 1 ? "" : "s"} left
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {selectedDate ? (
+                    <div className="booking-time-panel">
+                      <div className="booking-time-panel__header">
+                        <p className="section-kicker">Departure time</p>
+                        <h3 className="booking-time-panel__title">
+                          {formatDateLabel(selectedDate)}
+                        </h3>
+                      </div>
+
+                      <div className="booking-time-grid">
+                        {toursForSelectedDate.map((tour) => {
+                          const isSelected = String(tour.id) === String(selectedTourId);
+                          const isFull = Number(tour.spaces_remaining || 0) <= 0;
+
+                          return (
+                            <button
+                              key={tour.id}
+                              type="button"
+                              className={
+                                isSelected
+                                  ? "booking-time-card is-selected"
+                                  : "booking-time-card"
+                              }
+                              onClick={() => handleTourSelect(tour.id)}
+                              disabled={isFull || submitting}
+                            >
+                              <span className="booking-time-card__time">
+                                {tour.start_time}
+                              </span>
+                              <span className="booking-time-card__meta">
+                                £{tour.price_pp} pp · {tour.spaces_remaining} left
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : null}
+
                   <div className="booking-form-grid">
-                    <div className="booking-field">
-                      <label className="booking-field__label" htmlFor="route">
-                        Route
-                      </label>
-                      <select
-                        id="route"
-                        className="booking-field__control"
-                        value={selectedRouteSlug}
-                        onChange={(event) => setSelectedRouteSlug(event.target.value)}
-                        disabled={loadingRoutes || submitting}
-                      >
-                        <option value="">
-                          {loadingRoutes ? "Loading routes..." : "Select a route"}
-                        </option>
-                        {routes.map((route) => (
-                          <option key={route.id} value={route.slug}>
-                            {route.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="booking-field">
-                      <label className="booking-field__label" htmlFor="tour-date">
-                        Departure
-                      </label>
-                      <select
-                        id="tour-date"
-                        className="booking-field__control"
-                        value={selectedTourId}
-                        onChange={(event) => setSelectedTourId(event.target.value)}
-                        disabled={!selectedRouteSlug || loadingTours || submitting}
-                      >
-                        <option value="">
-                          {!selectedRouteSlug
-                            ? "Select a route first"
-                            : loadingTours
-                            ? "Loading departures..."
-                            : scheduledTours.length === 0
-                            ? "No open departures available"
-                            : "Select a departure"}
-                        </option>
-                        {scheduledTours.map((tour) => (
-                          <option key={tour.id} value={tour.id}>
-                            {tour.date} · {tour.start_time} · £{tour.price_pp} pp
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
                     <div className="booking-field">
                       <label className="booking-field__label" htmlFor="party-size">
                         Party size
@@ -439,10 +720,6 @@ function BookNowPage() {
                       {submitting ? "Creating booking..." : "Create booking"}
                       <FaArrowRight />
                     </button>
-
-                    <button type="button" className="route-card__link" disabled={submitting}>
-                      Save booking placeholder
-                    </button>
                   </div>
                 </section>
               </form>
@@ -474,9 +751,7 @@ function BookNowPage() {
                       <FaLocationDot />
                       Region
                     </span>
-                    <strong>
-                      {selectedRoute?.region?.name || "Select route"}
-                    </strong>
+                    <strong>{selectedRoute?.region?.name || "Select route"}</strong>
                   </div>
 
                   <div className="booking-summary-card__meta-row">
@@ -514,21 +789,21 @@ function BookNowPage() {
                       <FaUserGroup />
                       Spaces remaining
                     </span>
-                    <strong>
-                      {selectedTour ? selectedTour.spaces_remaining : "—"}
-                    </strong>
+                    <strong>{selectedTour ? selectedTour.spaces_remaining : "—"}</strong>
                   </div>
                 </div>
 
                 <div className="booking-summary-card__price">
-                  <span className="booking-summary-card__price-label">Estimated total</span>
+                  <span className="booking-summary-card__price-label">
+                    Estimated total
+                  </span>
                   <strong className="booking-summary-card__price-value">
                     {estimatedTotal !== null ? `£${estimatedTotal.toFixed(2)}` : "—"}
                   </strong>
                 </div>
 
                 <p className="booking-summary-card__note">
-                  Booking now requires an authenticated customer session.
+                  Booking requires an authenticated customer session.
                 </p>
               </div>
             </Reveal>
@@ -540,8 +815,8 @@ function BookNowPage() {
                   Talk through the right route first
                 </h3>
                 <p className="booking-support-card__copy">
-                  Later this area can link to contact support, private enquiries,
-                  and route advice before booking.
+                  Contact support before booking for private enquiries, route advice,
+                  or guidance on conditions.
                 </p>
 
                 <button type="button" className="route-detail-action">
