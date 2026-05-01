@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { FaArrowLeft, FaArrowRight, FaExpand, FaXmark } from "react-icons/fa6";
 import { galleryFilters, getGalleryImages } from "../data/galleryImages";
@@ -12,6 +12,7 @@ function GalleryPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [activeImageIndex, setActiveImageIndex] = useState(null);
   const [loadedImages, setLoadedImages] = useState({});
+  const touchStartX = useRef(null);
 
   const galleryImages = useMemo(() => getGalleryImages(theme), [theme]);
 
@@ -25,6 +26,9 @@ function GalleryPage() {
         image.season === activeFilter
     );
   }, [activeFilter, galleryImages]);
+
+  const featuredImage = filteredImages[0];
+  const gridImages = filteredImages.slice(1);
 
   const activeImage =
     activeImageIndex !== null ? filteredImages[activeImageIndex] : null;
@@ -56,6 +60,27 @@ function GalleryPage() {
     }));
   }
 
+  function handleTouchStart(event) {
+    touchStartX.current = event.touches[0].clientX;
+  }
+
+  function handleTouchEnd(event) {
+    if (touchStartX.current === null) return;
+
+    const touchEndX = event.changedTouches[0].clientX;
+    const difference = touchStartX.current - touchEndX;
+
+    if (Math.abs(difference) > 50) {
+      if (difference > 0) {
+        showNextImage();
+      } else {
+        showPreviousImage();
+      }
+    }
+
+    touchStartX.current = null;
+  }
+
   useEffect(() => {
     const observer = new MutationObserver(() => {
       setTheme(getCurrentTheme());
@@ -72,11 +97,7 @@ function GalleryPage() {
   }, []);
 
   useEffect(() => {
-    if (activeImage) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
+    document.body.style.overflow = activeImage ? "hidden" : "";
 
     return () => {
       document.body.style.overflow = "";
@@ -200,8 +221,40 @@ function GalleryPage() {
             </div>
           </div>
 
+          {featuredImage ? (
+            <motion.button
+              type="button"
+              className="gallery-featured"
+              onClick={() => openLightbox(0)}
+              initial={{ opacity: 0, y: 26 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.65 }}
+            >
+              <span className="gallery-featured__media">
+                <img src={featuredImage.src} alt={featuredImage.alt} />
+              </span>
+
+              <span className="gallery-featured__content">
+                <span className="gallery-featured__eyebrow">
+                  Featured frame
+                </span>
+                <strong className="gallery-featured__title">
+                  {featuredImage.title}
+                </strong>
+                <span className="gallery-featured__copy">
+                  {featuredImage.location} / {featuredImage.season} /{" "}
+                  {featuredImage.category}
+                </span>
+                <span className="gallery-featured__cta">
+                  Open full screen <FaExpand aria-hidden="true" />
+                </span>
+              </span>
+            </motion.button>
+          ) : null}
+
           <motion.div
-            className="gallery-grid"
+            className="gallery-grid gallery-grid--premium"
             aria-label="Previous tour photo gallery"
             initial="hidden"
             whileInView="visible"
@@ -215,7 +268,7 @@ function GalleryPage() {
               },
             }}
           >
-            {filteredImages.map((image, index) => (
+            {gridImages.map((image, index) => (
               <motion.button
                 type="button"
                 key={image.id}
@@ -224,7 +277,7 @@ function GalleryPage() {
                     ? "gallery-card gallery-card--featured"
                     : "gallery-card"
                 }
-                onClick={() => openLightbox(index)}
+                onClick={() => openLightbox(index + 1)}
                 variants={{
                   hidden: { opacity: 0, y: 24 },
                   visible: { opacity: 1, y: 0 },
@@ -275,6 +328,9 @@ function GalleryPage() {
           role="dialog"
           aria-modal="true"
           aria-label="Gallery image preview"
+          onClick={closeLightbox}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
           <button
             type="button"
@@ -288,7 +344,10 @@ function GalleryPage() {
           <button
             type="button"
             className="gallery-lightbox__nav gallery-lightbox__nav--prev"
-            onClick={showPreviousImage}
+            onClick={(event) => {
+              event.stopPropagation();
+              showPreviousImage();
+            }}
             aria-label="Previous image"
           >
             <FaArrowLeft />
@@ -296,6 +355,7 @@ function GalleryPage() {
 
           <motion.div
             className="gallery-lightbox__content"
+            onClick={(event) => event.stopPropagation()}
             initial={{ opacity: 0, scale: 0.96 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.28 }}
@@ -304,17 +364,23 @@ function GalleryPage() {
 
             <div className="gallery-lightbox__caption">
               <p>
-                {activeImage.season} / {activeImage.category}
+                Image {activeImageIndex + 1} of {filteredImages.length}
               </p>
               <h2>{activeImage.title}</h2>
-              <span>{activeImage.location}</span>
+              <span>
+                {activeImage.location} / {activeImage.season} /{" "}
+                {activeImage.category}
+              </span>
             </div>
           </motion.div>
 
           <button
             type="button"
             className="gallery-lightbox__nav gallery-lightbox__nav--next"
-            onClick={showNextImage}
+            onClick={(event) => {
+              event.stopPropagation();
+              showNextImage();
+            }}
             aria-label="Next image"
           >
             <FaArrowRight />
