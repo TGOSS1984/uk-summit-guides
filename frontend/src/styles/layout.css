@@ -72,12 +72,12 @@
 }
 
 .brand-logo__title {
-  font-size: 1.38rem;
+  font-size: clamp(1rem, 1.35vw, 1.32rem);
   font-weight: 800;
   letter-spacing: 0.03em;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
+  text-overflow: clip;
 }
 
 .brand-logo__subtitle {
@@ -100,7 +100,12 @@
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  gap: clamp(0.65rem, 1vw, 1rem);
+}
+
+.site-nav__link {
+  font-size: 0.92rem;
+  white-space: nowrap;
 }
 
 .site-nav__link,
@@ -116,6 +121,15 @@
 .site-nav__link.is-active,
 .mobile-nav__link.is-active {
   color: var(--color-text);
+}
+
+.site-nav--desktop {
+  flex-shrink: 0;
+}
+
+.site-brand {
+  min-width: max-content;
+  flex: 0 0 auto;
 }
 
 .site-account-link {
@@ -202,12 +216,17 @@
 }
 
 .mobile-menu.is-open {
-  max-height: 320px;
+  max-height: calc(100vh - var(--header-height));
+  overflow-y: auto;
   border-bottom-color: var(--color-border);
 }
 
 .mobile-menu__inner {
-  padding: 1rem 0 1.25rem;
+  padding: 1rem 0 2rem;
+}
+
+.mobile-nav__logout {
+  margin-top: 0.25rem;
 }
 
 .mobile-nav {
