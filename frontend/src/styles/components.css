@@ -2401,3 +2401,190 @@
   font-size: 0.88rem;
   color: var(--color-text-muted);
 }
+
+/* Route detail departures card */
+
+.route-departures-card {
+  position: relative;
+  padding: 1.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-lg) + 0.1rem);
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 24%),
+    rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-soft);
+}
+
+.route-departures-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.route-departures-card__eyebrow {
+  margin: 0 0 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: var(--color-accent);
+}
+
+.route-departures-card__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  line-height: 1.05;
+}
+
+.route-departures-card__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  padding: 0 0.7rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+}
+
+.route-departures-card__list {
+  display: grid;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.route-departures-card__item {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.route-departures-card__item strong {
+  color: var(--color-text);
+}
+
+.route-departures-card__item span,
+.route-departures-card__empty,
+.route-departures-card__more {
+  color: var(--color-text-soft);
+  line-height: 1.6;
+}
+
+.route-departures-card__more {
+  margin: 0.85rem 0 0;
+  font-size: 0.9rem;
+}
+
+.route-departures-card__empty {
+  margin: 1rem 0 0;
+}
+
+.route-departures-card__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  width: 100%;
+  min-height: 3rem;
+  margin-top: 1rem;
+  padding: 0 1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+/* Wide route weather layout */
+
+.route-weather-card--wide {
+  overflow: hidden;
+}
+
+.route-weather-card__list--wide {
+  grid-template-columns: repeat(7, minmax(130px, 1fr));
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+}
+
+.route-weather-card__list--wide .route-weather-card__day {
+  min-width: 130px;
+}
+
+@media (max-width: 980px) {
+  .route-weather-card__list--wide {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow-x: visible;
+  }
+}
+
+@media (max-width: 640px) {
+  .route-weather-card__list--wide {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Route detail layout containment fix */
+
+.route-detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.route-detail-main,
+.route-detail-aside,
+.route-detail-main > .reveal,
+.route-detail-aside > .reveal {
+  min-width: 0;
+  width: 100%;
+}
+
+.route-detail-main {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.route-detail-aside {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.route-detail-panel,
+.route-weather-card,
+.route-booking-card,
+.route-guide-card,
+.route-departures-card {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.route-detail-panel {
+  overflow: hidden;
+}
+
+@media (max-width: 980px) {
+  .route-detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .route-detail-aside {
+    order: 2;
+  }
+
+  .route-detail-main {
+    order: 1;
+  }
+}

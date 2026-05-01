@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FaArrowRight,
   FaCalendarDays,
@@ -12,7 +12,12 @@ import { Link, useParams } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 import RouteCard from "../components/ui/RouteCard";
 import RouteMap from "../components/ui/RouteMap";
-import { getRouteDetail, getRoutes, getRouteWeather, getScheduledTours } from "../lib/api";
+import {
+  getRouteDetail,
+  getRoutes,
+  getRouteWeather,
+  getScheduledTours,
+} from "../lib/api";
 
 function formatDifficulty(value) {
   if (!value) return "Route";
@@ -64,8 +69,11 @@ function RouteDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [weather, setWeather] = useState(null);
-  const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherError, setWeatherError] = useState("");
+
+  const visibleScheduledTours = useMemo(() => {
+    return scheduledTours.slice(0, 4);
+  }, [scheduledTours]);
 
   useEffect(() => {
     async function loadRouteData() {
@@ -88,7 +96,7 @@ function RouteDetailPage() {
         setRelatedRoutes(
           routesData.filter((item) => item.slug !== routeData.slug).slice(0, 2)
         );
-      } catch (err) {
+      } catch {
         setError("Unable to load this route right now.");
       } finally {
         setLoading(false);
@@ -243,31 +251,46 @@ function RouteDetailPage() {
             </Reveal>
 
             <Reveal delay={120} variant="left">
-              <article className="route-detail-panel">
-                <p className="section-kicker">Scheduled Tours</p>
-                <h2 className="section-title">Upcoming bookable departures</h2>
-
-                {scheduledTours.length === 0 ? (
-                  <div className="route-detail-highlight">
-                    <span className="route-detail-highlight__marker" aria-hidden="true" />
-                    <p className="route-detail-highlight__text">
-                      No open scheduled tours yet for this route. Add some in Django
-                      admin to see live departures here.
-                    </p>
+              <article className="route-weather-card route-weather-card--wide">
+                <div className="route-weather-card__header">
+                  <div>
+                    <p className="route-weather-card__eyebrow">Mountain Forecast</p>
+                    <h3 className="route-weather-card__title">Next 7 days</h3>
                   </div>
+                  <span className="route-weather-card__source">
+                    {weather?.source || "Open-Meteo"}
+                  </span>
+                </div>
+
+                {weatherError ? (
+                  <p className="route-weather-card__empty">{weatherError}</p>
+                ) : !weather?.forecast?.length ? (
+                  <p className="route-weather-card__empty">Loading forecast…</p>
                 ) : (
-                  <div className="route-detail-highlights">
-                    {scheduledTours.map((tour) => (
-                      <div key={tour.id} className="route-detail-highlight">
-                        <span className="route-detail-highlight__marker" aria-hidden="true" />
-                        <p className="route-detail-highlight__text">
-                          <strong>{tour.date}</strong> at {tour.start_time} — {tour.season} —{" "}
-                          {tour.spaces_remaining} spaces remaining — £{tour.price_pp} pp
-                        </p>
+                  <div className="route-weather-card__list route-weather-card__list--wide">
+                    {weather.forecast.slice(0, 7).map((day) => (
+                      <div key={day.date} className="route-weather-card__day">
+                        <div>
+                          <strong>{formatWeatherDate(day.date)}</strong>
+                          <span>{describeWeatherCode(day.weather_code)}</span>
+                        </div>
+
+                        <div className="route-weather-card__metrics">
+                          <span>
+                            {Math.round(day.temperature_min)}° /{" "}
+                            {Math.round(day.temperature_max)}°
+                          </span>
+                          <span>{day.precipitation_probability ?? 0}% rain</span>
+                          <span>{Math.round(day.wind_speed_max || 0)} km/h wind</span>
+                        </div>
                       </div>
                     ))}
                   </div>
                 )}
+
+                <p className="route-weather-card__note">
+                  Forecast is route-centre guidance only. Mountain conditions can change quickly.
+                </p>
               </article>
             </Reveal>
           </div>
@@ -301,10 +324,6 @@ function RouteDetailPage() {
                   Book This Route
                   <FaArrowRight />
                 </Link>
-
-                <button type="button" className="route-booking-card__secondary">
-                  View Dates Placeholder
-                </button>
               </div>
             </Reveal>
 
@@ -323,9 +342,8 @@ function RouteDetailPage() {
                 />
                 <h3 className="route-guide-card__title">{route.region.name}</h3>
                 <p className="route-guide-card__copy">
-                  This route now supports GPX-based mapping with a fallback map centre.
-                  Next we can layer in richer route styling, route stats, and start/end
-                  journey detail.
+                  This route supports GPX-based mapping, live departure availability,
+                  and mountain forecast guidance.
                 </p>
 
                 <div className="route-guide-card__meta">
@@ -340,47 +358,49 @@ function RouteDetailPage() {
                 </div>
               </div>
             </Reveal>
+
             <Reveal delay={110} variant="right">
-              <div className="route-weather-card">
-                <div className="route-weather-card__header">
+              <div className="route-departures-card">
+                <div className="route-departures-card__header">
                   <div>
-                    <p className="route-weather-card__eyebrow">Mountain Forecast</p>
-                    <h3 className="route-weather-card__title">Next 7 days</h3>
+                    <p className="route-departures-card__eyebrow">Scheduled Tours</p>
+                    <h3 className="route-departures-card__title">Next departures</h3>
                   </div>
-                  <span className="route-weather-card__source">
-                    {weather?.source || "Open-Meteo"}
+                  <span className="route-departures-card__count">
+                    {scheduledTours.length}
                   </span>
                 </div>
 
-                {weatherError ? (
-                  <p className="route-weather-card__empty">{weatherError}</p>
-                ) : !weather?.forecast?.length ? (
-                  <p className="route-weather-card__empty">Loading forecast…</p>
+                {scheduledTours.length === 0 ? (
+                  <p className="route-departures-card__empty">
+                    No open scheduled tours yet for this route.
+                  </p>
                 ) : (
-                  <div className="route-weather-card__list">
-                    {weather.forecast.slice(0, 7).map((day) => (
-                      <div key={day.date} className="route-weather-card__day">
-                        <div>
-                          <strong>{formatWeatherDate(day.date)}</strong>
-                          <span>{describeWeatherCode(day.weather_code)}</span>
-                        </div>
-
-                        <div className="route-weather-card__metrics">
+                  <>
+                    <div className="route-departures-card__list">
+                      {visibleScheduledTours.map((tour) => (
+                        <div key={tour.id} className="route-departures-card__item">
+                          <strong>{tour.date}</strong>
                           <span>
-                            {Math.round(day.temperature_min)}° /{" "}
-                            {Math.round(day.temperature_max)}°
+                            {tour.start_time} · {tour.season} · {tour.spaces_remaining} spaces
                           </span>
-                          <span>{day.precipitation_probability ?? 0}% rain</span>
-                          <span>{Math.round(day.wind_speed_max || 0)} km/h wind</span>
+                          <span>£{tour.price_pp} pp</span>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+
+                    {scheduledTours.length > visibleScheduledTours.length ? (
+                      <p className="route-departures-card__more">
+                        + {scheduledTours.length - visibleScheduledTours.length} more dates available.
+                      </p>
+                    ) : null}
+                  </>
                 )}
 
-                <p className="route-weather-card__note">
-                  Forecast is route-centre guidance only. Mountain conditions can change quickly.
-                </p>
+                <Link to="/book-now" className="route-departures-card__link">
+                  View booking calendar
+                  <FaArrowRight />
+                </Link>
               </div>
             </Reveal>
           </aside>
