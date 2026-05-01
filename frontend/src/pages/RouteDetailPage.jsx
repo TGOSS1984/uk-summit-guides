@@ -269,7 +269,16 @@ function RouteDetailPage() {
             <Reveal delay={70} variant="right">
               <div className="route-guide-card">
                 <p className="route-guide-card__eyebrow">Route Data</p>
-                <div className="route-guide-card__avatar" />
+                <div
+                  className="route-guide-card__avatar route-guide-card__avatar--dynamic"
+                  style={{
+                    backgroundImage: route.card_image
+                      ? `url(${route.card_image})`
+                      : route.hero_image
+                      ? `url(${route.hero_image})`
+                      : undefined,
+                  }}
+                />
                 <h3 className="route-guide-card__title">{route.region.name}</h3>
                 <p className="route-guide-card__copy">
                   This route now supports GPX-based mapping with a fallback map centre.

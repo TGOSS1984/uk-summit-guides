@@ -5,6 +5,7 @@ from .views import (
     RegionListAPIView,
     RouteDetailAPIView,
     RouteListAPIView,
+    RouteWeatherAPIView,
 )
 
 urlpatterns = [
@@ -12,4 +13,9 @@ urlpatterns = [
     path("guides/", GuideListAPIView.as_view(), name="guide-list"),
     path("routes/", RouteListAPIView.as_view(), name="route-list"),
     path("routes/<slug:slug>/", RouteDetailAPIView.as_view(), name="route-detail"),
+    path(
+        "routes/<slug:slug>/weather/",
+        RouteWeatherAPIView.as_view(),
+        name="route-weather",
+    ),
 ]
