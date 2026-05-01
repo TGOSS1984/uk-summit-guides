@@ -1,31 +1,40 @@
-const winterGalleryImages = Array.from({ length: 30 }, (_, index) => {
-  const number = index + 1;
+const regions = ["Scotland", "Lake District", "Snowdonia", "Peak District"];
+const categories = ["Summit", "Ridge", "Client Day", "Conditions"];
 
-  return {
-    id: `winter-${number}`,
-    src: `/images/gallery/winter/gallery-${number}.jpg`,
-    alt: `Winter guided mountain tour photograph ${number}`,
-    title: `Winter Mountain Day ${number}`,
-    location: "UK Mountains",
-    season: "Winter",
-    featured: number % 7 === 0 || number % 11 === 0,
-  };
-});
+function buildGalleryImages(season) {
+  return Array.from({ length: 30 }, (_, index) => {
+    const number = index + 1;
+    const region = regions[index % regions.length];
+    const category = categories[index % categories.length];
 
-const summerGalleryImages = Array.from({ length: 30 }, (_, index) => {
-  const number = index + 1;
+    return {
+      id: `${season.toLowerCase()}-${number}`,
+      src: `/images/gallery/${season.toLowerCase()}/gallery-${number}.jpg`,
+      alt: `${season} guided mountain tour photograph ${number}`,
+      title: `${season} ${category} ${number}`,
+      location: region,
+      season,
+      category,
+      featured: number % 7 === 0 || number % 11 === 0,
+    };
+  });
+}
 
-  return {
-    id: `summer-${number}`,
-    src: `/images/gallery/summer/gallery-${number}.jpg`,
-    alt: `Summer guided mountain tour photograph ${number}`,
-    title: `Summer Mountain Day ${number}`,
-    location: "UK Mountains",
-    season: "Summer",
-    featured: number % 7 === 0 || number % 11 === 0,
-  };
-});
+const winterGalleryImages = buildGalleryImages("Winter");
+const summerGalleryImages = buildGalleryImages("Summer");
 
 export function getGalleryImages(theme) {
   return theme === "summer" ? summerGalleryImages : winterGalleryImages;
 }
+
+export const galleryFilters = [
+  "All",
+  "Scotland",
+  "Lake District",
+  "Snowdonia",
+  "Peak District",
+  "Summit",
+  "Ridge",
+  "Client Day",
+  "Conditions",
+];

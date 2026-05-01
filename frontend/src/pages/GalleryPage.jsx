@@ -1,19 +1,33 @@
 import { useEffect, useMemo, useState } from "react";
+import { motion } from "framer-motion";
 import { FaArrowLeft, FaArrowRight, FaExpand, FaXmark } from "react-icons/fa6";
-import { getGalleryImages } from "../data/galleryImages";
+import { galleryFilters, getGalleryImages } from "../data/galleryImages";
+
+function getCurrentTheme() {
+  return document.documentElement.getAttribute("data-theme") || "winter";
+}
 
 function GalleryPage() {
+  const [theme, setTheme] = useState(getCurrentTheme);
+  const [activeFilter, setActiveFilter] = useState("All");
   const [activeImageIndex, setActiveImageIndex] = useState(null);
-
-  const theme =
-    typeof document !== "undefined"
-      ? document.documentElement.getAttribute("data-theme") || "winter"
-      : "winter";
+  const [loadedImages, setLoadedImages] = useState({});
 
   const galleryImages = useMemo(() => getGalleryImages(theme), [theme]);
 
+  const filteredImages = useMemo(() => {
+    if (activeFilter === "All") return galleryImages;
+
+    return galleryImages.filter(
+      (image) =>
+        image.location === activeFilter ||
+        image.category === activeFilter ||
+        image.season === activeFilter
+    );
+  }, [activeFilter, galleryImages]);
+
   const activeImage =
-    activeImageIndex !== null ? galleryImages[activeImageIndex] : null;
+    activeImageIndex !== null ? filteredImages[activeImageIndex] : null;
 
   function openLightbox(index) {
     setActiveImageIndex(index);
@@ -25,31 +39,57 @@ function GalleryPage() {
 
   function showPreviousImage() {
     setActiveImageIndex((currentIndex) =>
-      currentIndex === 0 ? galleryImages.length - 1 : currentIndex - 1
+      currentIndex === 0 ? filteredImages.length - 1 : currentIndex - 1
     );
   }
 
   function showNextImage() {
     setActiveImageIndex((currentIndex) =>
-      currentIndex === galleryImages.length - 1 ? 0 : currentIndex + 1
+      currentIndex === filteredImages.length - 1 ? 0 : currentIndex + 1
     );
   }
+
+  function handleImageLoaded(imageId) {
+    setLoadedImages((currentImages) => ({
+      ...currentImages,
+      [imageId]: true,
+    }));
+  }
+
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setTheme(getCurrentTheme());
+      setActiveFilter("All");
+      setActiveImageIndex(null);
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (activeImage) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [activeImage]);
 
   useEffect(() => {
     function handleKeyDown(event) {
       if (activeImageIndex === null) return;
 
-      if (event.key === "Escape") {
-        closeLightbox();
-      }
-
-      if (event.key === "ArrowLeft") {
-        showPreviousImage();
-      }
-
-      if (event.key === "ArrowRight") {
-        showNextImage();
-      }
+      if (event.key === "Escape") closeLightbox();
+      if (event.key === "ArrowLeft") showPreviousImage();
+      if (event.key === "ArrowRight") showNextImage();
     }
 
     window.addEventListener("keydown", handleKeyDown);
@@ -57,51 +97,68 @@ function GalleryPage() {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [activeImageIndex, galleryImages.length]);
+  }, [activeImageIndex, filteredImages.length]);
 
   return (
     <>
       <section className="gallery-hero">
-        <div className="gallery-hero__image" />
+        <motion.div
+          className="gallery-hero__image"
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1.02 }}
+          transition={{ duration: 1.1, ease: "easeOut" }}
+        />
         <div className="gallery-hero__overlay" />
 
         <div className="container gallery-hero__content">
-          <p className="section-kicker">Tour archive</p>
-          <h1 className="page-title gallery-hero__title">
-            Previous days in the mountains.
-          </h1>
-          <p className="gallery-hero__copy">
-            A visual record of guided summit days, quiet ridgelines, winter
-            conditions, summer traverses, and memorable moments from previous UK
-            mountain tours.
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <p className="section-kicker">Tour archive</p>
+            <h1 className="page-title gallery-hero__title">
+              Previous days in the mountains.
+            </h1>
+            <p className="gallery-hero__copy">
+              A visual record of guided summit days, quiet ridgelines, winter
+              conditions, summer traverses, and memorable moments from previous
+              UK mountain tours.
+            </p>
 
-          <div className="gallery-hero__meta">
-            <div className="gallery-hero__meta-item">
-              <span className="gallery-hero__meta-label">Images</span>
-              <strong className="gallery-hero__meta-value">
-                {galleryImages.length}
-              </strong>
-            </div>
+            <div className="gallery-hero__meta">
+              <div className="gallery-hero__meta-item">
+                <span className="gallery-hero__meta-label">Images</span>
+                <strong className="gallery-hero__meta-value">
+                  {galleryImages.length}
+                </strong>
+              </div>
 
-            <div className="gallery-hero__meta-item">
-              <span className="gallery-hero__meta-label">Season</span>
-              <strong className="gallery-hero__meta-value">
-                {theme === "summer" ? "Summer" : "Winter"}
-              </strong>
-            </div>
+              <div className="gallery-hero__meta-item">
+                <span className="gallery-hero__meta-label">Season</span>
+                <strong className="gallery-hero__meta-value">
+                  {theme === "summer" ? "Summer" : "Winter"}
+                </strong>
+              </div>
 
-            <div className="gallery-hero__meta-item">
-              <span className="gallery-hero__meta-label">Format</span>
-              <strong className="gallery-hero__meta-value">Full screen</strong>
+              <div className="gallery-hero__meta-item">
+                <span className="gallery-hero__meta-label">Viewing</span>
+                <strong className="gallery-hero__meta-value">Lightbox</strong>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       <section className="section gallery-shell">
         <div className="container">
-          <div className="feature-band__card gallery-intro-card">
+          <motion.div
+            className="feature-band__card gallery-intro-card"
+            initial={{ opacity: 0, y: 26 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.65 }}
+          >
             <span className="feature-band__accent" aria-hidden="true" />
             <p className="feature-band__eyebrow">Seasonal gallery</p>
             <h2 className="feature-band__title">
@@ -109,14 +166,57 @@ function GalleryPage() {
             </h2>
             <p className="feature-band__text">
               Switch between winter and summer to view a season-specific archive.
-              Images are loaded from a simple scalable data file, so the gallery
-              can grow from 30 images to 100+ without changing the layout.
+              Use the filters below to browse by region, terrain type, or tour
+              moment.
             </p>
+          </motion.div>
+
+          <div className="gallery-toolbar">
+            <div>
+              <p className="gallery-toolbar__eyebrow">Browse archive</p>
+              <h2 className="gallery-toolbar__title">
+                {filteredImages.length} images showing
+              </h2>
+            </div>
+
+            <div className="gallery-filters" aria-label="Gallery filters">
+              {galleryFilters.map((filter) => (
+                <button
+                  type="button"
+                  key={filter}
+                  className={
+                    activeFilter === filter
+                      ? "gallery-filter is-active"
+                      : "gallery-filter"
+                  }
+                  onClick={() => {
+                    setActiveFilter(filter);
+                    setActiveImageIndex(null);
+                  }}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="gallery-grid" aria-label="Previous tour photo gallery">
-            {galleryImages.map((image, index) => (
-              <button
+          <motion.div
+            className="gallery-grid"
+            aria-label="Previous tour photo gallery"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.08 }}
+            variants={{
+              hidden: {},
+              visible: {
+                transition: {
+                  staggerChildren: 0.045,
+                },
+              },
+            }}
+          >
+            {filteredImages.map((image, index) => (
+              <motion.button
                 type="button"
                 key={image.id}
                 className={
@@ -125,13 +225,31 @@ function GalleryPage() {
                     : "gallery-card"
                 }
                 onClick={() => openLightbox(index)}
+                variants={{
+                  hidden: { opacity: 0, y: 24 },
+                  visible: { opacity: 1, y: 0 },
+                }}
+                transition={{ duration: 0.5 }}
               >
-                <img src={image.src} alt={image.alt} loading="lazy" />
+                <span
+                  className={
+                    loadedImages[image.id]
+                      ? "gallery-card__image-wrap is-loaded"
+                      : "gallery-card__image-wrap"
+                  }
+                >
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    loading="lazy"
+                    onLoad={() => handleImageLoaded(image.id)}
+                  />
+                </span>
 
                 <span className="gallery-card__overlay">
                   <span>
                     <span className="gallery-card__kicker">
-                      {image.season}
+                      {image.season} / {image.category}
                     </span>
                     <strong className="gallery-card__title">
                       {image.title}
@@ -145,9 +263,9 @@ function GalleryPage() {
                     <FaExpand />
                   </span>
                 </span>
-              </button>
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -176,15 +294,22 @@ function GalleryPage() {
             <FaArrowLeft />
           </button>
 
-          <div className="gallery-lightbox__content">
+          <motion.div
+            className="gallery-lightbox__content"
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.28 }}
+          >
             <img src={activeImage.src} alt={activeImage.alt} />
 
             <div className="gallery-lightbox__caption">
-              <p>{activeImage.season}</p>
+              <p>
+                {activeImage.season} / {activeImage.category}
+              </p>
               <h2>{activeImage.title}</h2>
               <span>{activeImage.location}</span>
             </div>
-          </div>
+          </motion.div>
 
           <button
             type="button"
