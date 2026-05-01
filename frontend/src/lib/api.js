@@ -143,6 +143,10 @@ export async function getRouteDetail(slug) {
   return fetchJson(`/routes/${slug}/`);
 }
 
+export async function getRouteWeather(slug) {
+  return fetchJson(`/routes/${slug}/weather/`);
+}
+
 export async function getScheduledTours(params = {}) {
   const searchParams = new URLSearchParams();
 

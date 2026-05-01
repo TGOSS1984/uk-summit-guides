@@ -12,11 +12,47 @@ import { Link, useParams } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 import RouteCard from "../components/ui/RouteCard";
 import RouteMap from "../components/ui/RouteMap";
-import { getRouteDetail, getRoutes, getScheduledTours } from "../lib/api";
+import { getRouteDetail, getRoutes, getRouteWeather, getScheduledTours } from "../lib/api";
 
 function formatDifficulty(value) {
   if (!value) return "Route";
   return value.charAt(0).toUpperCase() + value.slice(1);
+}
+
+function formatWeatherDate(dateValue) {
+  if (!dateValue) return "";
+  const date = new Date(`${dateValue}T00:00:00`);
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "short",
+    day: "2-digit",
+    month: "short",
+  }).format(date);
+}
+
+function describeWeatherCode(code) {
+  const weatherMap = {
+    0: "Clear",
+    1: "Mainly clear",
+    2: "Partly cloudy",
+    3: "Cloudy",
+    45: "Fog",
+    48: "Freezing fog",
+    51: "Light drizzle",
+    53: "Drizzle",
+    55: "Heavy drizzle",
+    61: "Light rain",
+    63: "Rain",
+    65: "Heavy rain",
+    71: "Light snow",
+    73: "Snow",
+    75: "Heavy snow",
+    80: "Rain showers",
+    81: "Showers",
+    82: "Heavy showers",
+    95: "Thunderstorm",
+  };
+
+  return weatherMap[code] || "Mixed conditions";
 }
 
 function RouteDetailPage() {
@@ -27,6 +63,9 @@ function RouteDetailPage() {
   const [relatedRoutes, setRelatedRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [weather, setWeather] = useState(null);
+  const [weatherLoading, setWeatherLoading] = useState(false);
+  const [weatherError, setWeatherError] = useState("");
 
   useEffect(() => {
     async function loadRouteData() {
@@ -37,12 +76,15 @@ function RouteDetailPage() {
         const routeData = await getRouteDetail(slug);
         setRoute(routeData);
 
-        const [toursData, routesData] = await Promise.all([
+        const [toursData, routesData, weatherData] = await Promise.all([
           getScheduledTours({ route: slug }),
           getRoutes({ region: routeData.region.slug }),
+          getRouteWeather(slug).catch(() => null),
         ]);
 
         setScheduledTours(toursData);
+        setWeather(weatherData);
+        setWeatherError(weatherData ? "" : "Weather forecast is unavailable right now.");
         setRelatedRoutes(
           routesData.filter((item) => item.slug !== routeData.slug).slice(0, 2)
         );
@@ -296,6 +338,49 @@ function RouteDetailPage() {
                     <span>Live departure data ready</span>
                   </div>
                 </div>
+              </div>
+            </Reveal>
+            <Reveal delay={110} variant="right">
+              <div className="route-weather-card">
+                <div className="route-weather-card__header">
+                  <div>
+                    <p className="route-weather-card__eyebrow">Mountain Forecast</p>
+                    <h3 className="route-weather-card__title">Next 7 days</h3>
+                  </div>
+                  <span className="route-weather-card__source">
+                    {weather?.source || "Open-Meteo"}
+                  </span>
+                </div>
+
+                {weatherError ? (
+                  <p className="route-weather-card__empty">{weatherError}</p>
+                ) : !weather?.forecast?.length ? (
+                  <p className="route-weather-card__empty">Loading forecast…</p>
+                ) : (
+                  <div className="route-weather-card__list">
+                    {weather.forecast.slice(0, 7).map((day) => (
+                      <div key={day.date} className="route-weather-card__day">
+                        <div>
+                          <strong>{formatWeatherDate(day.date)}</strong>
+                          <span>{describeWeatherCode(day.weather_code)}</span>
+                        </div>
+
+                        <div className="route-weather-card__metrics">
+                          <span>
+                            {Math.round(day.temperature_min)}° /{" "}
+                            {Math.round(day.temperature_max)}°
+                          </span>
+                          <span>{day.precipitation_probability ?? 0}% rain</span>
+                          <span>{Math.round(day.wind_speed_max || 0)} km/h wind</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                <p className="route-weather-card__note">
+                  Forecast is route-centre guidance only. Mountain conditions can change quickly.
+                </p>
               </div>
             </Reveal>
           </aside>

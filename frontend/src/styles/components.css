@@ -2299,3 +2299,105 @@
     linear-gradient(180deg, transparent 45%, rgba(0, 0, 0, 0.26) 100%);
   pointer-events: none;
 }
+
+/* Route weather forecast card */
+
+.route-weather-card {
+  position: relative;
+  padding: 1.4rem;
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-lg) + 0.1rem);
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.05), transparent 24%),
+    rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-soft);
+}
+
+.route-weather-card__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.route-weather-card__eyebrow {
+  margin: 0 0 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: var(--color-accent);
+}
+
+.route-weather-card__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 2vw, 2rem);
+  line-height: 1.05;
+}
+
+.route-weather-card__source {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0 0.8rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-soft);
+  font-size: 0.76rem;
+}
+
+.route-weather-card__list {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.route-weather-card__day {
+  display: grid;
+  gap: 0.65rem;
+  padding: 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.route-weather-card__day strong,
+.route-weather-card__day span {
+  display: block;
+}
+
+.route-weather-card__day strong {
+  color: var(--color-text);
+}
+
+.route-weather-card__day span {
+  margin-top: 0.2rem;
+  color: var(--color-text-soft);
+  line-height: 1.5;
+}
+
+.route-weather-card__metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.35rem;
+}
+
+.route-weather-card__metrics span {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--color-text-soft);
+}
+
+.route-weather-card__empty,
+.route-weather-card__note {
+  margin: 1rem 0 0;
+  color: var(--color-text-soft);
+  line-height: 1.7;
+}
+
+.route-weather-card__note {
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
+}
