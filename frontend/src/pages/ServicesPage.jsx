@@ -1,3 +1,6 @@
+import { useEffect, useState } from "react";
+import TourLocationsMap from "../components/ui/TourLocationsMap";
+import { getRoutes } from "../lib/api";
 import {
   FaArrowRight,
   FaCompass,
@@ -12,6 +15,40 @@ import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 
 function ServicesPage() {
+  const [routes, setRoutes] = useState([]);
+  const [routesLoading, setRoutesLoading] = useState(true);
+  const [routesError, setRoutesError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadRoutes() {
+      try {
+        setRoutesLoading(true);
+        setRoutesError("");
+
+        const data = await getRoutes();
+
+        if (!isMounted) return;
+
+        const results = Array.isArray(data) ? data : data.results || [];
+        setRoutes(results);
+      } catch (err) {
+        if (!isMounted) return;
+        setRoutesError("Unable to load route locations right now.");
+      } finally {
+        if (isMounted) {
+          setRoutesLoading(false);
+        }
+      }
+    }
+
+    loadRoutes();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   const services = [
     {
       icon: <FaSnowflake />,
@@ -127,6 +164,46 @@ function ServicesPage() {
               </Reveal>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="section services-locations">
+        <div className="container services-locations__layout">
+          <Reveal variant="left">
+            <div className="services-locations__content">
+              <p className="section-kicker">Where we guide</p>
+              <h2 className="section-title">
+                Guided mountain days across the UK’s classic regions
+              </h2>
+              <p className="section-copy">
+                Our route network is built around the UK’s most recognisable
+                mountain areas, from winter objectives in Scotland to classic
+                scrambles, ridges, and high-level walking routes across England
+                and Wales.
+              </p>
+              <p className="section-copy services-locations__copy-spaced">
+                Each marker is powered by the route location data already stored
+                in Django, keeping the map connected to the same route content
+                used across the rest of the platform.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={90} variant="right">
+            <div className="services-locations__map-panel">
+              {routesLoading ? (
+                <div className="services-locations__state">
+                  Loading UK tour locations…
+                </div>
+              ) : routesError ? (
+                <div className="services-locations__state">
+                  {routesError}
+                </div>
+              ) : (
+                <TourLocationsMap routes={routes} />
+              )}
+            </div>
+          </Reveal>
         </div>
       </section>
 
