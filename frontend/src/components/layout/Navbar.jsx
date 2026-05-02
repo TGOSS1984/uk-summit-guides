@@ -1,6 +1,16 @@
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { FaRightFromBracket, FaUser } from "react-icons/fa6";
+import {
+  FaAddressBook,
+  FaBookOpen,
+  FaCalendarDays,
+  FaHouse,
+  FaImage,
+  FaMountain,
+  FaRightFromBracket,
+  FaRoute,
+  FaUser,
+} from "react-icons/fa6";
 import siteNav from "../../data/siteNav";
 import { getCurrentUser, logoutUser } from "../../lib/api";
 import ThemeToggle from "../ui/ThemeToggle";
@@ -83,6 +93,16 @@ function Navbar({ theme, onToggleTheme }) {
   const accountLabel = authLoading
     ? "Account"
     : user?.first_name || user?.username || "Account";
+
+  const mobileNavIcons = {
+    "/": FaHouse,
+    "/about": FaMountain,
+    "/services": FaBookOpen,
+    "/routes": FaRoute,
+    "/gallery": FaImage,
+    "/book-now": FaCalendarDays,
+    "/contact": FaAddressBook,
+  };
 
   return (
     <header className="site-header">
@@ -168,38 +188,55 @@ function Navbar({ theme, onToggleTheme }) {
 
       <div className={menuOpen ? "mobile-menu is-open" : "mobile-menu"}>
         <div className="container mobile-menu__inner">
-          <nav className="mobile-nav" aria-label="Mobile primary">
-            {siteNav.map((item) => (
-              <NavLink
-                key={item.href}
-                to={item.href}
-                className={({ isActive }) =>
-                  isActive ? "mobile-nav__link is-active" : "mobile-nav__link"
-                }
-                onClick={closeMenu}
-              >
-                {item.label}
-              </NavLink>
-            ))}
+          <nav className="mobile-nav mobile-nav--premium" aria-label="Mobile primary">
+            {siteNav.map((item) => {
+              const MobileIcon = mobileNavIcons[item.href] || FaMountain;
+
+              return (
+                <NavLink
+                  key={item.href}
+                  to={item.href}
+                  className={({ isActive }) =>
+                    isActive
+                      ? "mobile-nav__link mobile-nav__link--premium is-active"
+                      : "mobile-nav__link mobile-nav__link--premium"
+                  }
+                  onClick={closeMenu}
+                >
+                  <span className="mobile-nav__icon" aria-hidden="true">
+                    <MobileIcon />
+                  </span>
+                  <span>{item.label}</span>
+                </NavLink>
+              );
+            })}
 
             <NavLink
               to="/account"
               className={({ isActive }) =>
-                isActive ? "mobile-nav__link is-active" : "mobile-nav__link"
+                isActive
+                  ? "mobile-nav__link mobile-nav__link--premium is-active"
+                  : "mobile-nav__link mobile-nav__link--premium"
               }
               onClick={closeMenu}
             >
-              {user ? `My Account (${accountLabel})` : "Login / Create Account"}
+              <span className="mobile-nav__icon" aria-hidden="true">
+                <FaUser />
+              </span>
+              <span>{user ? `My Account (${accountLabel})` : "Login / Create Account"}</span>
             </NavLink>
 
             {user ? (
               <button
                 type="button"
-                className="mobile-nav__logout"
+                className="mobile-nav__logout mobile-nav__logout--premium"
                 onClick={handleLogout}
                 disabled={isLoggingOut}
               >
-                {isLoggingOut ? "Logging out..." : "Logout"}
+                <span className="mobile-nav__icon" aria-hidden="true">
+                  <FaRightFromBracket />
+                </span>
+                <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
               </button>
             ) : null}
           </nav>
