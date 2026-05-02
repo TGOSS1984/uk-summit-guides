@@ -9,7 +9,7 @@ function buildGalleryImages(season) {
 
     return {
       id: `${season.toLowerCase()}-${number}`,
-      src: `/images/gallery/${season.toLowerCase()}/gallery-${number}.jpg`,
+      src: `/images/gallery/${season.toLowerCase()}/gallery-${number}.jpeg`,
       alt: `${season} guided mountain tour photograph ${number}`,
       title: `${season} ${category} ${number}`,
       location: region,

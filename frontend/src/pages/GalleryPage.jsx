@@ -86,6 +86,7 @@ function GalleryPage() {
       setTheme(getCurrentTheme());
       setActiveFilter("All");
       setActiveImageIndex(null);
+      setLoadedImages({});
     });
 
     observer.observe(document.documentElement, {
@@ -254,11 +255,12 @@ function GalleryPage() {
           ) : null}
 
           <motion.div
+            key={`${theme}-${activeFilter}`}
             className="gallery-grid gallery-grid--premium"
             aria-label="Previous tour photo gallery"
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.08 }}
+            viewport={{ once: false, amount: 0.08 }}
             variants={{
               hidden: {},
               visible: {
