@@ -1,9 +1,18 @@
+import { Helmet } from "react-helmet-async";
 import Reveal from "../components/ui/Reveal";
 import StatsBand from "../components/sections/StatsBand";
 
 function HomePage() {
   return (
     <>
+    <Helmet>
+        <title>UK Summit Guides | Guided Mountain Tours UK</title>
+        <meta
+          name="description"
+          content="Premium guided mountain tours across the UK. Winter skills, summer routes, and private guiding experiences in the Lake District, Snowdonia, and Scotland."
+        />
+      </Helmet>
+      
       <section className="hero">
         <div className="hero__image" />
         <div className="hero__overlay" />
