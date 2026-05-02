@@ -107,6 +107,13 @@
   --footer-input-text: #102028;
   --footer-button-bg: #c7b06a;
   --footer-button-text: #152028;
+
+  --form-bg: rgba(11, 22, 30, 0.96);
+  --form-bg-open: #0c1d29;
+  --form-text: #eef3f6;
+  --form-text-muted: #91a8b2;
+  --form-border: rgba(176, 202, 214, 0.24);
+  --form-focus: #d9e6e4;
 }
 
 :root[data-theme="summer"] {
@@ -195,4 +202,11 @@
   --footer-input-text: #243730;
   --footer-button-bg: #d8bf7b;
   --footer-button-text: #24352e;
+
+  --form-bg: rgba(34, 49, 45, 0.96);
+  --form-bg-open: #2d443d;
+  --form-text: #f7f4ea;
+  --form-text-muted: #bdc0ae;
+  --form-border: rgba(231, 219, 189, 0.24);
+  --form-focus: #efe3ba;
 }

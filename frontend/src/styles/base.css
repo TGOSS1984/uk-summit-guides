@@ -103,3 +103,35 @@ button {
   line-height: 1.7;
   max-width: 60ch;
 }
+
+/* Fix dropdown text + background */
+
+select,
+input,
+textarea {
+  background-color: var(--form-bg);
+  color: var(--form-text);
+  border: 1px solid var(--form-border);
+}
+
+select {
+  color: var(--form-text);
+  cursor: pointer;
+}
+
+select option {
+  background-color: var(--form-bg-open);
+  color: var(--form-text);
+}
+
+select option:disabled {
+  color: var(--form-text-muted);
+}
+
+select:focus,
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--form-focus);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--form-focus) 22%, transparent);
+}
