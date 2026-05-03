@@ -139,6 +139,10 @@ export async function getRoutes(params = {}) {
   return fetchJson(`/routes/${queryString ? `?${queryString}` : ""}`);
 }
 
+export async function getFeaturedRoutes() {
+  return getRoutes({ featured: "true" });
+}
+
 export async function getRouteDetail(slug) {
   return fetchJson(`/routes/${slug}/`);
 }

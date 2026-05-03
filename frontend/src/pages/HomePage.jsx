@@ -1,8 +1,49 @@
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
+import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
 import StatsBand from "../components/sections/StatsBand";
+import { getFeaturedRoutes } from "../lib/api";
 
 function HomePage() {
+  const [featuredRoutes, setFeaturedRoutes] = useState([]);
+  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadFeaturedRoutes() {
+      try {
+        const data = await getFeaturedRoutes();
+        if (isMounted) {
+          setFeaturedRoutes(Array.isArray(data) ? data : data.results || []);
+        }
+      } catch (error) {
+        console.error("Unable to load featured routes", error);
+      }
+    }
+
+    loadFeaturedRoutes();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (featuredRoutes.length <= 1) return undefined;
+
+    const interval = window.setInterval(() => {
+      setActiveFeaturedIndex((currentIndex) =>
+        currentIndex === featuredRoutes.length - 1 ? 0 : currentIndex + 1
+      );
+    }, 6500);
+
+    return () => window.clearInterval(interval);
+  }, [featuredRoutes.length]);
+
+  const featuredRoute = featuredRoutes[activeFeaturedIndex];
+
   return (
     <>
     <Helmet>
@@ -74,23 +115,86 @@ function HomePage() {
 
             <div className="hero__aside">
               <div className="hero__route-card">
-                <p className="hero__route-kicker">Featured route</p>
-                <h2 className="hero__route-title">Helvellyn Winter Traverse</h2>
+                {featuredRoute ? (
+                  <>
+                    
+                    <p className="hero__route-kicker">
+                      Featured route
+                      {featuredRoutes.length > 1 ? (
+                        <span>
+                          {" "}
+                          {activeFeaturedIndex + 1}/{featuredRoutes.length}
+                        </span>
+                      ) : null}
+                    </p>
 
-                <div className="hero__route-stats">
-                  <div className="hero__route-stat">
-                    <span className="hero__route-stat-label">Distance</span>
-                    <strong className="hero__route-stat-value">11 km</strong>
-                  </div>
-                  <div className="hero__route-stat">
-                    <span className="hero__route-stat-label">Duration</span>
-                    <strong className="hero__route-stat-value">7 hrs</strong>
-                  </div>
-                  <div className="hero__route-stat">
-                    <span className="hero__route-stat-label">Difficulty</span>
-                    <strong className="hero__route-stat-value">Advanced</strong>
-                  </div>
-                </div>
+                    <h2 className="hero__route-title">{featuredRoute.name}</h2>
+
+                    <div className="hero__route-stats">
+                      <div className="hero__route-stat">
+                        <span className="hero__route-stat-label">Region</span>
+                        <strong className="hero__route-stat-value">
+                          {featuredRoute.region?.name || "UK"}
+                        </strong>
+                      </div>
+
+                      <div className="hero__route-stat">
+                        <span className="hero__route-stat-label">Distance</span>
+                        <strong className="hero__route-stat-value">
+                          {featuredRoute.distance_km} km
+                        </strong>
+                      </div>
+
+                      <div className="hero__route-stat">
+                        <span className="hero__route-stat-label">Duration</span>
+                        <strong className="hero__route-stat-value">
+                          {featuredRoute.duration_hours} hrs
+                        </strong>
+                      </div>
+
+                      <div className="hero__route-stat">
+                        <span className="hero__route-stat-label">Difficulty</span>
+                        <strong className="hero__route-stat-value">
+                          {featuredRoute.difficulty}
+                        </strong>
+                      </div>
+                    </div>
+
+                    <Link
+                      className="hero__route-link"
+                      to={`/routes/${featuredRoute.slug}`}
+                    >
+                      View route
+                    </Link>
+
+                    {featuredRoutes.length > 1 ? (
+                      <div className="hero__route-dots" aria-label="Featured routes">
+                        {featuredRoutes.map((route, index) => (
+                          <button
+                            key={route.id}
+                            type="button"
+                            className={`hero__route-dot${
+                              index === activeFeaturedIndex ? " is-active" : ""
+                            }`}
+                            onClick={() => setActiveFeaturedIndex(index)}
+                            aria-label={`Show ${route.name}`}
+                          />
+                        ))}
+                      </div>
+                    ) : null}
+                  </>
+                ) : (
+                  <>
+                    <p className="hero__route-kicker">Featured route</p>
+                    <h2 className="hero__route-title">Explore our mountain routes</h2>
+                    <p className="hero__route-empty">
+                      Featured routes will appear here once marked in Django.
+                    </p>
+                    <Link className="hero__route-link" to="/routes">
+                      Browse routes
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>
