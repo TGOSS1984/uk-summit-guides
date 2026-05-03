@@ -37,7 +37,7 @@ function Footer() {
         { label: "FAQ", to: "/support/faq" },
         { label: "Contact Us", to: "/contact" },
         { label: "Booking Help" },
-        { label: "Cancellation Policy" },
+        { label: "Cancellation Policy", to: "/support/cancellation-policy" },
         { label: "Accessibility" },
         { label: "Safety Information" },
       ],
