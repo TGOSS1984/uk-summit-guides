@@ -11,6 +11,7 @@ import ContactPage from "./pages/ContactPage";
 import GalleryPage from "./pages/GalleryPage";
 import FAQPage from "./pages/FAQPage";
 import CancellationPolicyPage from "./pages/CancellationPolicyPage";
+import AccessibilityPage from "./pages/AccessibilityPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentCancelledPage from "./pages/PaymentCancelledPage";
 
@@ -29,6 +30,7 @@ function App() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/support/faq" element={<FAQPage />} />
         <Route path="/support/cancellation-policy" element={<CancellationPolicyPage />}/>
+        <Route path="/support/accessibility" element={<AccessibilityPage />} />
         <Route path="/payment-success" element={<PaymentSuccessPage />} />
         <Route path="/payment-cancelled" element={<PaymentCancelledPage />} />
       </Routes>
