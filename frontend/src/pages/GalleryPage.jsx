@@ -266,20 +266,13 @@ function GalleryPage() {
             key={`${theme}-${activeFilter}-${visibleCount}`}
             className="gallery-grid gallery-grid--premium"
             aria-label="Previous tour photo gallery"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: false, amount: 0.08 }}
-            variants={{
-              hidden: {},
-              visible: {
-                transition: {
-                  staggerChildren: 0.045,
-                },
-              },
-            }}
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, amount: 0.04 }}
+            transition={{ duration: 0.45 }}
           >
             {gridImages.map((image, index) => (
-              <motion.button
+              <button
                 type="button"
                 key={image.id}
                 className={
@@ -288,11 +281,6 @@ function GalleryPage() {
                     : "gallery-card"
                 }
                 onClick={() => openLightbox(index + 1)}
-                variants={{
-                  hidden: { opacity: 0, y: 24 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-                transition={{ duration: 0.5 }}
               >
                 <span
                   className={
@@ -327,7 +315,7 @@ function GalleryPage() {
                     <FaExpand />
                   </span>
                 </span>
-              </motion.button>
+              </button>
             ))}
           </motion.div>
 
@@ -338,7 +326,10 @@ function GalleryPage() {
                 className="gallery-load-more__button"
                 onClick={() =>
                   setVisibleCount((currentCount) =>
-                    Math.min(currentCount + LOAD_MORE_AMOUNT, filteredImages.length)
+                    Math.min(
+                      currentCount + LOAD_MORE_AMOUNT,
+                      filteredImages.length
+                    )
                   )
                 }
               >
@@ -350,7 +341,6 @@ function GalleryPage() {
               </button>
             </div>
           ) : null}
-
         </div>
       </section>
 

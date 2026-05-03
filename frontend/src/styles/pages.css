@@ -2313,3 +2313,47 @@
   font-size: 0.82rem;
   font-weight: 600;
 }
+
+/* Stable mobile gallery layout */
+
+@media (max-width: 640px) {
+  .gallery-grid,
+  .gallery-grid--premium {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-count: initial;
+    column-gap: 0;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .gallery-card {
+    display: block;
+    width: 100%;
+    min-height: 220px;
+    opacity: 1;
+    transform: none;
+  }
+
+  .gallery-card__image-wrap {
+    display: block;
+    width: 100%;
+    min-height: 220px;
+  }
+
+  .gallery-card__image-wrap::before {
+    display: none;
+  }
+
+  .gallery-card__image-wrap img,
+  .gallery-card__image-wrap:not(.is-loaded) img,
+  .gallery-card__image-wrap.is-loaded img {
+    display: block;
+    width: 100%;
+    min-height: 220px;
+    height: auto;
+    opacity: 1;
+    filter: none;
+    visibility: visible;
+  }
+}
