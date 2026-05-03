@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import AppShell from "./app/AppShell";
+import ScrollToTop from "./components/utils/ScrollToTop";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
 import ServicesPage from "./pages/ServicesPage";
@@ -22,6 +23,7 @@ import PaymentCancelledPage from "./pages/PaymentCancelledPage";
 function App() {
   return (
     <AppShell>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
