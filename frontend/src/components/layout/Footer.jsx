@@ -49,7 +49,7 @@ function Footer() {
         { label: "My Bookings", to: "/account" },
         { label: "Manage Booking", to: "/account" },
         { label: "Saved Routes", to: "/account" },
-        { label: "Email Preferences" },
+        { label: "Email Preferences", to: "/email-preferences" },
         { label: "Customer Support", to: "/contact" },
       ],
     },
