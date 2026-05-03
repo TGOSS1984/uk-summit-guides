@@ -3,6 +3,9 @@ import { motion } from "framer-motion";
 import { FaArrowLeft, FaArrowRight, FaExpand, FaXmark } from "react-icons/fa6";
 import { galleryFilters, getGalleryImages } from "../data/galleryImages";
 
+const INITIAL_VISIBLE_IMAGES = 30;
+const LOAD_MORE_AMOUNT = 12;
+
 function getCurrentTheme() {
   return document.documentElement.getAttribute("data-theme") || "winter";
 }
@@ -12,6 +15,7 @@ function GalleryPage() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [activeImageIndex, setActiveImageIndex] = useState(null);
   const [loadedImages, setLoadedImages] = useState({});
+  const [visibleCount, setVisibleCount] = useState(INITIAL_VISIBLE_IMAGES);
   const touchStartX = useRef(null);
 
   const galleryImages = useMemo(() => getGalleryImages(theme), [theme]);
@@ -27,8 +31,10 @@ function GalleryPage() {
     );
   }, [activeFilter, galleryImages]);
 
-  const featuredImage = filteredImages[0];
-  const gridImages = filteredImages.slice(1);
+  const visibleImages = filteredImages.slice(0, visibleCount);
+  const featuredImage = visibleImages[0];
+  const gridImages = visibleImages.slice(1);
+  const hasMoreImages = visibleCount < filteredImages.length;
 
   const activeImage =
     activeImageIndex !== null ? filteredImages[activeImageIndex] : null;
@@ -87,6 +93,7 @@ function GalleryPage() {
       setActiveFilter("All");
       setActiveImageIndex(null);
       setLoadedImages({});
+      setVisibleCount(INITIAL_VISIBLE_IMAGES);
     });
 
     observer.observe(document.documentElement, {
@@ -214,6 +221,7 @@ function GalleryPage() {
                   onClick={() => {
                     setActiveFilter(filter);
                     setActiveImageIndex(null);
+                    setVisibleCount(INITIAL_VISIBLE_IMAGES);
                   }}
                 >
                   {filter}
@@ -255,7 +263,7 @@ function GalleryPage() {
           ) : null}
 
           <motion.div
-            key={`${theme}-${activeFilter}`}
+            key={`${theme}-${activeFilter}-${visibleCount}`}
             className="gallery-grid gallery-grid--premium"
             aria-label="Previous tour photo gallery"
             initial="hidden"
@@ -298,6 +306,7 @@ function GalleryPage() {
                     alt={image.alt}
                     loading="lazy"
                     onLoad={() => handleImageLoaded(image.id)}
+                    onError={() => handleImageLoaded(image.id)}
                   />
                 </span>
 
@@ -321,6 +330,27 @@ function GalleryPage() {
               </motion.button>
             ))}
           </motion.div>
+
+          {hasMoreImages ? (
+            <div className="gallery-load-more">
+              <button
+                type="button"
+                className="gallery-load-more__button"
+                onClick={() =>
+                  setVisibleCount((currentCount) =>
+                    Math.min(currentCount + LOAD_MORE_AMOUNT, filteredImages.length)
+                  )
+                }
+              >
+                Load more images
+                <span>
+                  {Math.min(visibleCount, filteredImages.length)} /{" "}
+                  {filteredImages.length}
+                </span>
+              </button>
+            </div>
+          ) : null}
+
         </div>
       </section>
 

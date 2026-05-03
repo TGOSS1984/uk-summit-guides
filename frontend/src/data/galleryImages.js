@@ -1,8 +1,15 @@
 const regions = ["Scotland", "Lake District", "Snowdonia", "Peak District"];
 const categories = ["Summit", "Ridge", "Client Day", "Conditions"];
 
+const imageCounts = {
+  Winter: 60,
+  Summer: 60,
+};
+
 function buildGalleryImages(season) {
-  return Array.from({ length: 30 }, (_, index) => {
+  const imageCount = imageCounts[season] || 30;
+
+  return Array.from({ length: imageCount }, (_, index) => {
     const number = index + 1;
     const region = regions[index % regions.length];
     const category = categories[index % categories.length];
