@@ -39,7 +39,7 @@ function Footer() {
         { label: "Terms & Conditions", to: "/support/terms" },
         { label: "Cancellation Policy", to: "/support/cancellation-policy" },
         { label: "Accessibility", to: "/support/accessibility" },
-        { label: "Safety Information" },
+        { label: "Privacy Policy", to: "/support/privacy-policy" },
       ],
     },
     {
