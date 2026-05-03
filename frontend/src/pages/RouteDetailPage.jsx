@@ -366,7 +366,10 @@ function RouteDetailPage() {
                   </div>
                 </div>
 
-                <Link to="/book-now" className="route-booking-card__button">
+                <Link
+                  to={`/book-now?route=${encodeURIComponent(route.slug)}`}
+                  className="route-booking-card__button"
+                >
                   Book This Route
                   <FaArrowRight />
                 </Link>
@@ -443,7 +446,10 @@ function RouteDetailPage() {
                   </>
                 )}
 
-                <Link to="/book-now" className="route-departures-card__link">
+                <Link
+                  to={`/book-now?route=${encodeURIComponent(route.slug)}`}
+                  className="route-departures-card__link"
+                >
                   View booking calendar
                   <FaArrowRight />
                 </Link>

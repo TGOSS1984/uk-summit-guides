@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   FaArrowRight,
   FaCalendarDays,
@@ -59,6 +60,8 @@ function getCalendarDays(monthKey) {
 }
 
 function BookNowPage() {
+  const [searchParams] = useSearchParams();
+  const routeFromUrl = searchParams.get("route") || "";
   const [routes, setRoutes] = useState([]);
   const [scheduledTours, setScheduledTours] = useState([]);
   const [selectedRouteSlug, setSelectedRouteSlug] = useState("");
@@ -116,6 +119,16 @@ function BookNowPage() {
 
     loadRoutes();
   }, []);
+
+  useEffect(() => {
+    if (!routeFromUrl || routes.length === 0) return;
+
+    const matchingRoute = routes.find((route) => route.slug === routeFromUrl);
+
+    if (matchingRoute) {
+      setSelectedRouteSlug(matchingRoute.slug);
+    }
+  }, [routeFromUrl, routes]);
 
   useEffect(() => {
     async function loadTours() {
