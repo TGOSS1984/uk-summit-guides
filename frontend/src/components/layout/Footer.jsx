@@ -4,6 +4,7 @@ import {
   FaLinkedinIn,
   FaPinterestP,
 } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import BrandLogo from "../ui/BrandLogo";
 
 function Footer() {
@@ -11,54 +12,50 @@ function Footer() {
     {
       title: "Explore",
       items: [
-        "Winter Routes",
-        "Summer Routes",
-        "Private Guiding",
-        "Skills Days",
-        "Gift Vouchers",
-        "Group Bookings",
+        { label: "Winter Routes", to: "/routes" },
+        { label: "Summer Routes", to: "/routes" },
+        { label: "Private Guiding", to: "/services" },
+        { label: "Skills Days", to: "/services" },
+        { label: "Gift Vouchers" },
+        { label: "Group Bookings", to: "/services" },
       ],
     },
     {
       title: "Discover",
       items: [
-        "About Us",
-        "Our Guides",
-        "Regions",
-        "Route Difficulty",
-        "Seasonal Tours",
-        "Mountain Advice",
+        { label: "About Us", to: "/about" },
+        { label: "Our Guides" },
+        { label: "Regions", to: "/routes" },
+        { label: "Route Difficulty", to: "/routes" },
+        { label: "Seasonal Tours", to: "/services" },
+        { label: "Mountain Advice" },
       ],
     },
     {
       title: "Support",
       items: [
-        "FAQ",
-        "Contact Us",
-        "Booking Help",
-        "Cancellation Policy",
-        "Accessibility",
-        "Safety Information",
+        { label: "FAQ", to: "/support/faq" },
+        { label: "Contact Us", to: "/contact" },
+        { label: "Booking Help" },
+        { label: "Cancellation Policy" },
+        { label: "Accessibility" },
+        { label: "Safety Information" },
       ],
     },
     {
       title: "Account",
       items: [
-        "My Account",
-        "My Bookings",
-        "Manage Booking",
-        "Saved Routes",
-        "Email Preferences",
-        "Customer Support",
+        { label: "My Account", to: "/account" },
+        { label: "My Bookings", to: "/account" },
+        { label: "Manage Booking", to: "/account" },
+        { label: "Saved Routes", to: "/account" },
+        { label: "Email Preferences" },
+        { label: "Customer Support", to: "/contact" },
       ],
     },
   ];
 
-  const legalLinks = [
-    "Terms of Service",
-    "Privacy Policy",
-    "Booking Terms",
-  ];
+  const legalLinks = ["Terms of Service", "Privacy Policy", "Booking Terms"];
 
   const socialLinks = [
     { label: "Instagram", icon: <FaInstagram /> },
@@ -89,10 +86,16 @@ function Footer() {
                   <h3 className="site-footer__group-title">{group.title}</h3>
                   <ul className="site-footer__list">
                     {group.items.map((item) => (
-                      <li key={item}>
-                        <button type="button" className="site-footer__link">
-                          {item}
-                        </button>
+                      <li key={item.label}>
+                        {item.to ? (
+                          <Link to={item.to} className="site-footer__link">
+                            {item.label}
+                          </Link>
+                        ) : (
+                          <button type="button" className="site-footer__link">
+                            {item.label}
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -104,7 +107,8 @@ function Footer() {
           <div className="site-footer__signup">
             <p className="site-footer__signup-kicker">Stay in the loop</p>
             <h3 className="site-footer__signup-title">
-              Join for route updates, new departures, and seasonal mountain news.
+              Join for route updates, new departures, and seasonal mountain
+              news.
             </h3>
 
             <form className="site-footer__signup-form">
@@ -151,7 +155,11 @@ function Footer() {
 
           <div className="site-footer__legal">
             {legalLinks.map((item) => (
-              <button key={item} type="button" className="site-footer__legal-link">
+              <button
+                key={item}
+                type="button"
+                className="site-footer__legal-link"
+              >
                 {item}
               </button>
             ))}
