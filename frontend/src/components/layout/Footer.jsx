@@ -28,7 +28,7 @@ function Footer() {
         { label: "Regions", to: "/routes" },
         { label: "Route Difficulty", to: "/routes" },
         { label: "Seasonal Tours", to: "/services" },
-        { label: "Mountain Advice" },
+        { label: "Mountain Advice", to: "/advice" },
       ],
     },
     {
