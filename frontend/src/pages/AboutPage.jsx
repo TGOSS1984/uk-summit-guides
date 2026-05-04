@@ -31,6 +31,33 @@ function AboutPage() {
     },
   ];
 
+  const qualifications = [
+    {
+      icon: <FaMountainSun />,
+      title: "Mountain Leader Standard",
+      copy:
+        "A portfolio trust marker representing recognised mountain leadership, route choice, navigation, and group care in UK hill environments.",
+    },
+    {
+      icon: <FaShieldHeart />,
+      title: "Outdoor First Aid Ready",
+      copy:
+        "Reflects the importance of incident awareness, emergency response, and client wellbeing during remote mountain days.",
+    },
+    {
+      icon: <FaCompass />,
+      title: "Navigation & Route Planning",
+      copy:
+        "Built around map reading, weather awareness, terrain decisions, and adapting objectives to conditions on the day.",
+    },
+    {
+      icon: <FaUserGroup />,
+      title: "Small Group Management",
+      copy:
+        "Focused on safe pacing, communication, confidence building, and keeping guided days personal rather than overcrowded.",
+    },
+  ];
+
   const values = [
     {
       title: "Small group focus",
@@ -108,8 +135,8 @@ function AboutPage() {
               <p className="section-copy">
                 My name is Tom Goss, and UK Summit Guides comes from a genuine
                 love of the outdoors — the quiet pull of the hills, the changing
-                light across a ridge, and the feeling of perspective that only a
-                long mountain day can give you.
+                light across a ridge, and the sense of perspective that only a
+                long mountain day can give.
               </p>
               <p className="section-copy about-story__copy-spaced">
                 For me, mountain walking has never just been about reaching the
@@ -122,7 +149,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="section about-story">
+      <section className="section about-story about-story--memorial">
         <div className="container about-story__layout">
           <Reveal variant="left">
             <div className="about-story__content">
@@ -133,14 +160,14 @@ function AboutPage() {
               <p className="section-copy">
                 Much of my connection to the mountains was shaped by my late
                 father, Tom Goss Snr, who passed away in 2025. His love of the
-                outdoors, mountain landscapes, and days spent walking through wild
+                outdoors, mountain landscapes, and days spent moving through wild
                 places left a lasting mark on me.
               </p>
               <p className="section-copy about-story__copy-spaced">
-                This part of the journey is about keeping that love alive —
-                continuing to walk the UK mountains, carrying those memories
-                forward, and building something that honours the quiet strength,
-                perspective, and connection that the hills gave us.
+                This part of the journey is about carrying that forward — walking
+                the same hills, following the same ridgelines, and keeping that
+                connection alive through every step. This project, in many ways,
+                is part of that continuation.
               </p>
             </div>
           </Reveal>
@@ -152,14 +179,52 @@ function AboutPage() {
                 aria-hidden="true"
               />
               <div
-                className="about-story__media about-story__media--primary"
+                className="about-story__media about-story__media--primary about-story__media--memorial"
                 style={{
-                  backgroundImage:
-                    "url('/images/ui/about/tom_goss_snr.webp')",
+                  backgroundImage: "url('/images/ui/about/tom_goss_snr.webp')",
                 }}
               />
             </div>
           </Reveal>
+        </div>
+      </section>
+
+      <section className="section about-qualifications">
+        <div className="container">
+          <Reveal variant="up">
+            <div className="about-section-heading">
+              <p className="section-kicker">Trust & Safety</p>
+              <h2 className="section-title">
+                Built around the standards clients would expect from a professional guide
+              </h2>
+              <p className="section-copy">
+                This portfolio concept presents qualification-style trust markers
+                in a transparent way, showing the kind of safety, planning, and
+                leadership standards a real guided mountain service would need.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="about-qualifications__grid">
+            {qualifications.map((item, index) => (
+              <Reveal
+                key={item.title}
+                delay={index * 70}
+                variant={index % 2 === 0 ? "left" : "right"}
+              >
+                <article className="about-qualification-card">
+                  <span className="about-qualification-card__accent" aria-hidden="true" />
+                  <span className="about-qualification-card__icon">
+                    {item.icon}
+                  </span>
+                  <h3 className="about-qualification-card__title">
+                    {item.title}
+                  </h3>
+                  <p className="about-qualification-card__copy">{item.copy}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -240,7 +305,9 @@ function AboutPage() {
                   </span>
                   <div>
                     <span className="about-stat-panel__label">Mountain Focus</span>
-                    <strong className="about-stat-panel__value">Routes, Seasons & Experience</strong>
+                    <strong className="about-stat-panel__value">
+                      Routes, Seasons & Experience
+                    </strong>
                   </div>
                 </div>
               </div>

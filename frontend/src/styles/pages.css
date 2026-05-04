@@ -545,6 +545,45 @@
   background-image: var(--image-about-story);
 }
 
+/* Memorial section tone */
+.about-story--memorial {
+  position: relative;
+}
+
+.about-story--memorial::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    rgba(199, 176, 106, 0.06) 0%,
+    transparent 40%
+  );
+  pointer-events: none;
+}
+
+/* Image treatment */
+.about-story__media--memorial {
+  filter: saturate(0.9) contrast(1.05);
+  position: relative;
+}
+
+/* Subtle gold edge highlight */
+.about-story__media--memorial::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(199, 176, 106, 0.22);
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+/* Optional: slightly warmer kicker */
+.about-story--memorial .section-kicker {
+  color: #c7b06a;
+  letter-spacing: 0.12em;
+}
+
 .about-split__layout {
   grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
 }
@@ -552,6 +591,186 @@
 .about-split__media--tall {
   min-height: 360px;
   background-image: var(--image-about-split);
+}
+
+/* About qualifications section */
+
+.about-qualifications {
+  position: relative;
+  background:
+    radial-gradient(circle at top right, rgba(199, 176, 106, 0.1), transparent 24%),
+    radial-gradient(circle at 12% 18%, rgba(211, 66, 66, 0.08), transparent 22%),
+    var(--section-surface-dark);
+  overflow: hidden;
+}
+
+.about-qualifications::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(211, 66, 66, 0.055), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%);
+  pointer-events: none;
+}
+
+.about-qualifications .container {
+  position: relative;
+  z-index: 1;
+}
+
+.about-qualifications .section-kicker {
+  color: #c7b06a;
+}
+
+.about-qualifications__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.about-qualification-card {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+  min-height: 100%;
+  padding: 1.4rem;
+  overflow: hidden;
+  border: 1px solid rgba(199, 176, 106, 0.22);
+  border-radius: calc(var(--radius-lg) + 0.1rem);
+  background:
+    radial-gradient(circle at top right, rgba(199, 176, 106, 0.12), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(211, 66, 66, 0.08), transparent 32%),
+    rgba(255, 255, 255, 0.03);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(8px);
+}
+
+.about-qualification-card::before,
+.about-qualification-card::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.about-qualification-card::before {
+  top: 0.85rem;
+  right: 0.85rem;
+  width: 4.25rem;
+  height: 2.75rem;
+  border-top: 2px solid rgba(211, 66, 66, 0.9);
+  border-right: 2px solid rgba(211, 66, 66, 0.9);
+}
+
+.about-qualification-card::after {
+  left: 0;
+  bottom: 1.25rem;
+  width: 3.5rem;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(211, 66, 66, 0.95),
+    rgba(211, 66, 66, 0)
+  );
+}
+
+.about-qualification-card__accent {
+  position: absolute;
+  left: 1.1rem;
+  top: 1.1rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #d34242;
+  box-shadow: 0 0 18px rgba(211, 66, 66, 0.45);
+}
+
+.about-qualification-card__icon,
+.about-qualification-card__title,
+.about-qualification-card__copy {
+  position: relative;
+  z-index: 2;
+}
+
+.about-qualification-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.9rem;
+  height: 2.9rem;
+  margin-top: 0.35rem;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.18), transparent 36%),
+    rgba(199, 176, 106, 0.14);
+  color: #c7b06a;
+  font-size: 1.05rem;
+  box-shadow:
+    0 0 24px rgba(199, 176, 106, 0.14),
+    inset 0 0 0 1px rgba(199, 176, 106, 0.18);
+}
+
+.about-qualification-card__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  line-height: 1.05;
+}
+
+.about-qualification-card__copy {
+  margin: 0;
+  color: var(--color-text-soft);
+  line-height: 1.75;
+}
+
+:root[data-theme="summer"] .about-qualifications {
+  background:
+    radial-gradient(circle at top right, rgba(214, 193, 142, 0.13), transparent 24%),
+    radial-gradient(circle at 12% 18%, rgba(211, 66, 66, 0.075), transparent 22%),
+    var(--section-surface-dark);
+}
+
+:root[data-theme="summer"] .about-qualification-card {
+  border-color: rgba(214, 193, 142, 0.24);
+  background:
+    radial-gradient(circle at top right, rgba(214, 193, 142, 0.13), transparent 28%),
+    radial-gradient(circle at bottom left, rgba(211, 66, 66, 0.075), transparent 32%),
+    rgba(255, 255, 255, 0.03);
+}
+
+:root[data-theme="summer"] .about-qualification-card__icon {
+  color: #efe3ba;
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.18), transparent 36%),
+    rgba(214, 193, 142, 0.16);
+}
+
+/* Optional: add this into your About responsive safeguards */
+.about-qualifications__grid > * {
+  min-width: 0;
+}
+
+@media (max-width: 980px) {
+  .about-qualifications__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .about-qualifications__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-qualification-card {
+    padding: 1.15rem;
+  }
+
+  .about-qualification-card::before {
+    width: 3.5rem;
+    height: 2.25rem;
+  }
 }
 
 .services-feature__layout {
