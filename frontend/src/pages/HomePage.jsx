@@ -46,14 +46,14 @@ function HomePage() {
 
   return (
     <>
-    <Helmet>
+      <Helmet>
         <title>UK Summit Guides | Guided Mountain Tours UK</title>
         <meta
           name="description"
           content="Premium guided mountain tours across the UK. Winter skills, summer routes, and private guiding experiences in the Lake District, Snowdonia, and Scotland."
         />
       </Helmet>
-      
+
       <section className="hero">
         <div className="hero__image" />
         <div className="hero__overlay" />
@@ -96,11 +96,12 @@ function HomePage() {
             <div className="hero__main">
               <p className="hero__eyebrow">Mountain Travel Experts</p>
               <h1 className="hero__title">
-                Guided summit days shaped by season, terrain, and adventure.
+                Guided mountain days shaped by season, terrain, and experience.
               </h1>
               <p className="hero__text">
-                Premium guided mountain experiences across the UK with route-led
-                planning, seasonal departures, and a sleek booking experience.
+                Premium guided mountain experiences across the UK, with
+                carefully chosen routes, small-group departures, and planning
+                that responds to real mountain conditions.
               </p>
 
               <div className="hero__actions">
@@ -117,7 +118,6 @@ function HomePage() {
               <div className="hero__route-card">
                 {featuredRoute ? (
                   <>
-                    
                     <p className="hero__route-kicker">
                       Featured route
                       {featuredRoutes.length > 1 ? (
@@ -206,8 +206,8 @@ function HomePage() {
                 Discover guided days built for winter and summer terrain.
               </h2>
               <p className="hero__panel-copy">
-                Route-led planning, premium guiding, and a booking platform
-                designed to feel calm, modern, and mountain-first.
+                Route-led planning, premium guiding, and a calm booking
+                experience designed around the realities of UK mountain travel.
               </p>
             </div>
 
@@ -234,11 +234,14 @@ function HomePage() {
           <Reveal delay={80}>
             <div className="feature-band__card">
               <span className="feature-band__accent" aria-hidden="true" />
-              <p className="feature-band__eyebrow">Seasonal touring</p>
-              <h2 className="feature-band__title">Winter-first mountain platform</h2>
+              <p className="feature-band__eyebrow">Guided by experience</p>
+              <h2 className="feature-band__title">
+                More than a route — a better way to move through the mountains.
+              </h2>
               <p className="feature-band__text">
-                Designed around clean mountain photography, dark layered panels,
-                elegant spacing, and a future-ready booking engine.
+                Our guided days are built around clear planning, small groups,
+                seasonal awareness, and the kind of judgement that only comes
+                from time spent in mountain terrain.
               </p>
             </div>
           </Reveal>
@@ -261,10 +264,14 @@ function HomePage() {
                     Find the right route for your season and experience level
                   </h2>
                   <p className="section-copy">
-                    Browse structured mountain days with difficulty, distance,
-                    elevation gain, duration, and regional detail. The goal is a
-                    calmer, clearer planning experience that feels premium from
-                    the first screen.
+                    Every route is selected with intent — balancing terrain,
+                    exposure, distance, and seasonal conditions. Whether you're
+                    stepping into winter mountaineering or looking for a classic
+                    ridge traverse, we guide you toward objectives that match
+                    both your ability and the mountain’s mood.
+                    <br />
+                    <br />
+                    Plan with clarity before you even step onto the hill.
                   </p>
                 </div>
               </div>
@@ -290,12 +297,88 @@ function HomePage() {
                   <p className="editorial-block__number">02</p>
                   <p className="section-kicker">Book with confidence</p>
                   <h2 className="section-title">
-                    Protected availability and route-led guided departures
+                    Small groups. Clear availability. No surprises.
                   </h2>
                   <p className="section-copy">
-                    Capacity rules, seasonal pricing, customer accounts, and
-                    guide scheduling will sit behind a polished frontend that
-                    keeps the experience simple and intentional.
+                    We keep group sizes intentionally small to maintain safety,
+                    pace, and a more personal experience. Live availability
+                    reflects real guide capacity — so when you book, your place
+                    is secured and properly supported.
+                    <br />
+                    <br />
+                    Simple booking, backed by real-world planning.
+                  </p>
+                </div>
+              </div>
+
+              <div className="editorial-block__media-wrap editorial-block__media-wrap--offset">
+                <span
+                  className="accent-box accent-box--media accent-box--bottom-right"
+                  aria-hidden="true"
+                />
+                <div className="editorial-block__media editorial-block__media--alt" />
+              </div>
+            </article>
+          </Reveal>
+
+          <Reveal delay={140} variant="left">
+            <article className="editorial-block editorial-block--first">
+              <div className="editorial-block__text-wrap">
+                <span
+                  className="accent-box accent-box--content accent-box--right"
+                  aria-hidden="true"
+                />
+                <div className="editorial-block__text">
+                  <p className="editorial-block__number">03</p>
+                  <p className="section-kicker">Seasonal awareness</p>
+                  <h2 className="section-title">
+                    Winter and summer are different worlds
+                  </h2>
+                  <p className="section-copy">
+                    Snow, ice, daylight, wind, and visibility can transform
+                    familiar routes into completely different days. We adapt
+                    plans, pacing, and objectives around the season, the
+                    forecast, and the conditions found on the hill.
+                    <br />
+                    <br />
+                    The goal is simple: choose the best mountain day available,
+                    not just the one that looked good weeks ago.
+                  </p>
+                </div>
+              </div>
+
+              <div className="editorial-block__media-wrap">
+                <span
+                  className="accent-box accent-box--media accent-box--top-left"
+                  aria-hidden="true"
+                />
+                <div className="editorial-block__media editorial-block__media--primary" />
+              </div>
+            </article>
+          </Reveal>
+
+          <Reveal delay={170} variant="right">
+            <article className="editorial-block editorial-block--reverse">
+              <div className="editorial-block__text-wrap">
+                <span
+                  className="accent-box accent-box--content accent-box--left"
+                  aria-hidden="true"
+                />
+                <div className="editorial-block__text">
+                  <p className="editorial-block__number">04</p>
+                  <p className="section-kicker">Mountain confidence</p>
+                  <h2 className="section-title">
+                    More than just reaching the summit
+                  </h2>
+                  <p className="section-copy">
+                    A guided day should leave you with more than a photo at the
+                    top. Along the way, you’ll build confidence with movement,
+                    route choice, pacing, weather awareness, and the small
+                    decisions that shape a safer day outside.
+                    <br />
+                    <br />
+                    The summit matters — but the experience getting there
+                    matters more.
                   </p>
                 </div>
               </div>
@@ -327,12 +410,16 @@ function HomePage() {
               <div className="scenic-layout__copy">
                 <p className="section-kicker">Regional discovery</p>
                 <h2 className="section-title">
-                  Route pages that feel editorial, visual, and useful
+                  Route pages that go beyond basic details
                 </h2>
                 <p className="section-copy">
-                  We are shaping the UI so route discovery feels more like a
-                  curated mountain journal than a plain listing page, while
-                  still keeping all the data and booking utility underneath.
+                  Each route combines practical information with real context —
+                  terrain, exposure, seasonal considerations, and what the day
+                  actually feels like on the ground.
+                  <br />
+                  <br />
+                  It’s not just a list of stats — it’s a clearer picture of the
+                  experience ahead.
                 </p>
               </div>
             </div>
@@ -341,14 +428,15 @@ function HomePage() {
           <Reveal delay={120} variant="right">
             <div className="scenic-layout__right">
               <div className="scenic-layout__copy scenic-layout__copy--compact">
-                <p className="section-kicker">Design language</p>
+                <p className="section-kicker">Quietly professional</p>
                 <h2 className="section-title">
-                  Quiet surfaces, layered imagery, and restrained accents
+                  Always prepared, without overcomplicating the experience
                 </h2>
                 <p className="section-copy">
-                  The red frames stay subtle and selective, used only to tie
-                  together editorial cards and image compositions without
-                  overpowering the colder mountain palette.
+                  From route choice to group management, every detail is
+                  considered before the day begins. The planning stays calm and
+                  clear, so you can focus on the mountain rather than the
+                  logistics.
                 </p>
               </div>
 

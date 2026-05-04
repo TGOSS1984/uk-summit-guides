@@ -15,19 +15,19 @@ function AboutPage() {
       icon: <FaMountainSun />,
       title: "Season-led guiding",
       copy:
-        "Routes are framed around the realities of winter and summer terrain, not just the summit itself. The experience is built around the season, movement, and conditions.",
+        "Every mountain day is shaped by the season, the weather, the terrain, and the people on the route. Winter and summer each bring their own pace, risks, and rewards.",
     },
     {
       icon: <FaShieldHeart />,
-      title: "Calm, premium experience",
+      title: "Calm, considered experience",
       copy:
-        "The aim is a guiding experience that feels clear, reassuring, and thoughtfully structured from first enquiry through to the day on the hill.",
+        "The aim is to create mountain days that feel reassuring, well planned, and quietly professional from first enquiry through to the final steps off the hill.",
     },
     {
       icon: <FaCompass />,
       title: "Route-first planning",
       copy:
-        "Every mountain day starts with the line, the region, the objective, and the right pace for the client group. The platform will later reflect that same clarity.",
+        "Every experience starts with the right route, the right pace, and the right objective for the group — not simply chasing a summit for the sake of it.",
     },
   ];
 
@@ -35,17 +35,17 @@ function AboutPage() {
     {
       title: "Small group focus",
       copy:
-        "Built around small guided groups and premium private bookings, with a structure that later supports protected availability and route-specific scheduling.",
+        "Smaller groups allow for better communication, safer pacing, and a more personal experience on the mountain.",
     },
     {
-      title: "Regional expertise",
+      title: "Respect for the landscape",
       copy:
-        "The service is intended to grow around distinct mountain areas, giving each region its own routes, character, and seasonal flavour.",
+        "The mountains are not just a backdrop. They are living, changing places that deserve care, patience, and respect.",
     },
     {
-      title: "Modern operations",
+      title: "Meaningful mountain days",
       copy:
-        "Behind the visual layer, the project is being designed as a full booking and operations platform with routes, guides, tours, payments, and account management.",
+        "The best days are not always about speed or distance. They are about confidence, connection, memories, and moving well through wild places.",
     },
   ];
 
@@ -59,13 +59,12 @@ function AboutPage() {
           <Reveal variant="up">
             <p className="section-kicker">About UK Summit Guides</p>
             <h1 className="page-title about-hero__title">
-              A mountain-first platform shaped around guided experiences
+              Guided mountain days with a personal connection to the landscape
             </h1>
             <p className="about-hero__copy">
-              UK Summit Guides is being designed as more than a brochure site.
-              It is a premium guided mountain platform that brings together route
-              discovery, guiding, booking, seasonal planning, and operations in
-              one coherent experience.
+              UK Summit Guides is shaped by a love of the outdoors, the drama of
+              the British mountain landscape, and the belief that time in the
+              hills should feel calm, meaningful, and well considered.
             </p>
           </Reveal>
 
@@ -77,7 +76,7 @@ function AboutPage() {
               </div>
               <div className="about-hero__meta-item">
                 <span className="about-hero__meta-label">Experience</span>
-                <strong className="about-hero__meta-value">Premium</strong>
+                <strong className="about-hero__meta-value">Personal</strong>
               </div>
               <div className="about-hero__meta-item">
                 <span className="about-hero__meta-label">Guiding Style</span>
@@ -102,22 +101,63 @@ function AboutPage() {
 
           <Reveal delay={80} variant="right">
             <div className="about-story__content">
-              <p className="section-kicker">The idea behind it</p>
+              <p className="section-kicker">The story behind it</p>
               <h2 className="section-title">
-                Built to feel editorial, calm, and purposeful
+                A personal love for wild places, ridgelines, and mountain days
               </h2>
               <p className="section-copy">
-                The project vision is to create a mountain touring platform that
-                feels refined at the front end and robust underneath. That means
-                route pages designed around real mountain decisions, clean booking
-                flows, and a visual system that reflects the atmosphere of the hills.
+                My name is Tom Goss, and UK Summit Guides comes from a genuine
+                love of the outdoors — the quiet pull of the hills, the changing
+                light across a ridge, and the feeling of perspective that only a
+                long mountain day can give you.
               </p>
               <p className="section-copy about-story__copy-spaced">
-                The winter and summer theme system is part of that thinking. The
-                experience should not feel like the same flat interface all year
-                round. It should shift with the season, the mood, and the type of
-                mountain day being offered.
+                For me, mountain walking has never just been about reaching the
+                top. It is about the route, the weather, the people you share it
+                with, and the memories that stay with you long after the boots
+                are cleaned and packed away.
               </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section about-story">
+        <div className="container about-story__layout">
+          <Reveal variant="left">
+            <div className="about-story__content">
+              <p className="section-kicker">In memory</p>
+              <h2 className="section-title">
+                For Tom Goss Snr — whose love of the mountains still leads the way
+              </h2>
+              <p className="section-copy">
+                Much of my connection to the mountains was shaped by my late
+                father, Tom Goss Snr, who passed away in 2025. His love of the
+                outdoors, mountain landscapes, and days spent walking through wild
+                places left a lasting mark on me.
+              </p>
+              <p className="section-copy about-story__copy-spaced">
+                This part of the journey is about keeping that love alive —
+                continuing to walk the UK mountains, carrying those memories
+                forward, and building something that honours the quiet strength,
+                perspective, and connection that the hills gave us.
+              </p>
+            </div>
+          </Reveal>
+
+          <Reveal delay={80} variant="right">
+            <div className="about-story__media-wrap">
+              <span
+                className="accent-box accent-box--media accent-box--top-left"
+                aria-hidden="true"
+              />
+              <div
+                className="about-story__media about-story__media--primary"
+                style={{
+                  backgroundImage:
+                    "url('/images/ui/about/tom_goss_snr.webp')",
+                }}
+              />
             </div>
           </Reveal>
         </div>
@@ -127,8 +167,8 @@ function AboutPage() {
         <div className="container">
           <Reveal variant="up">
             <div className="about-section-heading">
-              <p className="section-kicker">What shapes the platform</p>
-              <h2 className="section-title">The guiding principles behind the experience</h2>
+              <p className="section-kicker">What shapes the experience</p>
+              <h2 className="section-title">The principles behind every mountain day</h2>
             </div>
           </Reveal>
 
@@ -156,7 +196,7 @@ function AboutPage() {
             <div className="about-split__content">
               <p className="section-kicker">Guiding DNA</p>
               <h2 className="section-title">
-                Designed for real routes, small groups, and premium mountain days
+                Built around real routes, small groups, and meaningful mountain days
               </h2>
 
               <div className="about-values">
@@ -190,7 +230,7 @@ function AboutPage() {
                   </span>
                   <div>
                     <span className="about-stat-panel__label">Group Style</span>
-                    <strong className="about-stat-panel__value">Max 3 Per Booking</strong>
+                    <strong className="about-stat-panel__value">Small Groups</strong>
                   </div>
                 </div>
 
@@ -199,8 +239,8 @@ function AboutPage() {
                     <FaLayerGroup />
                   </span>
                   <div>
-                    <span className="about-stat-panel__label">Platform Shape</span>
-                    <strong className="about-stat-panel__value">Frontend + Booking Engine</strong>
+                    <span className="about-stat-panel__label">Mountain Focus</span>
+                    <strong className="about-stat-panel__value">Routes, Seasons & Experience</strong>
                   </div>
                 </div>
               </div>
@@ -213,14 +253,14 @@ function AboutPage() {
         <div className="container">
           <Reveal variant="up">
             <div className="about-cta__panel">
-              <p className="section-kicker">Looking ahead</p>
+              <p className="section-kicker">Start your journey</p>
               <h2 className="section-title">
-                The next stage is connecting this experience to real routes, guides, and bookable tours
+                Find a route that matches your season, confidence, and sense of adventure
               </h2>
               <p className="section-copy">
-                This page is the visual shell for the story behind the platform.
-                Later, it can expand with guide profiles, credentials, service detail,
-                regional expertise, and operational trust markers.
+                Explore guided mountain routes across the UK, from classic summer
+                ridges to atmospheric winter objectives, and choose the day that
+                feels right for you.
               </p>
 
               <div className="about-cta__actions">
