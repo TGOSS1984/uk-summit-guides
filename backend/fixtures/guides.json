@@ -1,15 +1,54 @@
 [
-{
-  "model": "routes_app.guide",
-  "pk": 1,
-  "fields": {
-    "first_name": "Tom",
-    "last_name": "Goss",
-    "slug": "tom-goss",
-    "bio": "",
-    "profile_image": "",
-    "qualifications": "",
-    "active": true
+  {
+    "model": "routes_app.guide",
+    "pk": 1,
+    "fields": {
+      "first_name": "Tom",
+      "last_name": "Goss",
+      "slug": "tom-goss",
+      "bio": "Tom leads route-led mountain days with a calm, structured approach. His guiding style focuses on clear planning, steady pacing, and helping clients choose objectives that suit the season, terrain, and group experience.",
+      "profile_image": "images/guides/tom-goss.jpg",
+      "qualifications": "Lead guide, Winter route planning, Small-group guiding",
+      "active": true
+    }
+  },
+  {
+    "model": "routes_app.guide",
+    "pk": 2,
+    "fields": {
+      "first_name": "Guide",
+      "last_name": "Two",
+      "slug": "guide-two",
+      "bio": "A confident and supportive guide for clients looking to progress onto more exposed terrain. Their days are built around movement skills, route awareness, and clear decision-making in changing mountain conditions.",
+      "profile_image": "",
+      "qualifications": "Scrambling terrain, Route confidence, Progressive objectives",
+      "active": true
+    }
+  },
+  {
+    "model": "routes_app.guide",
+    "pk": 3,
+    "fields": {
+      "first_name": "Guide",
+      "last_name": "Three",
+      "slug": "guide-three",
+      "bio": "Focused on helping clients build confidence in winter environments, from kit choices and footwork to safe route selection. Their approach keeps the day practical, measured, and condition-led.",
+      "profile_image": "",
+      "qualifications": "Winter skills, Snow travel, Condition-led planning",
+      "active": true
+    }
+  },
+  {
+    "model": "routes_app.guide",
+    "pk": 4,
+    "fields": {
+      "first_name": "Guide",
+      "last_name": "Four",
+      "slug": "guide-four",
+      "bio": "Ideal for private bookings and tailored mountain days. Their guiding style is flexible, friendly, and built around matching the right objective to the group’s pace, confidence, and expectations.",
+      "profile_image": "",
+      "qualifications": "Private guiding, Bespoke days, Group support",
+      "active": true
+    }
   }
-}
 ]

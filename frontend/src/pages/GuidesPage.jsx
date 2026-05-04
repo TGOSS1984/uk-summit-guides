@@ -1,79 +1,115 @@
+import { useEffect, useState } from "react";
 import {
   FaArrowRight,
   FaCompass,
-  FaFirstAid,
   FaMountain,
+  FaShieldAlt,
   FaSnowflake,
-  FaUsers
+  FaUsers,
 } from "react-icons/fa";
-import { FaShieldAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
+import { getGuides } from "../lib/api";
+
+function getGuideInitials(guide) {
+  const first = guide.first_name?.charAt(0) || "";
+  const last = guide.last_name?.charAt(0) || "";
+  return `${first}${last}` || "UG";
+}
+
+function getGuideName(guide) {
+  return guide.full_name || `${guide.first_name || ""} ${guide.last_name || ""}`.trim();
+}
+
+function getGuideImage(profileImage) {
+  if (!profileImage) return "";
+
+  if (profileImage.startsWith("http") || profileImage.startsWith("/")) {
+    return profileImage;
+  }
+
+  return `${import.meta.env.BASE_URL}${profileImage}`;
+}
+
+function getGuideRole(index) {
+  const roles = [
+    "Lead Mountain Guide",
+    "Senior Mountain Guide",
+    "Winter Skills Guide",
+    "Private Guiding Specialist",
+  ];
+
+  return roles[index] || "Mountain Guide";
+}
+
+function getGuideRegion(index) {
+  const regions = [
+    "Lake District / Scotland",
+    "Snowdonia / North Wales",
+    "Scottish Highlands",
+    "UK-wide",
+  ];
+
+  return regions[index] || "UK mountain regions";
+}
 
 function GuidesPage() {
-  const guides = [
-    {
-      name: "Tom Goss",
-      role: "Lead Mountain Guide",
-      initials: "TG",
-      region: "Lake District / Scotland",
-      specialism: "Winter mountain days, classic ridges, route planning",
-      bio:
-        "Tom leads route-led mountain days with a calm, structured approach. His guiding style focuses on clear planning, steady pacing, and helping clients choose objectives that suit the season, terrain, and group experience.",
-      highlights: ["Small-group guiding", "Winter route planning", "Client-focused pacing"],
-    },
-    {
-      name: "Guide Two",
-      role: "Senior Mountain Guide",
-      initials: "G2",
-      region: "Snowdonia / North Wales",
-      specialism: "Scrambles, ridgelines, and technical walking days",
-      bio:
-        "A confident and supportive guide for clients looking to progress onto more exposed terrain. Their days are built around movement skills, route awareness, and clear decision-making in changing mountain conditions.",
-      highlights: ["Scrambling terrain", "Route confidence", "Progressive objectives"],
-    },
-    {
-      name: "Guide Three",
-      role: "Winter Skills Guide",
-      initials: "G3",
-      region: "Scottish Highlands",
-      specialism: "Winter skills, snow conditions, and mountain judgement",
-      bio:
-        "Focused on helping clients build confidence in winter environments, from kit choices and footwork to safe route selection. Their approach keeps the day practical, measured, and condition-led.",
-      highlights: ["Winter skills", "Snow travel", "Condition-led planning"],
-    },
-    {
-      name: "Guide Four",
-      role: "Private Guiding Specialist",
-      initials: "G4",
-      region: "UK-wide",
-      specialism: "Bespoke guiding, private groups, and tailored objectives",
-      bio:
-        "Ideal for private bookings and tailored mountain days. Their guiding style is flexible, friendly, and built around matching the right objective to the group’s pace, confidence, and expectations.",
-      highlights: ["Private guiding", "Bespoke days", "Group support"],
-    },
-  ];
+  const [guides, setGuides] = useState([]);
+  const [guidesLoading, setGuidesLoading] = useState(true);
+  const [guidesError, setGuidesError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadGuides() {
+      try {
+        setGuidesLoading(true);
+        setGuidesError("");
+
+        const data = await getGuides();
+        const results = Array.isArray(data) ? data : data.results || [];
+
+        if (isMounted) {
+          setGuides(results);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setGuidesError("Unable to load guide profiles right now.");
+        }
+      } finally {
+        if (isMounted) {
+          setGuidesLoading(false);
+        }
+      }
+    }
+
+    loadGuides();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const values = [
     {
-        icon: <FaShieldAlt />,
-        title: "Safety-led decisions",
-        copy:
+      icon: <FaShieldAlt />,
+      title: "Safety-led decisions",
+      copy:
         "Guides adapt objectives around weather, terrain, daylight, group pace, and real conditions on the hill.",
     },
     {
-        icon: <FaUsers />,
-        title: "Small-group focus",
-        copy:
+      icon: <FaUsers />,
+      title: "Small-group focus",
+      copy:
         "Guided days are designed to feel calm, personal, and properly supported rather than crowded or rushed.",
     },
     {
-        icon: <FaCompass />,
-        title: "Route-first planning",
-        copy:
+      icon: <FaCompass />,
+      title: "Route-first planning",
+      copy:
         "Every guide works from the route, the season, and the client’s current ability before chasing a summit.",
     },
-    ];
+  ];
 
   return (
     <>
@@ -105,56 +141,107 @@ function GuidesPage() {
                 Professional, calm, and mountain-first
               </h2>
               <p className="section-copy">
-                Each guide profile is structured so this page can scale later
-                from static content into real Django-powered guide records.
+                Guide profiles are now powered by Django, so names, bios,
+                images, qualifications, and active status can be managed from
+                the admin panel.
               </p>
             </div>
           </Reveal>
 
-          <div className="guides-grid">
-            {guides.map((guide, index) => (
-              <Reveal
-                key={guide.name}
-                delay={index * 70}
-                variant={index % 2 === 0 ? "left" : "right"}
-              >
-                <article className="guide-card">
-                  <span
-                    className="accent-box accent-box--content accent-box--right"
-                    aria-hidden="true"
-                  />
+          {guidesLoading ? (
+            <div className="support-card">
+              <p className="support-card__copy">Loading guide profiles…</p>
+            </div>
+          ) : guidesError ? (
+            <div className="support-card">
+              <p className="support-card__copy">{guidesError}</p>
+            </div>
+          ) : (
+            <div className="guides-grid">
+              {guides.map((guide, index) => {
+                const guideName = getGuideName(guide);
+                const guideImage = getGuideImage(guide.profile_image);
+                const qualifications = guide.qualifications
+                  ? guide.qualifications
+                      .split(",")
+                      .map((item) => item.trim())
+                      .filter(Boolean)
+                  : [];
 
-                  <div className="guide-card__portrait-wrap">
-                    <div className="guide-card__portrait">
-                      <span>{guide.initials}</span>
-                    </div>
-                  </div>
+                return (
+                  <Reveal
+                    key={guide.id || guide.slug || guideName}
+                    delay={index * 70}
+                    variant={index % 2 === 0 ? "left" : "right"}
+                  >
+                    <article className="guide-card">
+                      <span
+                        className="accent-box accent-box--content accent-box--right"
+                        aria-hidden="true"
+                      />
 
-                  <div className="guide-card__content">
-                    <p className="guide-card__eyebrow">{guide.role}</p>
-                    <h3 className="guide-card__name">{guide.name}</h3>
+                      <div className="guide-card__portrait-wrap">
+                        <div className="guide-card__portrait">
+                        {guideImage ? (
+                          <>
+                            <img
+                              src={guideImage}
+                              alt={guideName}
+                              onError={(event) => {
+                                event.currentTarget.style.display = "none";
+                                event.currentTarget.nextElementSibling.style.display = "block";
+                              }}
+                            />
+                            <span style={{ display: "none" }}>{getGuideInitials(guide)}</span>
+                          </>
+                        ) : (
+                          <span>{getGuideInitials(guide)}</span>
+                        )}
+                      </div>
+                      </div>
 
-                    <div className="guide-card__meta">
-                      <span>
-                        <FaMountain /> {guide.region}
-                      </span>
-                      <span>
-                        <FaSnowflake /> {guide.specialism}
-                      </span>
-                    </div>
+                      <div className="guide-card__content">
+                        <p className="guide-card__eyebrow">
+                          {getGuideRole(index)}
+                        </p>
+                        <h3 className="guide-card__name">{guideName}</h3>
 
-                    <p className="guide-card__bio">{guide.bio}</p>
+                        <div className="guide-card__meta">
+                          <span>
+                            <FaMountain /> {getGuideRegion(index)}
+                          </span>
+                          <span>
+                            <FaSnowflake />{" "}
+                            {qualifications.length
+                              ? qualifications.slice(0, 2).join(" / ")
+                              : "Route-led mountain guiding"}
+                          </span>
+                        </div>
 
-                    <div className="guide-card__highlights">
-                      {guide.highlights.map((highlight) => (
-                        <span key={highlight}>{highlight}</span>
-                      ))}
-                    </div>
-                  </div>
-                </article>
-              </Reveal>
-            ))}
-          </div>
+                        <p className="guide-card__bio">
+                          {guide.bio ||
+                            "A calm, supportive mountain guide focused on safe route choice, steady pacing, and helping clients enjoy memorable guided days in the UK mountains."}
+                        </p>
+
+                        <div className="guide-card__highlights">
+                          {(qualifications.length
+                            ? qualifications
+                            : [
+                                "Small-group guiding",
+                                "Route planning",
+                                "Client-focused pacing",
+                              ]
+                          ).map((highlight) => (
+                            <span key={highlight}>{highlight}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </article>
+                  </Reveal>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

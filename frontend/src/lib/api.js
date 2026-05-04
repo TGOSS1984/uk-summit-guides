@@ -126,6 +126,10 @@ export async function getRegions() {
   return fetchJson("/regions/");
 }
 
+export async function getGuides() {
+  return fetchJson("/guides/");
+}
+
 export async function getRoutes(params = {}) {
   const searchParams = new URLSearchParams();
 
