@@ -17,6 +17,7 @@ import TermsPage from "./pages/TermsPage";
 import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import MountainAdvicePage from "./pages/MountainAdvicePage";
 import EmailPreferencesPage from "./pages/EmailPreferencesPage";
+import GuidesPage from "./pages/GuidesPage";
 import PaymentSuccessPage from "./pages/PaymentSuccessPage";
 import PaymentCancelledPage from "./pages/PaymentCancelledPage";
 
@@ -41,6 +42,7 @@ function App() {
         <Route path="/support/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/advice" element={<MountainAdvicePage />} />
         <Route path="/email-preferences" element={<EmailPreferencesPage />} />
+        <Route path="/guides" element={<GuidesPage />} />
         <Route path="/payment-success" element={<PaymentSuccessPage />} />
         <Route path="/payment-cancelled" element={<PaymentCancelledPage />} />
       </Routes>

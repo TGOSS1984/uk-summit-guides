@@ -24,7 +24,7 @@ function Footer() {
       title: "Discover",
       items: [
         { label: "About Us", to: "/about" },
-        { label: "Our Guides" },
+        { label: "Our Guides", to: "/guides" },
         { label: "Regions", to: "/routes" },
         { label: "Route Difficulty", to: "/routes" },
         { label: "Seasonal Tours", to: "/services" },

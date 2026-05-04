@@ -282,6 +282,14 @@
   background-image: var(--image-home-scenic-2);
 }
 
+.editorial-block__media--third {
+  background-image: var(--image-home-editorial-3);
+}
+
+.editorial-block__media--fourth {
+  background-image: var(--image-home-editorial-4);
+}
+
 /*About Images*/
 
 .about-story__media--primary {

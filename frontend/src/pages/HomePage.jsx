@@ -352,7 +352,7 @@ function HomePage() {
                   className="accent-box accent-box--media accent-box--top-left"
                   aria-hidden="true"
                 />
-                <div className="editorial-block__media editorial-block__media--primary" />
+                <div className="editorial-block__media editorial-block__media--third" />
               </div>
             </article>
           </Reveal>
@@ -388,7 +388,7 @@ function HomePage() {
                   className="accent-box accent-box--media accent-box--bottom-right"
                   aria-hidden="true"
                 />
-                <div className="editorial-block__media editorial-block__media--alt" />
+                <div className="editorial-block__media editorial-block__media--fourth" />
               </div>
             </article>
           </Reveal>

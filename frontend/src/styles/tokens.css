@@ -81,6 +81,8 @@
 
   --image-home-editorial-1: url("/images/ui/home/home-1.jpeg");
   --image-home-editorial-2: url("/images/ui/home/home-2.jpeg");
+  --image-home-editorial-3: url("/images/ui/home/home-5.jpeg");
+  --image-home-editorial-4: url("/images/ui/home/home-6.jpeg");
   --image-home-scenic-1: url("/images/ui/home/home-3.jpeg");
   --image-home-scenic-2: url("/images/ui/home/home-4.jpeg");
 
@@ -174,6 +176,8 @@
 
   --image-home-editorial-1: url("/images/ui/home/home-1-summer.jpeg");
   --image-home-editorial-2: url("/images/ui/home/home-2-summer.jpeg");
+  --image-home-editorial-3: url("/images/ui/home/home-5-summer.jpeg");
+  --image-home-editorial-4: url("/images/ui/home/home-6-summer.jpeg");
   --image-home-scenic-1: url("/images/ui/home/home-3-summer.jpeg");
   --image-home-scenic-2: url("/images/ui/home/home-4-summer.jpeg");
 
