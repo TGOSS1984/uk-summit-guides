@@ -54,5 +54,145 @@
     "max_group_size": 3,
     "status": "open"
   }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 5,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-01",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 6,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-02",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 7,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-03",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 8,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-04",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 9,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-05",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 10,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-06",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 11,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-07",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 12,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-08",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 13,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-09",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
+},
+{
+  "model": "bookings.scheduledtour",
+  "pk": 14,
+  "fields": {
+    "route": 1,
+    "guide": 1,
+    "date": "2026-06-10",
+    "season": "summer",
+    "start_time": "06:00:00",
+    "price_pp": "145.00",
+    "max_group_size": 3,
+    "status": "open"
+  }
 }
 ]
