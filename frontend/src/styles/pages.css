@@ -598,8 +598,8 @@
 .about-qualifications {
   position: relative;
   background:
-    radial-gradient(circle at top right, rgba(199, 176, 106, 0.1), transparent 24%),
-    radial-gradient(circle at 12% 18%, rgba(211, 66, 66, 0.08), transparent 22%),
+    radial-gradient(circle at top right, rgba(176, 207, 208, 0.045), transparent 26%),
+    radial-gradient(circle at 12% 18%, rgba(176, 207, 208, 0.035), transparent 24%),
     var(--section-surface-dark);
   overflow: hidden;
 }
@@ -609,8 +609,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(211, 66, 66, 0.055), transparent 28%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%);
+    linear-gradient(90deg, rgba(211, 66, 66, 0.018), transparent 24%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.012), transparent 22%);
   pointer-events: none;
 }
 
@@ -727,8 +727,8 @@
 
 :root[data-theme="summer"] .about-qualifications {
   background:
-    radial-gradient(circle at top right, rgba(214, 193, 142, 0.13), transparent 24%),
-    radial-gradient(circle at 12% 18%, rgba(211, 66, 66, 0.075), transparent 22%),
+    radial-gradient(circle at top right, rgba(214, 193, 142, 0.055), transparent 26%),
+    radial-gradient(circle at 12% 18%, rgba(214, 193, 142, 0.04), transparent 24%),
     var(--section-surface-dark);
 }
 
@@ -747,7 +747,7 @@
     rgba(214, 193, 142, 0.16);
 }
 
-/* Optional: add this into your About responsive safeguards */
+/* About responsive safeguards */
 .about-qualifications__grid > * {
   min-width: 0;
 }
