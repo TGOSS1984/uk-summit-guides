@@ -175,10 +175,6 @@ function GuidesPage() {
                     variant={index % 2 === 0 ? "left" : "right"}
                   >
                     <article className="guide-card">
-                      <span
-                        className="accent-box accent-box--content accent-box--right"
-                        aria-hidden="true"
-                      />
 
                       <div className="guide-card__portrait-wrap">
                         <div className="guide-card__portrait">

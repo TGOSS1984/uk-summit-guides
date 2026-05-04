@@ -3334,3 +3334,16 @@
   display: block;
 }
 
+.guide-card::after {
+  content: "";
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 70px;
+  height: 70px;
+  border-top: 2.5px solid rgba(211, 66, 66, 0.6);
+  border-right: 2.5px solid rgba(211, 66, 66, 0.6);
+  pointer-events: none;
+  opacity: 0.75;
+  z-index: 1;
+}
