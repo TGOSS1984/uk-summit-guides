@@ -777,7 +777,8 @@
   }
 
   .brand-logo__subtitle {
-    display: none;
+    font-size: 0.48rem;
+    letter-spacing: 0.12em;
   }
 
   .site-account-link--compact,
