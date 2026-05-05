@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   FaArrowRight,
   FaCompass,
@@ -8,8 +9,55 @@ import {
 } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Reveal from "../components/ui/Reveal";
+import { getGuides } from "../lib/api";
+
+function getGuideInitials(guide) {
+  const first = guide.first_name?.charAt(0) || "";
+  const last = guide.last_name?.charAt(0) || "";
+  return `${first}${last}` || "UG";
+}
+
+function getGuideName(guide) {
+  return guide.full_name || `${guide.first_name || ""} ${guide.last_name || ""}`.trim();
+}
+
+function getGuideImage(profileImage) {
+  if (!profileImage) return "";
+
+  if (profileImage.startsWith("http") || profileImage.startsWith("/")) {
+    return profileImage;
+  }
+
+  return `${import.meta.env.BASE_URL}${profileImage}`;
+}
 
 function AboutPage() {
+
+    const [guides, setGuides] = useState([]);
+
+    useEffect(() => {
+      let isMounted = true;
+
+      async function loadGuides() {
+        try {
+          const data = await getGuides();
+          const results = Array.isArray(data) ? data : data.results || [];
+
+          if (isMounted) {
+            setGuides(results.slice(0, 4));
+          }
+        } catch (error) {
+          console.error("Unable to load guide profiles", error);
+        }
+      }
+
+      loadGuides();
+
+      return () => {
+        isMounted = false;
+      };
+    }, []);
+
   const pillars = [
     {
       icon: <FaMountainSun />,
@@ -144,6 +192,92 @@ function AboutPage() {
                 with, and the memories that stay with you long after the boots
                 are cleaned and packed away.
               </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="section about-guides-preview">
+        <div className="container about-guides-preview__layout">
+          <Reveal variant="left">
+            <div className="about-guides-preview__content">
+              <p className="section-kicker">Meet the team</p>
+              <h2 className="section-title">
+                Calm, experienced guides behind every mountain day
+              </h2>
+              <p className="section-copy">
+                Our guide team brings together route-led planning, seasonal
+                judgement, steady pacing, and small-group support across the UK’s
+                mountain regions.
+              </p>
+
+              <Link
+                to="/guides"
+                className="route-card__link route-card__link--primary about-guides-preview__button"
+              >
+                Meet the guides
+                <FaArrowRight />
+              </Link>
+            </div>
+          </Reveal>
+
+          <Reveal delay={100} variant="right">
+            <div className="about-guides-preview__panel">
+              <span
+                className="accent-box accent-box--media accent-box--top-left"
+                aria-hidden="true"
+              />
+
+              <div className="about-guides-preview__portraits">
+                {guides.length ? (
+                  guides.map((guide, index) => {
+                    const guideName = getGuideName(guide);
+                    const guideImage = getGuideImage(guide.profile_image);
+
+                    return (
+                      <Link
+                        key={guide.id || guide.slug || guideName}
+                        to="/guides"
+                        className="about-guides-preview__portrait"
+                        style={{ "--portrait-index": index }}
+                        aria-label={`View ${guideName}'s guide profile`}
+                      >
+                        {guideImage ? (
+                          <>
+                            <img
+                              src={guideImage}
+                              alt={guideName}
+                              onError={(event) => {
+                                event.currentTarget.style.display = "none";
+                                event.currentTarget.nextElementSibling.style.display =
+                                  "grid";
+                              }}
+                            />
+                            <span style={{ display: "none" }}>
+                              {getGuideInitials(guide)}
+                            </span>
+                          </>
+                        ) : (
+                          <span>{getGuideInitials(guide)}</span>
+                        )}
+                      </Link>
+                    );
+                  })
+                ) : (
+                  <div className="about-guides-preview__portrait about-guides-preview__portrait--fallback">
+                    <span>UG</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="about-guides-preview__card">
+                <p className="about-guides-preview__eyebrow">Guide profiles</p>
+                <h3>Professional, personal, mountain-first</h3>
+                <p>
+                  View guide bios, images, qualifications, specialisms, and the
+                  approach behind each guided day.
+                </p>
+              </div>
             </div>
           </Reveal>
         </div>

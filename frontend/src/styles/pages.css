@@ -773,6 +773,190 @@
   }
 }
 
+/* About guide team preview */
+
+.about-guides-preview {
+  position: relative;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(176, 207, 208, 0.09), transparent 30%),
+    radial-gradient(circle at 18% 80%, rgba(211, 66, 66, 0.055), transparent 28%),
+    var(--section-surface-dark);
+  overflow: hidden;
+}
+
+.about-guides-preview__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(320px, 1.15fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+}
+
+.about-guides-preview__content {
+  max-width: 58ch;
+}
+
+.about-guides-preview__button {
+  width: fit-content;
+  margin-top: 1.5rem;
+}
+
+.about-guides-preview__panel {
+  position: relative;
+  min-height: 360px;
+  display: grid;
+  align-content: center;
+  gap: 1.25rem;
+  padding: clamp(1.4rem, 3vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--radius-lg) + 0.2rem);
+  background:
+    radial-gradient(circle at top right, rgba(255, 255, 255, 0.075), transparent 28%),
+    rgba(255, 255, 255, 0.035);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+
+.about-guides-preview__panel::after {
+  content: "";
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  width: 86px;
+  height: 86px;
+  border-top: 2px solid rgba(211, 66, 66, 0.75);
+  border-right: 2px solid rgba(211, 66, 66, 0.75);
+  pointer-events: none;
+}
+
+.about-guides-preview__portraits {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  min-height: 8.5rem;
+  padding-left: 0.3rem;
+}
+
+.about-guides-preview__portrait {
+  --portrait-size: clamp(5.4rem, 9vw, 7.6rem);
+  width: var(--portrait-size);
+  height: var(--portrait-size);
+  display: grid;
+  place-items: center;
+  margin-left: calc(var(--portrait-index) * -1.15rem);
+  border-radius: 50%;
+  border: 1px solid var(--color-border-strong);
+  background:
+    radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.22), transparent 26%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.035));
+  box-shadow:
+    0 1.4rem 3rem rgba(0, 0, 0, 0.28),
+    inset 0 0 0 0.42rem rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+  text-decoration: none;
+  transition:
+    transform var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.about-guides-preview__portrait:first-child {
+  margin-left: 0;
+}
+
+.about-guides-preview__portrait:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-accent);
+  z-index: 5;
+}
+
+.about-guides-preview__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-guides-preview__portrait span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 3vw, 2.35rem);
+  color: var(--color-text);
+}
+
+.about-guides-preview__card {
+  position: relative;
+  z-index: 2;
+  max-width: 34rem;
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.045);
+  backdrop-filter: blur(8px);
+}
+
+.about-guides-preview__eyebrow {
+  margin: 0 0 0.45rem;
+  color: var(--color-accent);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+}
+
+.about-guides-preview__card h3 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(1.55rem, 2.6vw, 2.3rem);
+  line-height: 1.05;
+}
+
+.about-guides-preview__card p:last-child {
+  margin: 0.85rem 0 0;
+  color: var(--color-text-soft);
+  line-height: 1.7;
+}
+
+:root[data-theme="summer"] .about-guides-preview {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(214, 193, 142, 0.105), transparent 30%),
+    radial-gradient(circle at 18% 80%, rgba(211, 66, 66, 0.045), transparent 28%),
+    var(--section-surface-dark);
+}
+
+@media (max-width: 900px) {
+  .about-guides-preview__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .about-guides-preview__content {
+    max-width: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-guides-preview__panel {
+    min-height: auto;
+    padding: 1.15rem;
+  }
+
+  .about-guides-preview__portraits {
+    min-height: 6.8rem;
+  }
+
+  .about-guides-preview__portrait {
+    --portrait-size: 5.4rem;
+    margin-left: calc(var(--portrait-index) * -0.95rem);
+  }
+
+  .about-guides-preview__button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/*Services*/
+
 .services-feature__layout {
   grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
 }
