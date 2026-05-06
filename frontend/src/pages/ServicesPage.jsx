@@ -106,16 +106,19 @@ function ServicesPage() {
 
         <div className="container services-hero__content">
           <Reveal variant="up">
-            <p className="section-kicker">Services</p>
-            <h1 className="page-title services-hero__title">
-              Guided mountain services shaped around season, terrain, and confidence
-            </h1>
-            <p className="services-hero__copy">
-              From winter objectives and classic summer routes to private guiding
-              and route-led planning, every service is designed to help clients
-              choose the right day, move with confidence, and get more from their
-              time in the mountains.
-            </p>
+            <div className="services-hero__intro">
+
+              <p className="section-kicker">Services</p>
+              <h1 className="page-title services-hero__title">
+                Guided mountain services shaped around season, terrain, and confidence
+              </h1>
+              <p className="services-hero__copy">
+                From winter objectives and classic summer routes to private guiding
+                and route-led planning, every service is designed to help clients
+                choose the right day, move with confidence, and get more from their
+                time in the mountains.
+              </p>
+            </div>
           </Reveal>
 
           <Reveal delay={80} variant="up">
@@ -140,7 +143,9 @@ function ServicesPage() {
       <section className="section services-grid-section">
         <div className="container">
           <Reveal variant="up">
-            <div className="services-section-heading">
+            <div className="services-section-heading services-accent-frame services-accent-frame--top-right">
+              <span className="services-accent-corner" aria-hidden="true" />
+
               <p className="section-kicker">Core Services</p>
               <h2 className="section-title">Guided mountain days with clear purpose</h2>
             </div>
@@ -153,7 +158,17 @@ function ServicesPage() {
                 delay={index * 70}
                 variant={index % 2 === 0 ? "left" : "right"}
               >
-                <article className="service-card">
+                <article
+                  className={`service-card ${
+                    index === 0 || index === 3
+                      ? "services-accent-frame services-accent-frame--card-corner"
+                      : ""
+                  }`}
+                >
+                  {(index === 0 || index === 3) && (
+                    <span className="services-accent-corner" aria-hidden="true" />
+                  )}
+
                   <span className="service-card__icon">{service.icon}</span>
                   <h3 className="service-card__title">{service.title}</h3>
                   <p className="service-card__copy">{service.copy}</p>
@@ -172,7 +187,9 @@ function ServicesPage() {
       <section className="section services-locations">
         <div className="container services-locations__layout">
           <Reveal variant="left">
-            <div className="services-locations__content">
+            <div className="services-locations__content services-accent-frame services-accent-frame--mid-right">
+              <span className="services-accent-corner" aria-hidden="true" />
+
               <p className="section-kicker">Where we guide</p>
               <h2 className="section-title">
                 Guided mountain days across the UK’s classic regions
@@ -192,15 +209,15 @@ function ServicesPage() {
           </Reveal>
 
           <Reveal delay={90} variant="right">
-            <div className="services-locations__map-panel">
+            <div className="services-locations__map-panel services-accent-frame services-accent-frame--bottom-right">
+              <span className="services-accent-corner" aria-hidden="true" />
+
               {routesLoading ? (
                 <div className="services-locations__state">
                   Loading UK tour locations…
                 </div>
               ) : routesError ? (
-                <div className="services-locations__state">
-                  {routesError}
-                </div>
+                <div className="services-locations__state">{routesError}</div>
               ) : (
                 <TourLocationsMap routes={routes} />
               )}
@@ -270,12 +287,18 @@ function ServicesPage() {
 
           <div className="services-process__grid">
             {process.map((item, index) => (
-              <Reveal
-                key={item.step}
-                delay={index * 80}
-                variant="up"
-              >
-                <article className="services-process__card">
+              <Reveal key={item.step} delay={index * 80} variant="up">
+                <article
+                  className={`services-process__card ${
+                    index === 1
+                      ? "services-accent-frame services-accent-frame--process-corner"
+                      : ""
+                  }`}
+                >
+                  {index === 1 && (
+                    <span className="services-accent-corner" aria-hidden="true" />
+                  )}
+
                   <p className="services-process__step">{item.step}</p>
                   <h3 className="services-process__title">{item.title}</h3>
                   <p className="services-process__copy">{item.copy}</p>
@@ -289,7 +312,9 @@ function ServicesPage() {
       <section className="section services-cta">
         <div className="container">
           <Reveal variant="up">
-            <div className="services-cta__panel">
+            <div className="services-cta__panel services-accent-frame services-accent-frame--cta">
+              <span className="services-accent-corner" aria-hidden="true" />
+
               <p className="section-kicker">Next step</p>
               <h2 className="section-title">
                 Explore the routes, then choose the guided experience that fits

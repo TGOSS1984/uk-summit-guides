@@ -1505,6 +1505,87 @@
   text-align: center;
 }
 
+/*Services Accents*/
+
+.services-accent-frame {
+  position: relative;
+}
+
+.services-accent-corner {
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.services-accent-frame--top-right .services-accent-corner {
+  top: -0.85rem;
+  right: 0;
+  width: clamp(90px, 14vw, 160px);
+  height: clamp(56px, 8vw, 96px);
+  border-top: 1px solid rgba(211, 66, 66, 0.9);
+  border-right: 1px solid rgba(211, 66, 66, 0.9);
+}
+
+.services-accent-frame--mid-right .services-accent-corner {
+  top: 18%;
+  right: -2rem;
+  width: clamp(110px, 16vw, 200px);
+  height: clamp(70px, 9vw, 126px);
+  border-top: 1px solid rgba(211, 66, 66, 0.72);
+  border-right: 1px solid rgba(211, 66, 66, 0.72);
+}
+
+.services-accent-frame--bottom-right .services-accent-corner {
+  right: 1rem;
+  bottom: 1rem;
+  width: clamp(80px, 10vw, 130px);
+  height: clamp(54px, 7vw, 88px);
+  border-right: 1px solid rgba(211, 66, 66, 0.88);
+  border-bottom: 1px solid rgba(211, 66, 66, 0.88);
+}
+
+.services-accent-frame--card-corner .services-accent-corner {
+  top: 0.9rem;
+  right: 0.9rem;
+  width: 52px;
+  height: 52px;
+  border-top: 1px solid rgba(211, 66, 66, 0.72);
+  border-right: 1px solid rgba(211, 66, 66, 0.72);
+}
+
+.services-accent-frame--process-corner .services-accent-corner {
+  left: 1rem;
+  bottom: 1rem;
+  width: 64px;
+  height: 64px;
+  border-left: 1px solid rgba(211, 66, 66, 0.7);
+  border-bottom: 1px solid rgba(211, 66, 66, 0.7);
+}
+
+.services-accent-frame--cta .services-accent-corner {
+  top: 1rem;
+  right: 1rem;
+  width: clamp(90px, 12vw, 150px);
+  height: clamp(58px, 8vw, 96px);
+  border-top: 1px solid rgba(211, 66, 66, 0.85);
+  border-right: 1px solid rgba(211, 66, 66, 0.85);
+}
+
+@media (max-width: 768px) {
+  .services-accent-frame--mid-right .services-accent-corner {
+    right: 0;
+    top: -0.5rem;
+    width: 90px;
+    height: 56px;
+  }
+
+  .services-accent-frame--card-corner .services-accent-corner,
+  .services-accent-frame--process-corner .services-accent-corner {
+    width: 42px;
+    height: 42px;
+  }
+}
+
 .tour-locations-map {
   position: relative;
   z-index: 1;
