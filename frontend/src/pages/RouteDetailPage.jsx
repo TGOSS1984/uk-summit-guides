@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
   FaArrowRight,
+  FaArrowUpRightFromSquare,
   FaCalendarDays,
   FaLocationDot,
   FaMapLocationDot,
@@ -338,6 +339,48 @@ function RouteDetailPage() {
                   Forecast is route-centre guidance only. Mountain conditions can change quickly.
                 </p>
               </article>
+              <Reveal delay={150} variant="left">
+                <article className="route-forecast-links">
+                  <span
+                    className="accent-box accent-box--content accent-box--left"
+                    aria-hidden="true"
+                  />
+
+                  <div className="route-forecast-links__content">
+                    <p className="section-kicker">Further Weather Checks</p>
+                    <h3 className="route-forecast-links__title">
+                      Mountain-specific forecast sources
+                    </h3>
+                    <p className="route-forecast-links__copy">
+                      The forecast above provides route-centre guidance. For a deeper
+                      mountain-specific outlook, we recommend checking dedicated mountain
+                      forecast services before any planned day in the hills.
+                    </p>
+                  </div>
+
+                  <div className="route-forecast-links__actions">
+                    <a
+                      href="https://www.mwis.org.uk/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="route-forecast-links__link"
+                    >
+                      MWIS
+                      <FaArrowUpRightFromSquare />
+                    </a>
+
+                    <a
+                      href="https://www.mountain-forecast.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="route-forecast-links__link"
+                    >
+                      Mountain Forecast
+                      <FaArrowUpRightFromSquare />
+                    </a>
+                  </div>
+                </article>
+              </Reveal>
             </Reveal>
           </div>
 

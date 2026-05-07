@@ -2089,6 +2089,118 @@
   }
 }
 
+/*Route Detail - Weather Links*/
+
+
+.route-forecast-links {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+
+  
+  margin-top: 1.75rem;
+
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+
+  background:
+    radial-gradient(circle at top right, rgba(211, 66, 66, 0.08), transparent 30%),
+    var(--color-surface);
+
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+
+.route-forecast-links .accent-box {
+  position: absolute;
+  top: -10px; 
+  left: -10px;
+  right: auto;
+  bottom: auto;
+}
+
+/* Content */
+
+.route-forecast-links__title {
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--font-serif);
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  line-height: 1.1;
+}
+
+.route-forecast-links__copy {
+  max-width: 46rem;
+  margin: 0.75rem 0 0;
+  color: var(--color-text-soft);
+  line-height: 1.7;
+}
+
+/* Actions */
+
+.route-forecast-links__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.route-forecast-links__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 2.9rem;
+  padding: 0.75rem 1rem;
+
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--color-text);
+
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    color var(--transition-fast),
+    transform var(--transition-fast);
+}
+
+.route-forecast-links__link:hover {
+  border-color: var(--color-border-strong);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  transform: translateY(-1px);
+}
+
+.route-forecast-links__link svg {
+  font-size: 0.75rem;
+}
+
+/* Mobile */
+
+@media (max-width: 760px) {
+  .route-forecast-links {
+    grid-template-columns: 1fr;
+  }
+
+  .route-forecast-links__actions {
+    justify-content: flex-start;
+  }
+
+  .route-forecast-links__link {
+    width: 100%;
+  }
+}
+
 /* Gallery Page */
 
 .gallery-hero {
