@@ -54,13 +54,19 @@
 }
 
 .hero__map-motif--one {
-  right: clamp(3rem, 8vw, 8rem);
+  right: max(
+    clamp(3rem, 8vw, 8rem),
+    calc((100vw - var(--container-width)) / 2 + 2rem)
+  );
   top: clamp(8rem, 18vh, 12rem);
   width: clamp(220px, 30vw, 420px);
 }
 
 .hero__map-motif--two {
-  right: clamp(8rem, 18vw, 16rem);
+  right: max(
+    clamp(8rem, 18vw, 16rem),
+    calc((100vw - var(--container-width)) / 2 + 8rem)
+  );
   top: clamp(14rem, 28vh, 18rem);
   width: clamp(150px, 18vw, 260px);
   opacity: 0.32;
@@ -1684,7 +1690,7 @@
   height: 0.65rem;
   border-radius: 999px;
   background: var(--legend-colour);
-  box-shadow: 0 0 1rem color-mix(in srgb, var(--legend-colour) 70%, transparent);
+  box-shadow: 0 0 1rem color-mix(in srgb, var(--legend-colour) 30%, transparent);
 }
 
 .tour-locations-map__actions {

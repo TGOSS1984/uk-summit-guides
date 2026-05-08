@@ -173,7 +173,7 @@ function TourLocationsMap({ routes = [] }) {
       </div>
 
       <div className="tour-locations-map__actions">
-        <Link to="/routes" className="route-detail-action route-detail-action--link">
+        <Link to="/routes" className="button button--primary">
           Explore all mapped routes
         </Link>
       </div>
