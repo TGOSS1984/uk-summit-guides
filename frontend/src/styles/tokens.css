@@ -91,6 +91,10 @@
 
   --image-services-feature: url("/images/ui/services/services-1.jpeg");
 
+  --topography-pattern: url("/images/patterns/topography-winter.svg");
+  --topography-opacity: 0.028;
+  --topography-blend: screen;
+
   --footer-image: url("/images/shared/footer-mountains.jpg");
   --footer-overlay:
     linear-gradient(
@@ -183,6 +187,10 @@
 
   --image-about-story: url("/images/ui/about/about-1-summer.jpeg");
   --image-about-split: url("/images/ui/about/about-2-summer.jpeg");
+
+  --topography-pattern: url("/images/patterns/topography-summer.svg");
+  --topography-opacity: 0.04;
+  --topography-blend: multiply;
 
   --image-services-feature: url("/images/ui/services/services-1-summer.jpeg");
 

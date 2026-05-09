@@ -241,7 +241,7 @@ function GuidesPage() {
         </div>
       </section>
 
-      <section className="section guides-values">
+      <section className="section guides-values section-topography">
         <div className="container">
           <Reveal variant="up">
             <div className="guides-section-heading">

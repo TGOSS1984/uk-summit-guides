@@ -1367,6 +1367,29 @@
   .about-cta__actions > * {
     width: 100%;
   }
+
+  .about-hero__meta {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    margin-top: 1.35rem;
+  }
+
+  .about-hero__meta-item {
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+    padding: 0.85rem 1rem;
+  }
+
+  .about-hero__meta-label {
+    font-size: 0.64rem;
+  }
+
+  .about-hero__meta-value {
+    margin-top: 0.3rem;
+    font-size: 1.05rem;
+  }
 }
 
 /*Services*/
@@ -1447,6 +1470,29 @@
 
   .services-cta__actions > * {
     width: 100%;
+  }
+
+  .services-hero__meta {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    margin-top: 1.35rem;
+  }
+
+  .services-hero__meta-item {
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+    padding: 0.85rem 1rem;
+  }
+
+  .services-hero__meta-label {
+    font-size: 0.64rem;
+  }
+
+  .services-hero__meta-value {
+    margin-top: 0.3rem;
+    font-size: 1.05rem;
   }
 }
 

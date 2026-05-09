@@ -395,7 +395,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section className="section scenic-section">
+      <section className="section scenic-section section-topography">
         <div className="container scenic-layout">
           <Reveal delay={60} variant="left">
             <div className="scenic-layout__left">

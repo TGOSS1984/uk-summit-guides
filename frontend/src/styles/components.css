@@ -2715,3 +2715,89 @@
     font-size: 0.8rem;
   }
 }
+
+/* Topography background utility */
+
+.section-topography {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.section-topography::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background-image: var(--topography-pattern);
+  background-repeat: repeat;
+  background-size: 620px auto;
+  background-position: center top;
+
+  opacity: var(--topography-opacity);
+  mix-blend-mode: var(--topography-blend);
+
+  pointer-events: none;
+  z-index: 0;
+}
+
+.section-topography > * {
+  position: relative;
+  z-index: 1;
+}
+
+.about-qualifications.section-topography::before {
+  background-image:
+    var(--topography-pattern),
+    linear-gradient(90deg, rgba(211, 66, 66, 0.055), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%);
+
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size: 620px auto, auto, auto;
+  background-position: center top, center, center;
+
+  opacity: 0.1;
+  mix-blend-mode: screen;
+}
+
+.scenic-section.section-topography::before {
+  background-image:
+    var(--topography-pattern),
+    linear-gradient(90deg, rgba(211, 66, 66, 0.055), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%);
+
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size: 620px auto, auto, auto;
+  background-position: center top, center, center;
+
+  opacity: 0.1;
+  mix-blend-mode: screen;
+}
+
+.services-cta.section-topography::before {
+  background-image:
+    var(--topography-pattern),
+    linear-gradient(90deg, rgba(211, 66, 66, 0.055), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%);
+
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size: 620px auto, auto, auto;
+  background-position: center top, center, center;
+
+  opacity: 0.1;
+  mix-blend-mode: screen;
+}
+
+.guides-values.section-topography::before {
+  background-image:
+    var(--topography-pattern),
+    linear-gradient(90deg, rgba(211, 66, 66, 0.055), transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%);
+
+  background-repeat: repeat, no-repeat, no-repeat;
+  background-size: 620px auto, auto, auto;
+  background-position: center top, center, center;
+
+  opacity: 0.1;
+  mix-blend-mode: screen;
+}

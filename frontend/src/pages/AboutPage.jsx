@@ -323,7 +323,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="section about-qualifications">
+      <section className="section about-qualifications section-topography">
         <div className="container">
           <Reveal variant="up">
             <div className="about-section-heading">
