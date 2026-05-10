@@ -17,19 +17,31 @@
 
 ## 📚 Table of Contents
 
-* [📸 Preview](#-preview)
-* [🌐 Live Project](#-live-project)
-* [📖 Overview](#-overview)
-* [🚀 Key Features](#-key-features)
-* [🏗️ Tech Stack](#️-tech-stack)
-* [📂 Project Structure](#-project-structure)
-* [⚙️ Setup & Installation](#️-setup--installation)
-* [💳 Stripe Webhook](#-stripe-webhook-local-testing)
-* [🧪 Testing](#-testing)
-* [🚀 Deployment](#-deployment-planned)
-* [📌 Future Enhancements](#-future-enhancements)
-* [📬 Contact](#-contact)
-* [⭐ Final Notes](#-final-notes)
+- [📸 Preview](#-preview)
+- [🌐 Live Project](#-live-project)
+- [📖 Overview](#-overview)
+- [🎯 UX / UI Inspiration](#-ux--ui-inspiration)
+- [🗂️ Project Management](#️-project-management)
+- [🚀 Key Features](#-key-features)
+- [🏗️ Tech Stack](#️-tech-stack)
+- [🧠 Architecture Overview](#-architecture-overview)
+- [🔌 API Overview](#-api-overview)
+- [📂 Project Structure](#-project-structure)
+- [⚙️ Local Setup & Installation](#️-local-setup--installation)
+- [💳 Stripe Webhook Local Testing](#-stripe-webhook-local-testing)
+- [📧 Email System](#-email-system)
+- [🗺️ GPX Mapping & Weather Integration](#️-gpx-mapping--weather-integration)
+- [👨‍💼 Django Admin](#-django-admin)
+- [🎨 Frontend Experience & UI Decisions](#-frontend-experience--ui-decisions)
+- [🧪 Testing](#-testing)
+- [📈 Lighthouse & Validation](#-lighthouse--validation)
+- [🚀 Deployment](#-deployment)
+- [🧩 Challenges & Solutions](#-challenges--solutions)
+- [📌 Future Enhancements](#-future-enhancements)
+- [📈 Business Context & Value](#-business-context--value)
+- [🎤 Talking Points](#-talking-points)
+- [📬 Contact](#-contact)
+- [⭐ Final Notes](#-final-notes)
 
 ---
 
@@ -39,13 +51,19 @@
 
 ![Homepage Placeholder](docs/images/homepage.png)
 
+---
+
 ### 🗺️ Routes Page
 
 ![Routes Placeholder](docs/images/routes.png)
 
+---
+
 ### 📍 Route Detail + GPX Map
 
 ![Route Detail Placeholder](docs/images/route-detail.png)
+
+---
 
 ### 💳 Booking Flow
 
@@ -53,53 +71,144 @@
 
 ---
 
+### 📱 Mobile Experience
+
+![Mobile Placeholder](docs/images/mobile.png)
+
+---
+
+### 👤 Account Dashboard
+
+![Dashboard Placeholder](docs/images/dashboard.png)
+
+---
+
 ## 🌐 Live Project
 
-* 🔗 Frontend: **[https://uk-summit-guides.vercel.app](https://uk-summit-guides.vercel.app)**
-* 🔗 Backend API: **[https://uk-summit-guides-api.onrender.com/api](https://uk-summit-guides-api.onrender.com/api)**
+- 🔗 Frontend: **[https://uk-summit-guides.vercel.app](https://uk-summit-guides.vercel.app)**
+- 🔗 Backend API: **[https://uk-summit-guides-api.onrender.com/api](https://uk-summit-guides-api.onrender.com/api)**
 
 ---
 
 ## 📖 Overview
 
-**UK Summit Guides** is a full-stack booking platform for guided mountain tours across the UK.
+**UK Summit Guides** is a full-stack booking platform designed around guided mountain experiences across the UK.
 
-It combines:
+The project combines:
 
-* Structured route discovery
-* GPX-powered interactive maps
-* Real-time booking availability
-* Secure Stripe payments
-* Account-based booking management
+- Structured route discovery
+- Interactive GPX-powered mapping
+- Scheduled guided tours
+- Real-time booking validation
+- Stripe-powered payments
+- Automated email workflows
+- Account-based booking management
+- Responsive UX across desktop and mobile
 
-The project is designed to reflect a **production-ready commercial system**, with a strong focus on UX, scalability, and clean architecture.
+The overall aim of the project was to create something that feels much closer to a real commercial platform rather than a simple portfolio CRUD application.
+
+A major focus throughout development has been:
+
+- Clean frontend presentation
+- Reliable backend workflows
+- Real-world booking logic
+- Premium UX/UI styling
+- Scalability and maintainability
+- Production-style deployment
+
+The project uses a decoupled architecture with:
+
+- React + Vite frontend
+- Django REST API backend
+- PostgreSQL database
+- Stripe payment integration
+- Leaflet GPX route mapping
+- Transactional email workflows
+- Render + Vercel deployment
+
+---
+
+## 🎯 UX / UI Inspiration
+
+A large part of the project focused on creating a more premium, editorial-style experience rather than a generic booking site.
+
+The visual direction was inspired by:
+
+- Mountain photography and alpine guide brands
+- Editorial layouts
+- Dark premium UI systems
+- Winter expedition aesthetics
+- Layered glassmorphism surfaces
+- Interactive route-focused experiences
+
+Core UI decisions included:
+
+- Winter/summer theme switching
+- Atmospheric hero overlays
+- Subtle red accent framing
+- Large scenic imagery
+- Motion-based reveals and transitions
+- Soft layered shadows
+- Responsive content spacing
+- Mobile-first interaction improvements
+
+### ✏️ Wireframes & Planning
+
+Initial layout ideas, UX notes, route page structures, and booking flow planning were tracked through wireframes and iterative UI mockups.
+
+#### Homepage Wireframe
+
+![Homepage Wireframe Placeholder](docs/images/wireframe-home.png)
+
+#### Booking Flow Wireframe
+
+![Booking Flow Wireframe Placeholder](docs/images/wireframe-booking.png)
+
+#### Mobile UX Mockup
+
+![Mobile UX Mockup Placeholder](docs/images/wireframe-mobile.png)
 
 ---
 
 ## 🗂️ Project Management
 
-This project is tracked through a GitHub Project board with a structured roadmap covering UX, frontend features, backend features, bookings, payments, email, testing, deployment, and documentation.
+This project was tracked through a GitHub Project board covering:
+
+- Frontend features
+- Backend systems
+- Payments
+- Booking workflows
+- Email systems
+- Testing
+- Deployment
+- UI/UX improvements
+- Documentation
+
+### GitHub Project Board
 
 - [Project Board — UK Summit Guides MVP Roadmap](https://github.com/users/TGOSS1984/projects/5/views/1)
-- [All GitHub Issues](https://github.com/TGOSS1984/uk-summit-guides/issues)
+- [GitHub Issues](https://github.com/TGOSS1984/uk-summit-guides/issues)
 
-The board uses the following workflow:
+### Workflow Structure
 
-- **Todo** — planned or documented work
+The project board followed a structured workflow:
+
+- **Todo** — planned work
 - **In Progress** — active development
-- **Done** — completed features, fixes, tests, and deployment tasks
+- **Done** — completed and tested work
 
-Key tracked areas include:
+Tracked development areas included:
 
-- Authenticated customer booking flow
-- Stripe Checkout and webhook payment lifecycle
-- Booking amendment, cancellation, refund, and archive tools
-- Transactional email confirmations
-- Admin booking/payment operations dashboard
-- Backend and frontend automated tests
-- GitHub Actions CI
-- Render and Vercel deployment
-- README, screenshots, and portfolio documentation
+- Stripe payment lifecycle
+- Route discovery and filtering
+- GPX map rendering
+- Booking amendment/cancellation
+- Email workflows
+- Frontend responsiveness
+- Weather integration
+- Deployment configuration
+- Automated testing
+- Documentation improvements
 
 ---
 
@@ -107,50 +216,139 @@ Key tracked areas include:
 
 ### 🗺️ Route Discovery
 
-* Filter by **region**, **difficulty**, and **search**
-* Pagination for scalable datasets
-* Dynamic route cards powered by Django API
+- Dynamic route data from Django REST API
+- Route filtering by:
+  - Region
+  - Difficulty
+  - Search
+- Pagination support
+- Featured routes system
+- Responsive route cards
+- Dedicated route detail pages
 
-### 📍 Interactive GPX Maps
+---
 
-* Full route visualisation using **Leaflet**
-* Zoomable map with route overlay
-* Start/end markers from GPX files
+### 📍 Interactive GPX Mapping
 
-### 👤 User Accounts
+- Leaflet-powered route maps
+- GPX route overlay support
+- Automatic route plotting
+- Zoom-to-fit GPX route bounds
+- Start/end route markers
+- Route centre fallback coordinates
+- Responsive mobile map layouts
 
-* Register / Login / Logout
-* Authenticated booking management
-* Personal booking dashboard
+---
+
+### 🌦️ Weather Integration
+
+Each route detail page includes:
+
+- Live weather forecast integration
+- Open-Meteo API integration
+- Daily forecast cards
+- Weather icons and condition mapping
+- Temperature/wind/precipitation display
+- External weather links for additional planning
+
+External planning links include:
+
+- MWIS
+- Met Office
+- Mountain Forecast
+
+The weather feature is intentionally presented as guidance only rather than safety-critical forecasting.
+
+---
+
+### 👤 User Authentication
+
+- Register
+- Login
+- Logout
+- Authenticated sessions
+- Token-based frontend auth handling
+- Current user endpoint
+- Protected booking/account routes
+
+---
 
 ### 📅 Booking System
 
-* Real-time availability checks
-* Capacity-based validation
-* Amend & cancel bookings
-* Archive old bookings
+- Scheduled guided tours
+- Capacity-based availability validation
+- Real-time booking checks
+- Booking lifecycle management
+- Booking amendment flow
+- Booking cancellation flow
+- Booking archive tools
+- User booking dashboard
 
-### 💳 Payments (Stripe)
+---
 
-* Secure checkout session
-* Webhook-driven payment confirmation
-* Refund handling
-* Payment status tracking
+### 💳 Stripe Payments
 
-### 📧 Email System
+- Stripe Checkout integration
+- Dynamic checkout sessions
+- Secure webhook handling
+- Payment confirmation lifecycle
+- Duplicate payment prevention
+- Refund support
+- Success/cancel return pages
 
-* Booking confirmation emails
-* Payment confirmation emails
-* Cancellation + refund emails
-* Contact form acknowledgement
-* Admin notification emails
+---
 
-### 🎨 UI / UX
+### 📧 Email Workflows
 
-* Fully responsive design
-* Dark theme with **winter/summer toggle**
-* Modern glassmorphism styling
-* Clean, premium layout
+Email functionality is fully wired into the backend.
+
+Current email flows include:
+
+- Booking confirmation emails
+- Payment confirmation emails
+- Cancellation emails
+- Refund notification emails
+- Contact form acknowledgement emails
+- Admin notification emails
+
+Development uses console email output locally, while production uses environment-based email configuration.
+
+---
+
+### 📱 Responsive Frontend
+
+The frontend was designed to work cleanly across:
+
+- Desktop
+- Tablet
+- Mobile devices
+
+Responsive improvements include:
+
+- Mobile navigation
+- Responsive route cards
+- Swipe-friendly forecast layouts
+- Adaptive spacing
+- Theme-aware layouts
+- Scalable typography
+- Optimised mobile CTAs
+
+---
+
+### 🎨 Animation & Interaction
+
+The frontend uses layered motion and reveal effects throughout the site.
+
+This includes:
+
+- Framer Motion reveal animations
+- Scroll-triggered transitions
+- Animated statistics counters
+- Hover interactions
+- Animated hero sections
+- Dynamic featured route transitions
+
+The aim was to keep interactions subtle rather than over-animated.
 
 ---
 
@@ -158,75 +356,97 @@ Key tracked areas include:
 
 ### Frontend
 
-* React (Vite)
-* React Router
-* Leaflet (maps + GPX)
-* Custom CSS (design system)
+- React
+- Vite
+- React Router
+- Framer Motion
+- Leaflet
+- React Icons
+- Custom CSS design system
 
 ### Backend
 
-* Django
-* Django REST Framework
-* Django ORM
-* Stripe API
+- Django
+- Django REST Framework
+- PostgreSQL
+- Django ORM
+- Stripe SDK
 
-### Data & Features
+### Infrastructure & Deployment
 
-* GPX route files
-* Booking + scheduling logic
-* Payment lifecycle handling
+- Vercel frontend deployment
+- Render backend deployment
+- PostgreSQL database
+- GitHub version control
 
 ---
 
 ## 🧠 Architecture Overview
 
-The application follows a **decoupled full-stack architecture**, with a React frontend communicating with a Django REST API.
+The project uses a decoupled architecture.
 
-### System Flow
+The React frontend consumes data entirely through the Django REST API.
 
 ```mermaid
 flowchart LR
-    User --> Frontend[React Frontend (Vercel)]
-    Frontend --> API[Django REST API (Render)]
+    User --> Frontend[React Frontend - Vercel]
+    Frontend --> API[Django REST API - Render]
     API --> DB[(PostgreSQL Database)]
 
     API --> Stripe[Stripe Checkout]
     Stripe --> Webhook[Stripe Webhook Endpoint]
     Webhook --> API
 
-    API --> Email[Email Service (SendGrid / Console)]
+    API --> Email[Email Service]
+```
 
-Key Architectural Decisions
-API-first design
-The frontend consumes all data via REST endpoints, allowing future expansion (mobile app, external integrations).
-Webhook-driven payments
-Payment success is handled via Stripe webhooks, ensuring reliability even if users close the browser.
-Separation of concerns
-bookings → booking lifecycle
-payments → Stripe + payment state
-routes_app → route data & discovery
-accounts → authentication
-Stateless frontend
-All critical logic (validation, payments, booking rules) lives in the backend.
-Environment-based configuration
-Secure handling of Stripe keys, email settings, and deployment environments.
+### Key Architectural Decisions
 
+#### API-First Design
+
+The frontend communicates exclusively through REST endpoints.
+
+This allows future expansion into:
+
+- Mobile apps
+- Third-party integrations
+- Additional frontend clients
+
+#### Webhook-Driven Payments
+
+Stripe webhooks are responsible for confirming payment success.
+
+This avoids relying on frontend redirects alone and creates a more reliable payment workflow.
+
+#### Separation of Concerns
+
+Apps are separated by responsibility:
+
+- `accounts` → authentication
+- `bookings` → booking lifecycle
+- `payments` → Stripe/payment handling
+- `routes_app` → route discovery and route data
+- `contact` → contact workflows
+
+#### Stateless Frontend
+
+Critical validation and business logic remain server-side.
+
+This includes:
+
+- Capacity checks
+- Payment validation
+- Booking permissions
+- Refund handling
 
 ---
 
-# 🔌 2. API Overview
-
-Add this **after Testing or Deployment**:
-
-```markdown
 ## 🔌 API Overview
-
-The backend exposes a RESTful API used by the React frontend.
 
 ### Authentication
 
 | Method | Endpoint | Description |
-|------|--------|------------|
+|---|---|---|
 | POST | `/api/auth/register/` | Create account |
 | POST | `/api/auth/login/` | Login |
 | POST | `/api/auth/logout/` | Logout |
@@ -237,10 +457,11 @@ The backend exposes a RESTful API used by the React frontend.
 ### Routes & Regions
 
 | Method | Endpoint | Description |
-|------|--------|------------|
-| GET | `/api/routes/` | List routes (filterable) |
+|---|---|---|
+| GET | `/api/routes/` | List routes |
 | GET | `/api/routes/<slug>/` | Route detail |
-| GET | `/api/regions/` | List regions |
+| GET | `/api/routes/<slug>/weather/` | Weather forecast |
+| GET | `/api/regions/` | Regions |
 | GET | `/api/scheduled-tours/` | Available departures |
 
 ---
@@ -248,11 +469,12 @@ The backend exposes a RESTful API used by the React frontend.
 ### Bookings
 
 | Method | Endpoint | Description |
-|------|--------|------------|
+|---|---|---|
 | POST | `/api/bookings/` | Create booking |
 | GET | `/api/my-bookings/` | User bookings |
 | PATCH | `/api/my-bookings/<id>/amend/` | Amend booking |
 | PATCH | `/api/my-bookings/<id>/cancel/` | Cancel booking |
+| PATCH | `/api/my-bookings/<id>/refund/` | Refund booking |
 | PATCH | `/api/my-bookings/<id>/archive/` | Archive booking |
 
 ---
@@ -260,30 +482,18 @@ The backend exposes a RESTful API used by the React frontend.
 ### Payments
 
 | Method | Endpoint | Description |
-|------|--------|------------|
-| POST | `/api/payments/create-checkout-session/` | Create Stripe session |
-| GET | `/api/payments/checkout-session/<id>/` | Get session status |
-| POST | `/api/payments/webhook/` | Stripe webhook endpoint |
+|---|---|---|
+| POST | `/api/payments/create-checkout-session/` | Stripe checkout session |
+| GET | `/api/payments/checkout-session/<id>/` | Session status |
+| POST | `/api/payments/webhook/` | Stripe webhook |
 
 ---
 
 ### Contact
 
 | Method | Endpoint | Description |
-|------|--------|------------|
-| POST | `/api/contact/` | Submit contact form |
-
----
-
-### API Design Notes
-
-- All booking/payment endpoints are **authenticated**
-- User data is **scoped to the logged-in user**
-- Stripe integration is handled entirely server-side
-- Validation ensures:
-  - No overbooking
-  - No duplicate payments
-  - Correct booking state transitions
+|---|---|---|
+| POST | `/api/contact/` | Contact form submission |
 
 ---
 
@@ -298,15 +508,22 @@ uk-summit-guides/
 │   ├── contact/
 │   ├── payments/
 │   ├── routes_app/
-│   ├── core/
+│   ├── fixtures/
 │   ├── config/
 │   └── manage.py
 │
 ├── frontend/
 │   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── lib/
+│   │   ├── styles/
+│   │   └── data/
+│   │
 │   ├── public/
 │   │   ├── images/
 │   │   └── gpx/
+│   │
 │   └── package.json
 │
 └── README.md
@@ -314,450 +531,628 @@ uk-summit-guides/
 
 ---
 
-## ⚙️ Setup & Installation
+## ⚙️ Local Setup & Installation
 
-### 1. Clone repo
+### 1. Clone Repository
 
 ```bash
 git clone https://github.com/yourusername/uk-summit-guides.git
+
 cd uk-summit-guides
 ```
 
 ---
 
-### 2. Backend setup
+## ⚙️ Backend Setup
+
+### Create Virtual Environment
 
 ```bash
 cd backend
 
 python -m venv .venv
-.venv\Scripts\activate   # Windows
+```
 
+### Activate Virtual Environment
+
+#### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+#### Mac/Linux
+
+```bash
+source .venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-Create `.env` file:
+### Create `.env`
 
 ```env
 DJANGO_SECRET_KEY=your-secret-key
 DJANGO_DEBUG=True
 
-STRIPE_SECRET_KEY=your-stripe-secret
-STRIPE_PUBLISHABLE_KEY=your-stripe-public
-STRIPE_WEBHOOK_SECRET=your-webhook-secret
+ALLOWED_HOSTS=127.0.0.1,localhost
 
 FRONTEND_BASE_URL=http://localhost:5175
 
+DATABASE_URL=your-postgres-url
+
+STRIPE_SECRET_KEY=your-secret-key
+STRIPE_PUBLISHABLE_KEY=your-publishable-key
+STRIPE_WEBHOOK_SECRET=your-webhook-secret
+
 EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+
 DEFAULT_FROM_EMAIL=hello@uksummitguides.com
 CONTACT_NOTIFICATION_EMAIL=admin@example.com
 ```
 
-Run migrations:
+### Run Migrations
 
 ```bash
 python manage.py migrate
+```
+
+### Create Superuser
+
+```bash
 python manage.py createsuperuser
+```
+
+### Load Fixtures
+
+```bash
+python manage.py loaddata fixtures/regions.json
+python manage.py loaddata fixtures/guides.json
+python manage.py loaddata fixtures/routes.json
+python manage.py loaddata fixtures/scheduled_tours.json
+```
+
+### Run Backend
+
+```bash
 python manage.py runserver
 ```
 
----
+Backend default:
 
-### 3. Frontend setup
-
-```bash
-cd frontend
-npm install
-npm run dev
+```text
+http://127.0.0.1:8000
 ```
 
 ---
 
-## 💳 Stripe Webhook (Local Testing)
+## ⚙️ Frontend Setup
+
+```bash
+cd frontend
+
+npm install
+
+npm run dev
+```
+
+Frontend default:
+
+```text
+http://localhost:5175
+```
+
+---
+
+## 💳 Stripe Webhook Local Testing
+
+Install Stripe CLI:
+
+```bash
+stripe login
+```
+
+Run local webhook forwarding:
 
 ```bash
 stripe listen --forward-to localhost:8000/api/payments/webhook/
 ```
 
-Copy the webhook secret into your `.env`.
+Copy the webhook secret into `.env`:
+
+```env
+STRIPE_WEBHOOK_SECRET=whsec_xxxxx
+```
+
+---
+
+## 📧 Email System
+
+### Development
+
+Local development uses Django console email backend.
+
+Emails appear directly in the terminal for testing.
+
+### Production
+
+Production email configuration uses environment variables.
+
+Supported workflows include:
+
+- Booking confirmations
+- Payment confirmations
+- Refund notifications
+- Contact acknowledgements
+- Admin notifications
+
+---
+
+## 🗺️ GPX Mapping & Weather Integration
+
+### GPX Mapping
+
+Route GPX files are stored in:
+
+```text
+frontend/public/gpx/
+```
+
+Maps are rendered using:
+
+- Leaflet
+- React Leaflet
+- GPX XML parsing
+- Dynamic polyline rendering
+
+### Weather API
+
+Weather data is powered by:
+
+- Open-Meteo API
+
+The backend handles:
+
+- Forecast requests
+- Weather code mapping
+- Rate-limit handling
+- API fallback responses
+
+External planning resources are also linked from route detail pages.
+
+---
+
+## 👨‍💼 Django Admin
+
+The Django admin panel is used for managing:
+
+- Routes
+- Regions
+- Guides
+- Scheduled tours
+- Bookings
+- Payments
+- Contact submissions
+- User accounts
+
+Admin URL:
+
+```text
+http://127.0.0.1:8000/admin/
+```
+
+---
+
+## 🎨 Frontend Experience & UI Decisions
+
+### Theme System
+
+The frontend includes:
+
+- Winter theme
+- Summer theme
+- Theme-aware imagery
+- Theme-aware overlays
+- LocalStorage theme persistence
+
+### Responsive Design
+
+Layouts were built mobile-first and adjusted progressively for:
+
+- Tablet
+- Desktop
+- Large displays
+
+### Motion & Reveal Effects
+
+Reveal animations were added to:
+
+- Hero sections
+- Cards
+- Editorial sections
+- Route panels
+- Stats counters
+
+Animations were intentionally kept subtle to match the premium visual direction.
 
 ---
 
 ## 🧪 Testing
 
-This project includes backend and frontend tests to demonstrate core application reliability across the main booking, payment, authentication, route, and contact workflows.
+### Backend Testing
 
-### Backend Tests
+Backend tests use:
 
-Backend tests are written with Django's built-in test runner and Django REST Framework's `APITestCase`.
+- Django TestCase
+- DRF APITestCase
+- Coverage.py
 
-Covered backend areas include:
+Covered areas include:
 
-- User registration, login, logout, and authenticated `/me/` endpoint
-- Route list, route filtering, region data, and route detail endpoints
-- Contact form validation and message creation
-- Auth-protected booking creation
-- Booking visibility scoped to the authenticated user
-- Booking capacity validation
-- Booking amendment rules
-- Booking cancellation and archive rules
-- Stripe checkout session creation
-- Prevention of duplicate payment attempts
-- Stripe webhook handling for successful payments
-- Refund webhook handling for successful and failed refunds
+- Authentication
+- Route endpoints
+- Booking lifecycle
+- Capacity validation
+- Refund handling
+- Stripe webhooks
+- Contact forms
+- Permissions
 
-Run backend tests:
+### Run Backend Tests
 
 ```bash
 cd backend
-python manage.py test routes_app accounts contact bookings
+
+python manage.py test
 ```
 
-Run backend coverage:
+Coverage:
 
-cd backend
-coverage run manage.py test routes_app accounts contact bookings
+```bash
+coverage run manage.py test
 coverage report
 coverage html
+```
 
-The HTML coverage report is generated at:
+HTML report:
 
+```text
 backend/htmlcov/index.html
-Frontend Tests
+```
 
-Frontend tests use Vitest with React Testing Library.
+### Frontend Testing
 
-Covered frontend areas include:
+Frontend tests use:
 
-Auth token storage helpers
-Payment status formatting helpers
+- Vitest
+- React Testing Library
 
-Run frontend tests:
+Current frontend tests focus on:
 
+- Helper utilities
+- Auth token logic
+- Formatting helpers
+- Basic smoke coverage
+
+### Run Frontend Tests
+
+```bash
 cd frontend
+
 npm run test:run
+```
 
-Run frontend coverage:
+Coverage:
 
-cd frontend
+```bash
 npm run test:coverage
-
-The frontend coverage report is generated at:
-
-frontend/coverage/index.html
-Manual End-to-End Testing
-
-The deployed production flow has also been manually tested:
-
-Register or log in
-Select a route and scheduled departure
-Create a booking
-Pay through Stripe Checkout in test mode
-Return to the payment success page
-Confirm booking status updates to paid
-Cancel a paid booking
-Confirm refund pending/refund state is reflected
-Archive cancelled bookings from the account view
-Confirm transactional email is received
-
-Stripe test card used:
-
-4242 4242 4242 4242
-Any future expiry date
-Any CVC
-Any postcode
+```
 
 ---
 
-### 6. Run everything
+## ✅ Manual Testing Examples
 
-From `backend/`:
+The full deployed flow has also been manually tested.
 
-```bash
-coverage run manage.py test routes_app accounts contact bookings
-coverage report
+### Authentication
 
-From frontend/:
+| Test | Result |
+|---|---|
+| Register account | Pass |
+| Login/logout | Pass |
+| Invalid credentials | Pass |
+| Protected routes | Pass |
 
-npm run test:run
-```
+### Bookings
 
-### Coverage Summary
+| Test | Result |
+|---|---|
+| Create booking | Pass |
+| Capacity validation | Pass |
+| Cancel booking | Pass |
+| Archive booking | Pass |
+| Refund workflow | Pass |
 
-Current coverage snapshot:
+### Payments
 
-- Backend coverage: **92%**
-- Frontend coverage: **smoke tests only**
+| Test | Result |
+|---|---|
+| Stripe Checkout session | Pass |
+| Payment success redirect | Pass |
+| Webhook confirmation | Pass |
+| Duplicate payment prevention | Pass |
 
-Backend tests focus on:
+### Emails
 
-Booking validation & lifecycle
-Stripe payment & webhook handling
-Refund logic
-Authentication & security
-Contact and route endpoints
+| Test | Result |
+|---|---|
+| Booking email | Pass |
+| Refund email | Pass |
+| Contact acknowledgement | Pass |
 
-Frontend tests currently cover lightweight smoke/helper behaviour. Full React component coverage is planned as a future enhancement.
+### Mobile UX
 
-Manual Testing
-Register / login
-Create booking
-Pay via Stripe test mode
-Confirm booking updates
-Cancel booking → refund flow
-Archive bookings
-Email notifications received
+| Test | Result |
+|---|---|
+| Mobile navigation | Pass |
+| Route cards | Pass |
+| Forecast strip | Pass |
+| Responsive booking flow | Pass |
+
+---
+
+## 📈 Lighthouse & Validation
+
+Performance and accessibility checks were carried out during development.
+
+Placeholder screenshots can be replaced with final production reports.
+
+### Lighthouse Scores
+
+#### Desktop
+
+![Lighthouse Desktop Placeholder](docs/images/lighthouse-desktop.png)
+
+#### Mobile
+
+![Lighthouse Mobile Placeholder](docs/images/lighthouse-mobile.png)
+
+### HTML Validation
+
+![HTML Validation Placeholder](docs/images/html-validation.png)
+
+### CSS Validation
+
+![CSS Validation Placeholder](docs/images/css-validation.png)
+
+### Accessibility Notes
+
+Focus areas included:
+
+- Semantic HTML
+- Keyboard navigation
+- Contrast ratios
+- Responsive layouts
+- Accessible button states
+- Alt text handling
 
 ---
 
 ## 🚀 Deployment
-Current
-Frontend: Vercel
-Backend: Render
-Database: PostgreSQL
-Notes
-Environment variables configured per service
-Stripe webhook endpoint exposed publicly
-CORS + CSRF configured for cross-origin requests
+
+### Frontend Deployment — Vercel
+
+The frontend is deployed through Vercel.
+
+#### Build Settings
+
+```text
+Build Command:
+npm run build
+
+Output Directory:
+dist
+```
+
+#### Environment Variables
+
+```env
+VITE_API_BASE_URL=https://your-api-url.onrender.com/api
+```
+
+---
+
+### Backend Deployment — Render
+
+The Django backend is deployed through Render.
+
+#### Start Command
+
+```bash
+gunicorn config.wsgi:application
+```
+
+#### Required Environment Variables
+
+```env
+DJANGO_SECRET_KEY=
+DATABASE_URL=
+ALLOWED_HOSTS=
+CORS_ALLOWED_ORIGINS=
+CSRF_TRUSTED_ORIGINS=
+
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+FRONTEND_BASE_URL=
+```
+
+### PostgreSQL
+
+Production uses PostgreSQL hosted through Render.
+
+### Deployment Notes
+
+- CORS configured for frontend/backend domains
+- CSRF configured for cross-origin requests
+- Stripe webhook endpoint publicly exposed
+- Static files served in production
+- Environment-based settings handling
 
 ---
 
 ## 🧩 Challenges & Solutions
 
-### 💳 Reliable Payment Handling
+### 💳 Reliable Stripe Payments
 
-**Challenge:**  
-Ensuring bookings are only marked as paid when Stripe confirms the payment, even if the user closes the browser.
+#### Challenge
 
-**Solution:**  
-Implemented a **webhook-driven payment system**:
-- Stripe sends `checkout.session.completed`
-- Backend validates event
-- Payment marked as `PAID`
-- Booking updated to `CONFIRMED`
+Ensuring bookings only become confirmed when Stripe genuinely confirms payment.
 
----
+#### Solution
 
-### 🔁 Duplicate Webhook Events
+Webhook-driven payment confirmation using:
 
-**Challenge:**  
-Stripe may send the same webhook event multiple times.
-
-**Solution:**  
-Implemented **idempotent handling**:
-- If payment is already `PAID`, webhook does nothing
-- Prevents duplicate state changes
+- `checkout.session.completed`
+- Backend verification
+- State-based booking updates
 
 ---
 
-### 🚫 Preventing Duplicate Payments
+### 🔁 Duplicate Webhooks
 
-**Challenge:**  
-Users could attempt to pay multiple times for the same booking.
+#### Challenge
 
-**Solution:**  
-Backend validation prevents:
-- Creating a new checkout session if already paid
-- Ensures single payment per booking
+Stripe may retry webhook events.
 
----
+#### Solution
 
-### 👥 Booking Capacity Control
-
-**Challenge:**  
-Avoid overbooking scheduled tours.
-
-**Solution:**  
-- Track `booked_spaces` dynamically
-- Validate against `max_group_size`
-- Reject bookings exceeding capacity
+Idempotent webhook handling prevents duplicate processing.
 
 ---
 
-### 🔐 Secure API Access
+### 👥 Preventing Overbooking
 
-**Challenge:**  
-Ensure users can only access their own bookings.
+#### Challenge
 
-**Solution:**  
-- All booking queries scoped to `request.user`
-- Unauthorized access returns `404` or `403`
+Scheduled tours have limited capacity.
 
----
+#### Solution
 
-### 📧 Email Reliability in Development vs Production
-
-**Challenge:**  
-Email sending behaves differently locally vs deployed.
-
-**Solution:**  
-- Console email backend for development
-- SendGrid integration for production
-- Environment-based configuration
+Capacity validation is enforced server-side before booking creation.
 
 ---
 
-### 🌐 Cross-Origin Deployment (Vercel + Render)
+### 🌐 Cross-Origin Deployment
 
-**Challenge:**  
-Frontend and backend deployed on different domains.
+#### Challenge
 
-**Solution:**  
-- Configured **CORS + CSRF properly**
-- Ensured cookies/authentication work across origins
+Frontend and backend run on different domains.
+
+#### Solution
+
+Configured:
+
+- CORS
+- CSRF trusted origins
+- Secure cookie handling
+
+---
+
+### 🌦️ Weather API Rate Limits
+
+#### Challenge
+
+External weather APIs may temporarily rate limit requests.
+
+#### Solution
+
+Added graceful error handling and fallback messaging to avoid frontend crashes.
 
 ---
 
 ## 📌 Future Enhancements
 
-High Impact
-Full frontend test coverage
-GitHub Actions CI pipeline
-Booking calendar UI
-Admin analytics dashboard
-Features
-Weather API integration
-Elevation charts for routes
-Guide assignment automation
-User profile enhancements
-Performance
-API caching (Redis)
-Query optimisation
-Pagination scaling
+### Frontend
 
----
+- Expanded frontend test coverage
+- Better offline handling
+- Saved favourite routes
+- Interactive elevation charts
 
-## 📬 Contact
+### Backend
 
-* GitHub: https://github.com/yourusername
-* LinkedIn: https://linkedin.com/in/your-profile
+- Redis caching
+- Improved analytics
+- Expanded admin dashboards
+- Advanced booking reporting
+
+### Features
+
+- Guide assignment workflows
+- Seasonal route conditions
+- User profile customisation
+- Multi-day expedition support
 
 ---
 
 ## 📈 Business Context & Value
 
-This project is designed to simulate a **real-world guided tours business platform**, focusing on the key operational challenges such a business would face.
+This project was designed to simulate the operational requirements of a real mountain guiding business.
 
-### 🎯 Problem Being Solved
+Core business problems addressed include:
 
-A mountain guiding business needs to:
+- Availability management
+- Booking validation
+- Secure payments
+- Customer communication
+- Automated workflows
+- Route discovery
+- User self-service tools
 
-- Manage multiple routes across different regions
-- Offer scheduled tours with limited capacity
-- Prevent overbooking
-- Handle secure online payments
-- Track booking lifecycle (pending → confirmed → cancelled → refunded)
-- Communicate clearly with customers via email
-- Provide a smooth, modern booking experience
-
-Traditional solutions (manual spreadsheets, email bookings, offline payments) introduce:
-
-- Risk of overbooking
-- Lack of real-time availability
-- Poor customer experience
-- Manual administrative overhead
-
----
-
-### 💡 Solution Provided
-
-UK Summit Guides delivers a **fully digital booking platform** that:
-
-- Automates booking validation and capacity management
-- Integrates secure Stripe payments
-- Uses webhook-driven logic for reliable payment confirmation
-- Provides a self-service user dashboard
-- Sends automated transactional emails
-- Offers an intuitive, mobile-friendly interface
-
----
-
-### 📊 Key Value Areas
-
-#### 🧾 Operational Efficiency
-
-- Eliminates manual booking handling
-- Reduces admin workload through automation
-- Ensures consistent booking validation
-
----
-
-#### 💳 Payment Reliability
-
-- Webhook-driven payment system ensures **data integrity**
-- Prevents duplicate or incomplete transactions
-- Supports refunds and lifecycle tracking
-
----
-
-#### 👤 Customer Experience
-
-- Clear booking flow from discovery → payment → confirmation
-- Account dashboard for managing bookings
-- Immediate feedback and email confirmations
-
----
-
-#### 📈 Scalability
-
-The system is designed to scale with:
-
-- Additional routes and regions
-- Larger booking volumes
-- Multiple guides and scheduling complexity
-- Future integrations (weather APIs, analytics, etc.)
-
----
-
-### 🧠 Engineering Perspective
-
-This project demonstrates the ability to:
-
-- Translate business requirements into technical systems
-- Design reliable backend workflows
-- Handle real-world edge cases (payments, concurrency, validation)
-- Build a clean, modular architecture
-
-It reflects a shift from **building features → building systems that solve problems**.
+The project focuses heavily on translating business requirements into reliable technical systems.
 
 ---
 
 ## 🎤 Talking Points
 
-This project can be summarised as:
+This project demonstrates:
 
-- A full-stack booking platform built with React and Django REST
-- Designed to simulate a real commercial guided tours business
-- Focused on reliable backend workflows and payment handling
-- Uses Stripe webhooks for production-grade payment confirmation
-- Includes booking lifecycle management, refunds, and email notifications
-- Achieves high backend test coverage (~92%) focused on critical logic
+- Full-stack development
+- API-first architecture
+- Stripe payment integration
+- Webhook-driven workflows
+- Responsive frontend development
+- Real-world booking lifecycle management
+- Production deployment workflows
+- Automated testing practices
 
-Key strengths demonstrated:
+---
 
-- API design and backend architecture
-- Payment system integration (Stripe)
-- Handling real-world edge cases
-- Building scalable, maintainable systems
+## 📬 Contact
+
+- GitHub: https://github.com/yourusername
+- LinkedIn: https://linkedin.com/in/your-profile
 
 ---
 
 ## ⭐ Final Notes
 
-This project demonstrates:
+UK Summit Guides was built as a portfolio project focused on creating something closer to a genuine commercial platform rather than a basic CRUD demonstration.
 
-Full-stack architecture (React + Django)
-Real-world booking & payment systems
-Stripe webhook-driven workflows
-Secure API design
-High backend test coverage
-Production-style deployment
+The project combines:
 
-It is designed as a portfolio-grade commercial application, combining:
+- React frontend architecture
+- Django REST backend systems
+- Stripe payment workflows
+- GPX mapping
+- Automated emails
+- Responsive UI/UX
+- Booking lifecycle handling
+- Production deployment practices
 
-Software engineering
-Product thinking
-Data handling
-User experience design
-
----
+The overall aim throughout development has been to focus not just on features, but on building reliable systems and a polished user experience.
