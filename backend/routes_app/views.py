@@ -1,7 +1,8 @@
 import json
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 from urllib.request import urlopen
 
+from django.core.cache import cache
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -60,6 +61,7 @@ class RouteDetailAPIView(generics.RetrieveAPIView):
     serializer_class = RouteDetailSerializer
     lookup_field = "slug"
 
+
 class RouteWeatherAPIView(APIView):
     def get(self, request, slug):
         try:
@@ -82,12 +84,18 @@ class RouteWeatherAPIView(APIView):
         latitude = float(route.map_center_lat)
         longitude = float(route.map_center_lng)
 
+        cache_key = f"route-weather:{route.slug}:{latitude}:{longitude}"
+        cached_weather = cache.get(cache_key)
+
+        if cached_weather:
+            return Response(cached_weather)
+
         url = (
             "https://api.open-meteo.com/v1/forecast"
             f"?latitude={latitude}"
             f"&longitude={longitude}"
             "&daily=weather_code,temperature_2m_max,temperature_2m_min,"
-            "precipitation_probability_max,wind_speed_10m_max"
+            "precipitation_probability_max,windspeed_10m_max"
             "&timezone=Europe%2FLondon"
             "&forecast_days=7"
         )
@@ -105,21 +113,44 @@ class RouteWeatherAPIView(APIView):
                 forecast.append(
                     {
                         "date": date_value,
-                        "weather_code": daily.get("weather_code", [None] * len(dates))[index],
-                        "temperature_max": daily.get("temperature_2m_max", [None] * len(dates))[index],
-                        "temperature_min": daily.get("temperature_2m_min", [None] * len(dates))[index],
+                        "weather_code": daily.get(
+                            "weather_code",
+                            [None] * len(dates),
+                        )[index],
+                        "temperature_max": daily.get(
+                            "temperature_2m_max",
+                            [None] * len(dates),
+                        )[index],
+                        "temperature_min": daily.get(
+                            "temperature_2m_min",
+                            [None] * len(dates),
+                        )[index],
                         "precipitation_probability": daily.get(
                             "precipitation_probability_max",
                             [None] * len(dates),
                         )[index],
                         "wind_speed_max": daily.get(
-                            "wind_speed_10m_max",
+                            "windspeed_10m_max",
                             [None] * len(dates),
                         )[index],
                     }
                 )
 
-        except Exception as error:
+        except HTTPError as error:
+            print("WEATHER API ERROR:", repr(error))
+            print("WEATHER API URL:", url)
+
+            return Response(
+                {
+                    "detail": (
+                        "Weather provider rate limit reached. "
+                        "Please try again shortly."
+                    )
+                },
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
+        except (URLError, TimeoutError, json.JSONDecodeError) as error:
             print("WEATHER API ERROR:", repr(error))
             print("WEATHER API URL:", url)
 
@@ -128,13 +159,24 @@ class RouteWeatherAPIView(APIView):
                 status=status.HTTP_503_SERVICE_UNAVAILABLE,
             )
 
-        return Response(
-            {
-                "route": route.name,
-                "region": route.region.name,
-                "latitude": latitude,
-                "longitude": longitude,
-                "source": "Open-Meteo",
-                "forecast": forecast,
-            }
-        )
+        except (KeyError, IndexError, TypeError) as error:
+            print("WEATHER DATA ERROR:", repr(error))
+            print("WEATHER API URL:", url)
+
+            return Response(
+                {"detail": "Weather data is temporarily unavailable."},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
+        payload = {
+            "route": route.name,
+            "region": route.region.name,
+            "latitude": latitude,
+            "longitude": longitude,
+            "source": "Open-Meteo",
+            "forecast": forecast,
+        }
+
+        cache.set(cache_key, payload, 60 * 30)
+
+        return Response(payload)
