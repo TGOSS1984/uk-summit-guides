@@ -93,32 +93,39 @@ class RouteWeatherAPIView(APIView):
         )
 
         try:
-            with urlopen(url, timeout=8) as response:
+            with urlopen(url, timeout=12) as response:
                 data = json.loads(response.read().decode("utf-8"))
-        except (URLError, TimeoutError, json.JSONDecodeError):
+
+            daily = data.get("daily", {})
+            dates = daily.get("time", [])
+
+            forecast = []
+
+            for index, date_value in enumerate(dates):
+                forecast.append(
+                    {
+                        "date": date_value,
+                        "weather_code": daily.get("weather_code", [None] * len(dates))[index],
+                        "temperature_max": daily.get("temperature_2m_max", [None] * len(dates))[index],
+                        "temperature_min": daily.get("temperature_2m_min", [None] * len(dates))[index],
+                        "precipitation_probability": daily.get(
+                            "precipitation_probability_max",
+                            [None] * len(dates),
+                        )[index],
+                        "wind_speed_max": daily.get(
+                            "wind_speed_10m_max",
+                            [None] * len(dates),
+                        )[index],
+                    }
+                )
+
+        except Exception as error:
+            print("WEATHER API ERROR:", repr(error))
+            print("WEATHER API URL:", url)
+
             return Response(
                 {"detail": "Unable to load mountain weather right now."},
                 status=status.HTTP_503_SERVICE_UNAVAILABLE,
-            )
-
-        daily = data.get("daily", {})
-
-        forecast = []
-        dates = daily.get("time", [])
-
-        for index, date_value in enumerate(dates):
-            forecast.append(
-                {
-                    "date": date_value,
-                    "weather_code": daily.get("weather_code", [None])[index],
-                    "temperature_max": daily.get("temperature_2m_max", [None])[index],
-                    "temperature_min": daily.get("temperature_2m_min", [None])[index],
-                    "precipitation_probability": daily.get(
-                        "precipitation_probability_max",
-                        [None],
-                    )[index],
-                    "wind_speed_max": daily.get("wind_speed_10m_max", [None])[index],
-                }
             )
 
         return Response(
