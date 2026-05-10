@@ -27,7 +27,7 @@ class Guide(models.Model):
     last_name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=220, unique=True, blank=True)
     bio = models.TextField(blank=True)
-    profile_image = models.URLField(blank=True)
+    profile_image = models.CharField(max_length=255, blank=True)
     qualifications = models.TextField(blank=True)
     active = models.BooleanField(default=True)
 
