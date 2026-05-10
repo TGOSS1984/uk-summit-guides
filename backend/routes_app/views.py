@@ -140,15 +140,22 @@ class RouteWeatherAPIView(APIView):
             print("WEATHER API ERROR:", repr(error))
             print("WEATHER API URL:", url)
 
-            return Response(
-                {
-                    "detail": (
-                        "Weather provider rate limit reached. "
-                        "Please try again shortly."
-                    )
-                },
-                status=status.HTTP_503_SERVICE_UNAVAILABLE,
-            )
+            fallback_payload = {
+                "route": route.name,
+                "region": route.region.name,
+                "latitude": latitude,
+                "longitude": longitude,
+                "source": "Open-Meteo unavailable - fallback demo data",
+                "forecast": [],
+                "detail": (
+                    "Live weather is temporarily unavailable because the provider "
+                    "rate limit was reached."
+                ),
+            }
+
+            cache.set(cache_key, fallback_payload, 60 * 10)
+
+            return Response(fallback_payload)
 
         except (URLError, TimeoutError, json.JSONDecodeError) as error:
             print("WEATHER API ERROR:", repr(error))
