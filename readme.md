@@ -1,17 +1,26 @@
 # 🏔️ UK Summit Guides
 
-[![React](https://img.shields.io/badge/Frontend-React-61DAFB?logo=react\&logoColor=white)]()
-[![Vite](https://img.shields.io/badge/Build-Vite-646CFF?logo=vite\&logoColor=white)]()
-[![Django](https://img.shields.io/badge/Backend-Django-092E20?logo=django\&logoColor=white)]()
-[![Django REST](https://img.shields.io/badge/API-Django%20REST-ff1709?logo=django\&logoColor=white)]()
-[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-316192?logo=postgresql\&logoColor=white)]()
-[![Stripe](https://img.shields.io/badge/Payments-Stripe-635BFF?logo=stripe\&logoColor=white)]()
-[![Leaflet](https://img.shields.io/badge/Maps-Leaflet-199900?logo=leaflet\&logoColor=white)]()
-[![JavaScript](https://img.shields.io/badge/JS-ES6-F7DF1E?logo=javascript\&logoColor=black)]()
-[![Python](https://img.shields.io/badge/Python-3.13-3776AB?logo=python\&logoColor=white)]()
-[![CSS](https://img.shields.io/badge/Styling-CSS3-1572B6?logo=css3\&logoColor=white)]()
-![Backend Coverage](https://img.shields.io/badge/backend%20coverage-92%25-brightgreen)
-![Frontend Tests](https://img.shields.io/badge/frontend%20tests-smoke%20coverage-blue)
+[![Live Demo](https://img.shields.io/badge/Live%20Site-UK%20Summit%20Guides-0A66C2?style=for-the-badge&logo=vercel&logoColor=white)](https://uk-summit-guides.vercel.app/)
+[![Backend API](https://img.shields.io/badge/API-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://uk-summit-guides-api.onrender.com)
+[![Source Code](https://img.shields.io/badge/Source%20Code-GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/TGOSS1984/uk-summit-guides)
+
+[![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=for-the-badge&logo=react&logoColor=white)]()
+[![Vite](https://img.shields.io/badge/Build-Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)]()
+[![Django](https://img.shields.io/badge/Backend-Django-092E20?style=for-the-badge&logo=django&logoColor=white)]()
+[![Django REST](https://img.shields.io/badge/API-Django%20REST-ff1709?style=for-the-badge&logo=django&logoColor=white)]()
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)]()
+[![Stripe](https://img.shields.io/badge/Payments-Stripe-635BFF?style=for-the-badge&logo=stripe&logoColor=white)]()
+[![Leaflet](https://img.shields.io/badge/Maps-Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white)]()
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)]()
+[![Python](https://img.shields.io/badge/Python-3.13-3776AB?style=for-the-badge&logo=python&logoColor=white)]()
+[![CSS3](https://img.shields.io/badge/Styling-CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)]()
+
+![Backend Coverage](https://img.shields.io/badge/Backend%20Coverage-92%25-brightgreen?style=for-the-badge)
+![Frontend Tests](https://img.shields.io/badge/Frontend%20Tests-Smoke%20Coverage-blue?style=for-the-badge)
+
+---
+
+![Homepage Placeholder](frontend/public/images/screenshots/mockups/home_page_mockup_devices.PNG)
 
 ---
 
@@ -49,37 +58,60 @@
 
 ### 🏠 Homepage
 
-![Homepage Placeholder](docs/images/homepage.png)
+**Winter View**
+
+![Homepage Placeholder](frontend/public/images/screenshots/mockups/home_mockup.PNG)
+
+**Summer View**
+
+![Homepage Placeholder](frontend/public/images/screenshots/mockups/home_mockup_summer.PNG)
+
+---
+
+### Full scale webpages
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="frontend/public/images/screenshots/mockups/full_size_screenshot.png" width="300"><br>
+      <sub>Homepage full view</sub>
+    </td>
+    <td align="center">
+      <img src="frontend/public/images/screenshots/mockups/full_size_screenshot_2.png" width="300"><br>
+      <sub>Services full view</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
 ### 🗺️ Routes Page
 
-![Routes Placeholder](docs/images/routes.png)
+![Routes Placeholder](frontend/public/images/screenshots/mockups/routes_mockup.PNG)
 
 ---
 
 ### 📍 Route Detail + GPX Map
 
-![Route Detail Placeholder](docs/images/route-detail.png)
+![Route Detail Placeholder](frontend/public/images/screenshots/mockups/route_detail_mockup.PNG)
 
 ---
 
 ### 💳 Booking Flow
 
-![Booking Placeholder](docs/images/booking.png)
+![Booking Placeholder](frontend/public/images/screenshots/mockups/booking_mockup.PNG)
 
 ---
 
 ### 📱 Mobile Experience
 
-![Mobile Placeholder](docs/images/mobile.png)
+![Mobile Placeholder](frontend/public/images/screenshots/mockups/mobile_home_mockup.PNG)
 
 ---
 
 ### 👤 Account Dashboard
 
-![Dashboard Placeholder](docs/images/dashboard.png)
+![Dashboard Placeholder](frontend/public/images/screenshots/mockups/account_mockup.PNG)
 
 ---
 
@@ -93,6 +125,8 @@
 ## 📖 Overview
 
 **UK Summit Guides** is a full-stack booking platform designed around guided mountain experiences across the UK.
+
+This project was developed as a progression from my earlier CRUD-focused mountain tour booking platform, [UK Winter Mountain Tours V2](https://github.com/TGOSS1984/uk_winter_mountain_tours_v2). While the previous project focused primarily on core booking functionality and backend CRUD operations, this build was created to push my skills further across full stack development, frontend architecture, and user experience design. The project expands significantly on frontend/backend integration using React and Django REST Framework, while also introducing more advanced functionality such as Stripe payment processing, dynamic booking management, account-based user flows, transactional email confirmations, interactive mapping, weather integrations, responsive UX/UI systems, and a more developed administrative experience. A major focus of this project was creating a more polished, production-style application that balanced technical implementation with premium visual design and real-world usability.
 
 The project combines:
 
@@ -158,15 +192,15 @@ Initial layout ideas, UX notes, route page structures, and booking flow planning
 
 #### Homepage Wireframe
 
-![Homepage Wireframe Placeholder](docs/images/wireframe-home.png)
+![Homepage Wireframe Placeholder](frontend/public/images/screenshots/wireframes/homepage_wireframe.png)
 
 #### Booking Flow Wireframe
 
-![Booking Flow Wireframe Placeholder](docs/images/wireframe-booking.png)
+![Booking Flow Wireframe Placeholder](frontend/public/images/screenshots/wireframes/booking_wireframe.png)
 
 #### Mobile UX Mockup
 
-![Mobile UX Mockup Placeholder](docs/images/wireframe-mobile.png)
+![Mobile UX Mockup Placeholder](frontend/public/images/screenshots/wireframes/mobile_home_wireframe.png)
 
 ---
 
@@ -915,7 +949,7 @@ Placeholder screenshots can be replaced with final production reports.
 
 #### Desktop
 
-![Lighthouse Desktop Placeholder](docs/images/lighthouse-desktop.png)
+![Lighthouse Desktop Placeholder](frontend/public/images/screenshots/validators/lighthouse_capture.PNG)
 
 #### Mobile
 
@@ -1097,6 +1131,7 @@ Added graceful error handling and fallback messaging to avoid frontend crashes.
 - Seasonal route conditions
 - User profile customisation
 - Multi-day expedition support
+- Dynamic theme change based on time of year
 
 ---
 
@@ -1135,7 +1170,7 @@ This project demonstrates:
 
 ## 📬 Contact
 
-- GitHub: https://github.com/yourusername
+- GitHub: https://github.com/TGOSS1984
 - LinkedIn: https://linkedin.com/in/your-profile
 
 ---
