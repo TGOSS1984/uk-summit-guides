@@ -95,6 +95,10 @@
   --topography-opacity: 0.028;
   --topography-blend: screen;
 
+  --motif-contour-color: rgba(236, 243, 246, 0.4);
+  --motif-route-glow: #8fe3ff;
+  --motif-route-glow-core: #eafcff;
+
   --footer-image: url("/images/shared/footer-mountains.jpg");
   --footer-overlay:
     linear-gradient(
@@ -191,6 +195,10 @@
   --topography-pattern: url("/images/patterns/topography-summer.svg");
   --topography-opacity: 0.04;
   --topography-blend: multiply;
+
+  --motif-contour-color: rgba(247, 244, 234, 0.4);
+  --motif-route-glow: #ffd27a;
+  --motif-route-glow-core: #fff6e3;
 
   --image-services-feature: url("/images/ui/services/services-1-summer.jpeg");
 

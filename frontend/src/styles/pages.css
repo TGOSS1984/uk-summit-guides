@@ -46,47 +46,51 @@
   z-index: 1;
 }
 
-.hero__map-motif {
+.hero__summit-motif {
   position: absolute;
   z-index: 1;
   pointer-events: none;
-  opacity: 0.5;
-}
-
-.hero__map-motif--one {
   right: max(
     clamp(3rem, 8vw, 8rem),
     calc((100vw - var(--container-width)) / 2 + 2rem)
   );
-  top: clamp(8rem, 18vh, 12rem);
-  width: clamp(220px, 30vw, 420px);
+  top: clamp(7rem, 16vh, 10rem);
+  width: clamp(220px, 30vw, 400px);
+  aspect-ratio: 440 / 500;
 }
 
-.hero__map-motif--two {
-  right: max(
-    clamp(8rem, 18vw, 16rem),
-    calc((100vw - var(--container-width)) / 2 + 8rem)
-  );
-  top: clamp(14rem, 28vh, 18rem);
-  width: clamp(150px, 18vw, 260px);
-  opacity: 0.32;
-}
-
-.hero__map-motif svg {
+.hero__summit-motif svg {
   width: 100%;
-  height: auto;
+  height: 100%;
+  display: block;
 }
 
-.hero__map-motif path,
-.hero__map-motif circle {
-  stroke: rgba(236, 243, 246, 0.72);
+.hero__summit-motif-contour {
   fill: none;
-  stroke-width: 2;
+  stroke: var(--motif-contour-color);
+  stroke-width: 1.3;
 }
 
-:root[data-theme="summer"] .hero__map-motif path,
-:root[data-theme="summer"] .hero__map-motif circle {
-  stroke: rgba(247, 244, 234, 0.72);
+.hero__summit-motif-line {
+  fill: none;
+  stroke: var(--motif-route-glow);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 6 7;
+}
+
+.hero__summit-motif-node {
+  fill: none;
+  stroke: var(--motif-route-glow);
+  stroke-width: 2.6;
+}
+
+.hero__summit-motif-pin {
+  fill: var(--motif-route-glow);
+}
+
+.hero__summit-motif-pin-core {
+  fill: var(--motif-route-glow-core);
 }
 
 .hero__content {
@@ -1216,16 +1220,10 @@
     justify-content: flex-start;
   }
 
-  .hero__map-motif--one {
-    right: 3rem;
-    top: 10rem;
-    width: 280px;
-  }
-
-  .hero__map-motif--two {
-    right: 8rem;
-    top: 16rem;
-    width: 180px;
+  .hero__summit-motif {
+    top: 8rem;
+    right: 4.5rem;
+    width: 260px;
   }
 
   .routes-filter-bar,
@@ -1248,8 +1246,10 @@
     min-width: 100px;
   }
 
-  .hero__map-motif {
-    display: none;
+  .hero__summit-motif {
+    top: 7.5rem;
+    right: 2.75rem;
+    width: 132px;
   }
 }
 
