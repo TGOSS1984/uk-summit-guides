@@ -1252,8 +1252,16 @@
 
   .hero__summit-motif {
     top: 7.5rem;
-    right: 4rem;
-    width: 170px;
+    right: 7.5rem;
+    width: 190px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__summit-motif {
+    top: 7rem;
+    right: 1rem;
+    width: 150px;
   }
 }
 
