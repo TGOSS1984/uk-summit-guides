@@ -95,7 +95,7 @@
   --topography-opacity: 0.028;
   --topography-blend: screen;
 
-  --motif-contour-color: rgba(236, 243, 246, 0.4);
+  --motif-contour-png: url("/images/patterns/hero-summit-contours-winter.png");
   --motif-route-glow: #8fe3ff;
   --motif-route-glow-core: #eafcff;
 
@@ -196,7 +196,7 @@
   --topography-opacity: 0.04;
   --topography-blend: multiply;
 
-  --motif-contour-color: rgba(247, 244, 234, 0.4);
+  --motif-contour-png: url("/images/patterns/hero-summit-contours-summer.png");
   --motif-route-glow: #ffd27a;
   --motif-route-glow-core: #fff6e3;
 
