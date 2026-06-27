@@ -1,4 +1,4 @@
-# 🏔️ UK Summit Guides
+# <img src="frontend/public/favicon.svg" width="32" height="32" alt="UK Summit Guides logo" align="center" /> UK Summit Guides
 
 [![Live Demo](https://img.shields.io/badge/Live%20Site-UK%20Summit%20Guides-0A66C2?style=for-the-badge&logo=vercel&logoColor=white)](https://uk-summit-guides.vercel.app/)
 [![Backend API](https://img.shields.io/badge/API-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://uk-summit-guides-api.onrender.com)
@@ -70,18 +70,22 @@
 
 ### Full scale webpages
 
+<div align="center">
+
 <table>
   <tr>
     <td align="center">
-      <img src="frontend/public/images/screenshots/mockups/full_size_screenshot.png" width="300"><br>
+      <img src="frontend/public/images/screenshots/mockups/full_size_screenshot.PNG" width="300"><br>
       <sub>Homepage full view</sub>
     </td>
     <td align="center">
-      <img src="frontend/public/images/screenshots/mockups/full_size_screenshot_2.png" width="300"><br>
+      <img src="frontend/public/images/screenshots/mockups/full_size_screenshot_2.PNG" width="300"><br>
       <sub>Services full view</sub>
     </td>
   </tr>
 </table>
+
+</div>
 
 ---
 
